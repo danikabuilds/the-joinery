@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>The Joinery</title>
+  <meta name="description" content="The Joinery: free, hands-on data learning. Practise SQL in your browser with no sign-up.">
+  <!-- Preview card when the link is shared (LinkedIn, WhatsApp and others). The address assumes the site is published at danikabuilds.github.io/the-joinery/ -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Joinery">
+  <meta property="og:title" content="The Joinery: learn data skills, free, in your browser">
+  <meta property="og:description" content="SQL practice, a plain-English glossary and interview-style quizzes. No sign-up.">
+  <meta property="og:url" content="https://danikabuilds.github.io/the-joinery/">
+  <meta property="og:image" content="https://danikabuilds.github.io/the-joinery/preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Joinery, with Byte the beetle: learn data skills, free, in your browser.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2032%2032%27%3E%3Crect%20width=%2732%27%20height=%2732%27%20rx=%276%27%20fill=%27%23ECEDE8%27/%3E%3Cpath%20d=%27M3%204H29V10H20L24%2019H8L12%2010H3Z%27%20fill=%27%23B8912A%27/%3E%3Cpath%20d=%27M3%2011H11L7%2020H25L21%2011H29V28H3Z%27%20fill=%27%2325282C%27/%3E%3C/svg%3E">
+  <!-- Sets light or dark before the page paints, so there is no flash. -->
+  <script>
+    (function () {
+      var theme = null;
+      try { theme = window.localStorage.getItem('data-learning-theme'); } catch (e) { /* ignore */ }
+      if (theme !== 'dark' && theme !== 'light') {
+        theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+      try {
+        var st = JSON.parse(window.localStorage.getItem('data-learning-settings') || '{}');
+        if (st.text === 'large' || st.text === 'larger') document.documentElement.setAttribute('data-text', st.text);
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
+  <link rel="stylesheet" href="vendor/codemirror.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#view">Skip to content</a>
+  <header class="top">
+    <a class="brand" href="#/home"><svg class="mark-logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><path class="m-tail" d="M3 4H29V10H20L24 19H8L12 10H3Z"/><path class="m-board" d="M3 11H11L7 20H25L21 11H29V28H3Z"/></svg><span>The Joinery</span></a>
+    <nav aria-label="Main">
+      <a href="#/home" data-nav="home">Home</a>
+      <a href="#/lab" data-nav="lab">SQL lab</a>
+      <a href="#/review" data-nav="review">Review</a>
+      <a href="#/dialects" data-nav="dialects">Dialects</a>
+      <a href="#/glossary" data-nav="glossary">Glossary</a>
+      <a href="#/settings" data-nav="settings">Settings</a>
+    </nav>
+    <a href="#/start" class="route-link" id="route-link">Choose a route</a>
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false">Dark mode</button>
+  </header>
+
+  <main id="view" tabindex="-1"></main>
+
+  <footer class="foot">
+    <p><strong>The Joinery</strong> is free to use, with no sign-up. Practice data is synthetic and shaped like the Olist e-commerce dataset. Progress is saved in this browser only.</p>
+    <p class="credits">Built with sql.js, CodeMirror, Atkinson Hyperlegible and JetBrains Mono, all open source.</p>
+    <nav class="foot-links" aria-label="About and help">
+      <a href="#/about">About</a>
+      <a href="#/privacy">Privacy</a>
+      <a href="#/contact">Contact</a>
+      <a href="#/roadmap">Roadmap</a>
+      <a href="mailto:danika.builds@gmail.com" id="report-link">Report a mistake</a>
+    </nav>
+    <p class="foot-actions">
+      <button type="button" class="link" id="export-progress">Export my progress</button>
+      <button type="button" class="link" id="import-progress">Import progress</button>
+      <input type="file" id="import-file" accept=".json,application/json" hidden>
+      <button type="button" class="link" id="reset-progress">Reset my progress</button>
+    </p>
+    <p id="progress-msg" class="progress-msg" role="status"></p>
+  </footer>
+
+  <!-- Libraries (kept in /vendor so the site works offline) -->
+  <script src="vendor/sql-wasm.js"></script>
+  <script src="vendor/codemirror.js"></script>
+  <script src="vendor/codemirror-sql.js"></script>
+
+  <!-- Content: edit these to add exercises, explanations and terms -->
+  <script src="data/seed.js"></script>
+  <script src="data/exercises.js"></script>
+  <script src="data/aloud.js"></script>
+  <script src="data/dialects.js"></script>
+  <script src="data/pages.js"></script>
+  <script src="data/glossary.js"></script>
+  <script src="data/glossary-sql.js"></script>
+  <script src="data/glossary-modelling.js"></script>
+  <script src="data/glossary-pipelines.js"></script>
+  <script src="data/glossary-business.js"></script>
+  <script src="data/glossary-statistics.js"></script>
+  <script src="data/glossary-bi.js"></script>
+  <script src="data/routes.js"></script>
+
+  <!-- Site code -->
+  <script src="js/progress.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/hints.js"></script>
+  <script src="js/byte.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
