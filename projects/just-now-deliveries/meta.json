@@ -1,0 +1,36 @@
+{
+ "id": "just-now-deliveries",
+ "track": "Data Analytics",
+ "level": "Beginner",
+ "title": "Just Now Deliveries",
+ "fullTitle": "Beginner Data Analytics: Just Now Deliveries",
+ "blurb": "Clean a messy export from a fictional South African online store with Python, model it, answer the boss's questions with SQL and build a dashboard.",
+ "tagline": "Customers say we deliver \"just now\". Prove them wrong, or prove them right.",
+ "briefFrom": "Nomsa, Head of Operations",
+ "brief": "We have grown fast, but my inbox is full of complaints about late parcels. Before our next planning meeting, I need three answers: are we really growing, where are deliveries failing, and does slow delivery hurt our reviews? Here is an export from our systems. Fair warning: it is a bit of a mess.",
+ "time": "6 to 8 hours, over a few sittings",
+ "skills": [
+  "Python scripting",
+  "Cleaning data with pandas",
+  "SQL in DuckDB",
+  "Star schema modelling",
+  "Business questions",
+  "Dashboards",
+  "A first pipeline"
+ ],
+ "md": "projects/just-now-deliveries/PROJECT.md",
+ "steps": [
+  "Set up your computer",
+  "Get the data",
+  "First look, with Python",
+  "Clean the data, with Python",
+  "Load the data into DuckDB",
+  "Model the data",
+  "Answer the business questions",
+  "Build the dashboard",
+  "Run it all with one command",
+  "Why it matters, and how to talk about it",
+  "Take it further"
+ ],
+ "order": 1
+}

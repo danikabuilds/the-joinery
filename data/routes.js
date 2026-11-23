@@ -24,7 +24,7 @@ window.ROUTES = [
     id: 'gaps',
     pathTitle: 'The usual weak spots',
     topics: ['group', 'join', 'union', 'cte', 'window'],
-    cards: ['review', 'dialects'],
+    cards: ['review', 'glossary'],
     name: 'Fill my gaps',
     blurb: 'I already work with data and want to strengthen the weak spots.',
     headline: 'Fill the gaps in what you know',
@@ -33,7 +33,7 @@ window.ROUTES = [
       { label: 'Try joins', text: 'Check you know what each join keeps and drops.', topic: 'join' },
       { label: 'Try window functions', text: 'Rank, running totals and latest-per-group.', topic: 'window' },
       { label: 'Test yourself with a subject quiz', text: 'Multiple-choice questions on one area at a time, or all of them.', href: '#/review' },
-      { label: 'Compare how dialects differ', text: 'The same idea written in four SQL dialects.', href: '#/dialects' }
+      { label: 'Write clearer queries with CTEs', text: 'Break a long query into named steps.', topic: 'cte' }
     ],
     note: 'A quick skills check is planned. Until then, choose any topic below.'
   },
@@ -58,7 +58,7 @@ window.ROUTES = [
     id: 'engineering',
     pathTitle: 'SQL for data engineers',
     topics: ['join', 'union', 'cte', 'window'],
-    cards: ['glossary-pipelines', 'glossary-modelling', 'dialects'],
+    cards: ['glossary-pipelines', 'glossary-modelling'],
     name: 'Data engineering',
     blurb: 'I want to learn how data is modelled, moved and stored.',
     headline: 'Build the data engineering foundations',
@@ -67,8 +67,7 @@ window.ROUTES = [
       { label: 'Combine tables with joins', text: 'The skill behind almost every pipeline.', topic: 'join' },
       { label: 'Write clearer queries with CTEs', text: 'Break a big transformation into named steps.', topic: 'cte' },
       { label: 'Learn the pipeline terms', text: 'ETL, ELT, batch, streaming, warehouses and lakes.', href: '#/glossary/Pipelines' },
-      { label: 'Learn how data is modelled', text: 'Facts, dimensions, star schemas and grain.', href: '#/glossary/Modelling' },
-      { label: 'See how warehouses differ', text: 'SQLite, PostgreSQL, SQL Server and BigQuery side by side.', href: '#/dialects' }
+      { label: 'Learn how data is modelled', text: 'Facts, dimensions, star schemas and grain.', href: '#/glossary/Modelling' }
     ],
     note: 'This is a starter route. Python, pipelines and cloud lessons are planned.'
   },
@@ -76,7 +75,7 @@ window.ROUTES = [
     id: 'explore',
     pathTitle: 'SQL topics',
     topics: ['select', 'where', 'group', 'join', 'union', 'cte', 'window'],
-    cards: ['review', 'dialects', 'glossary'],
+    cards: ['review', 'glossary'],
     name: 'Just exploring',
     blurb: 'Show me everything and let me look around.',
     headline: 'Learn SQL in the order you write it',

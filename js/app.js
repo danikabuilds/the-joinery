@@ -1,12 +1,12 @@
 // The site itself: a small router plus the pages
-// (start screen, path, SQL lab, review and quiz, clause order, dialects, glossary, settings).
+// (start screen, path, SQL lab, review and quiz, glossary, settings).
 (function () {
   var view = document.getElementById('view');
   var engineReady = null;   // promise for the SQL engine
   var editor = null;        // CodeMirror instance on the current page
   var timerId = null;       // explain-out-loud countdown
   var session = null;      // current review or quiz session
-  var dialectShow = { sqlite: true, pg: true, mssql: true, bq: true };
+  var xlate = { target: 'pg', open: false }; // the lab's "Translate to" choice, remembered between exercises
   var QUIZ_SIZE = 8;
   var SETTINGS_KEY = 'data-learning-settings';
   var TEXT_SIZES = [['standard', 'Standard'], ['large', 'Large'], ['larger', 'Larger']];
@@ -209,10 +209,8 @@
   }
   function termCount(group) { return window.GLOSSARY.filter(function (g) { return g.group === group; }).length; }
   function resourceCard(id) {
-    var tDone = window.TRANSLATE.filter(function (q) { return Progress.dialectDone(q.id); }).length;
     var c = {
       'review': ['#/review', 'Review and quizzes', 'Spaced reviews of what you have solved, plus multiple-choice quizzes by subject.'],
-      'dialects': ['#/dialects', 'Dialects', 'SQLite, PostgreSQL, SQL Server and BigQuery side by side, with translate drills. ' + tDone + ' of ' + window.TRANSLATE.length + ' done.'],
       'glossary': ['#/glossary', 'Glossary and flashcards', window.GLOSSARY.length + ' data terms with deeper explanations, business questions and a sentence to say in an interview.'],
       'glossary-sql': ['#/glossary/SQL', 'SQL terms', termCount('SQL') + ' terms: joins, keys, NULL, CTEs, window functions and more.'],
       'glossary-pipelines': ['#/glossary/Pipelines', 'Pipeline terms', termCount('Pipelines') + ' terms: ETL, ELT, batch, streaming, warehouses and lakes.'],
@@ -228,7 +226,6 @@
     var h = st.href || '';
     if (h.indexOf('#/lab/') === 0) return Progress.isDone(h.slice(6));
     if (h === '#/review') return Progress.quizHistory().length > 0;
-    if (h === '#/dialects') return window.TRANSLATE.some(function (q) { return Progress.dialectDone(q.id); }) || Progress.isVisited(stepKey(rt, i));
     return Progress.isVisited(stepKey(rt, i));
   }
   function routeMap(rt) {
@@ -469,6 +466,7 @@
         '<div id="compare"></div>' +
         '<div id="after"></div>' +
         '<div id="result"><p class="empty">Write a query and run it. Results appear here.</p></div>' +
+        '<div id="xlate" hidden></div>' +
         (inSession ? '' : aloudPanel(ex)) +
         '<details class="model" id="model"' + (inSession ? ' hidden' : '') + '><summary>Show the model answer</summary>' +
           '<pre>' + esc(ex.solution) + '</pre><p>' + esc(ex.explain) + '</p></details>' +
@@ -507,6 +505,7 @@
       if (window.console) console.error(err);
     }
     function sqlError(e) {
+      hideTranslate();
       show('bad', 'SQL error: ' + e.message);
       var friendly = Hints.explainError(e.message);
       showTips(friendly ? [friendly] : []);
@@ -525,6 +524,58 @@
       next.addEventListener('click', function () { o.onNext(); });
       next.focus();
     }
+    // ---- "Translate to another database": appears under the result once a query has run ----
+    var lastRunSql = '';
+    function hideTranslate() { var box = document.getElementById('xlate'); if (box) box.hidden = true; }
+    function showTranslate(sql) {
+      var box = document.getElementById('xlate');
+      if (!box || !window.SQLTranslate) return;
+      lastRunSql = sql;
+      if (!box.firstChild) {
+        box.innerHTML = '<details class="xlate"' + (xlate.open ? ' open' : '') + '><summary>Translate to another database</summary>' +
+          '<div class="xlate-pick" role="group" aria-label="Database">' +
+          Object.keys(SQLTranslate.TARGETS).map(function (k) {
+            return '<button type="button" class="seg" data-db="' + k + '">' + esc(SQLTranslate.TARGETS[k]) + '</button>';
+          }).join('') + '</div><div class="xlate-out" aria-live="polite"></div></details>';
+        var det = box.querySelector('details');
+        det.addEventListener('toggle', function () { xlate.open = det.open; });
+        Array.prototype.forEach.call(box.querySelectorAll('[data-db]'), function (b) {
+          b.addEventListener('click', function () { xlate.target = b.getAttribute('data-db'); paintTranslate(); });
+        });
+      }
+      box.hidden = false;
+      paintTranslate();
+    }
+    function paintTranslate() {
+      var box = document.getElementById('xlate'); if (!box) return;
+      Array.prototype.forEach.call(box.querySelectorAll('[data-db]'), function (b) {
+        var on = b.getAttribute('data-db') === xlate.target;
+        b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+      });
+      var r = SQLTranslate.translate(lastRunSql, xlate.target);
+      var term = gTerm('sql-dialect');
+      box.querySelector('.xlate-out').innerHTML =
+        '<p class="xlate-head">Your query in <strong>' + esc(r.target) + '</strong></p>' +
+        '<pre class="xlate-code" id="xlate-code">' + esc(r.sql) + '</pre>' +
+        '<button type="button" class="btn quiet xlate-copy" id="xlate-copy">Copy</button>' +
+        (r.changes.length ? '<h2>What changed</h2><ul class="xlate-list">' + r.changes.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>'
+          : '<p>Nothing needed changing. This query is written the same way in ' + esc(r.target) + '.</p>') +
+        (r.warnings.length ? '<h2>Check by hand</h2><ul class="xlate-list xlate-warn">' + r.warnings.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>' : '') +
+        '<p class="xlate-small">This covers the common differences, not every one. Only SQLite runs on this site, so the translation cannot be run here.' +
+        (term ? ' <a href="' + termLink(term) + '">Compare the databases</a>' : '') + '</p>';
+      document.getElementById('xlate-copy').addEventListener('click', function () {
+        var btn = this, text = r.sql;
+        function done() { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1800); }
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, selectCode);
+        else selectCode();
+        function selectCode() {
+          var range = document.createRange(); range.selectNodeContents(document.getElementById('xlate-code'));
+          var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+          btn.textContent = 'Selected: press Ctrl + C';
+        }
+      });
+    }
+
     function runQuery() {
       showPane('result');
       var sql = userSql(); if (!sql) return;
@@ -533,6 +584,7 @@
           result.innerHTML = resultTable(LabDB.run(window.SEED_SQL, sql));
           clearHelp();
           show('info', 'Query ran. Select "Check answer" when the result looks right.');
+          showTranslate(sql);
         } catch (e) { sqlError(e); }
       }, engineError);
     }
@@ -565,6 +617,7 @@
         var v;
         try { v = LabDB.check(window.SEED_SQL, ex, sql); } catch (e) { sqlError(e); return; }
         result.innerHTML = resultTable(v.actual);
+        showTranslate(sql);
         if (v.ok) { onCorrect(v); return; }
         wrongHere += 1; Progress.addWrong(ex.id);
         show('bad', v.message);
@@ -693,15 +746,18 @@
     html += '</div>';
 
     html += '<div class="review-block"><h2>Quiz by subject</h2>' +
-      '<p>Multiple-choice questions on the ideas behind the work: ' + CQ_SIZE + ' per quiz, one area at a time or all of them together. Each answer comes with the plain meaning and a link to the glossary page.</p>' +
+      '<p>' + CQ_SIZE + ' multiple-choice questions at a time. Each subject has three levels: ' +
+        '<strong>Recognise</strong>, <strong>Apply</strong> and <strong>Explain</strong>. Score ' + (CQ_SIZE - 1) + ' or more twice to move up. ' +
+        'A term counts as mastered once you get it right on two different days.</p>' +
       '<div class="topic-quiz" role="group" aria-label="Quiz by subject">' +
       ['all'].concat(window.GLOSSARY_GROUPS.map(function (g) { return g.id; })).map(function (id) {
         var g = id === 'all' ? null : gGroup(id);
-        var n = id === 'all' ? window.GLOSSARY.length : termCount(id);
+        var n = id === 'all' ? window.GLOSSARY.length : termCount(id), m = masteredCount(id);
         return '<a class="topic-btn" ' + (g ? 'data-area="' + id + '" ' : '') + 'href="#/quiz/' + id + '">' +
           '<span class="tb-clause">' + esc(g ? (QUIZ_AREA[id] || g.name) : 'All areas') + '</span>' +
-          '<span class="tb-name">' + esc(g ? g.name : 'A mix from every area') + '</span>' +
-          '<span class="tb-meta">' + plural(n, 'term', 'terms') + '</span></a>';
+          '<span class="tb-name">' + esc(g ? levelLabel(Progress.quizLevel(id)) : 'A mix from every area') + '</span>' +
+          '<span class="tb-meta">' + m + ' of ' + plural(n, 'term', 'terms') + ' mastered</span>' +
+          '<span class="mastery-track" aria-hidden="true"><span class="mastery-fill" style="width:' + Math.round(100 * m / Math.max(1, n)) + '%"></span></span></a>';
       }).join('') + '</div></div>';
 
     if (hist.length) {
@@ -729,48 +785,111 @@
     var t = term.toLowerCase().replace(/\s*\(.*\)\s*/g, '').trim();
     return t.length >= 3 && text.toLowerCase().indexOf(t) !== -1;
   }
-  function buildSubjectQuiz(area) {
-    var pool = window.GLOSSARY.filter(function (t) { return area === 'all' || t.group === area; });
-    var qs = [];
-    shuffle(pool).forEach(function (t) {
-      if (qs.length >= CQ_SIZE) return;
-      var kinds = [];
-      if (!mentions(t.def, t.term)) kinds.push('def');
-      var bq = (t.questions || []).filter(function (q) { return !mentions(q, t.term); });
-      if (bq.length) kinds.push('biz');
-      if (!kinds.length) return;
-      var kind = kinds[Math.floor(Math.random() * kinds.length)];
-      var same = pool.filter(function (x) { return x !== t && x.group === t.group; });
-      var others = shuffle(same.length >= 3 ? same : pool.filter(function (x) { return x !== t; })).slice(0, 3);
-      var opts = shuffle([t].concat(others)).map(function (x) { return x.id; });
-      qs.push({
-        id: t.id, kind: kind, opts: opts,
-        text: kind === 'def' ? t.def : bq[Math.floor(Math.random() * bq.length)]
+  // Levels change the kind of question, so a subject feels new again as you improve.
+  var QLEVELS = {
+    1: { name: 'Recognise', kinds: ['def'], blurb: 'Read a meaning, pick the term.' },
+    2: { name: 'Apply', kinds: ['biz', 'ex'], blurb: 'Business questions and examples: which term fits?' },
+    3: { name: 'Explain', kinds: ['rev', 'say', 'bug'], blurb: 'Pick the right meaning, spot the common mistake, match the interview answer.' }
+  };
+  var QPROMPT = {
+    def: 'Which term fits this meaning?',
+    biz: 'A colleague asks the question below. Which term helps you answer it?',
+    ex: 'Which term does this example show?',
+    rev: 'Which is the right meaning of this term?',
+    say: 'Someone says this in an interview. Which term are they explaining?',
+    bug: 'This is a common mistake. Which term is it about?'
+  };
+  function levelLabel(n) { return 'Level ' + n + ': ' + QLEVELS[n].name; }
+  function areaLabel(area) { return area === 'all' ? 'All areas' : QUIZ_AREA[area]; }
+  function areaTerms(area) { return window.GLOSSARY.filter(function (t) { return area === 'all' || t.group === area; }); }
+  function masteredCount(area) { return areaTerms(area).filter(function (t) { return Progress.isMastered(t.id); }).length; }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  // What each kind of question can be made from, for one term. Text that names the term is left out, so it never gives the answer away.
+  function questionMaterial(t, kind) {
+    if (kind === 'def') return mentions(t.def, t.term) ? null : t.def;
+    if (kind === 'biz') { var b = (t.questions || []).filter(function (q) { return !mentions(q, t.term); }); return b.length ? pick(b) : null; }
+    if (kind === 'ex') return t.ex && !mentions(t.ex, t.term) ? t.ex : null;
+    if (kind === 'rev') return t.term;
+    if (kind === 'say') return t.say && !mentions(t.say, t.term) ? t.say : null;
+    if (kind === 'bug') { var m = (t.mistakes || []).filter(function (x) { return !mentions(x, t.term); }); return m.length ? pick(m) : null; }
+    return null;
+  }
+
+  // Order of preference: never seen, answered wrong last time, not mastered yet, then mastered (one comes back now and then).
+  function termPriority(t) {
+    var st = Progress.termStat(t.id);
+    if (!st) return 0;
+    if (st.last === 'w') return 1;
+    if (!Progress.isMastered(t.id)) return 2;
+    return 3;
+  }
+
+  function buildSubjectQuiz(area, retryIds) {
+    var pool = areaTerms(area), chosen;
+    if (retryIds) {
+      chosen = retryIds.map(gTerm).filter(Boolean);
+    } else {
+      var recent = Progress.recentTerms(area);
+      var fresh = pool.filter(function (t) { return recent.indexOf(t.id) === -1; });
+      if (fresh.length < CQ_SIZE) fresh = pool.slice();
+      var ranked = shuffle(fresh).sort(function (a, b) { return termPriority(a) - termPriority(b); });
+      chosen = ranked.slice(0, CQ_SIZE);
+      var mastered = ranked.filter(function (t) { return termPriority(t) === 3; });
+      if (mastered.length && !chosen.some(function (t) { return termPriority(t) === 3; }) && chosen.length === CQ_SIZE) {
+        chosen[chosen.length - 1] = pick(mastered); // keep what you know fresh
+      }
+      chosen = shuffle(chosen);
+      // spares, in case a chosen term cannot make a question: the rest of the ranking, then recently used terms
+      chosen = chosen.concat(ranked.filter(function (t) { return chosen.indexOf(t) === -1; }),
+        shuffle(pool.filter(function (t) { return ranked.indexOf(t) === -1; })));
+    }
+    var qs = [], limit = retryIds ? chosen.length : CQ_SIZE;
+    chosen.forEach(function (t) {
+      if (qs.length >= limit) return;
+      var lvl = Progress.quizLevel(t.group), kind = null, text = null;
+      // try this level, then easier levels, then harder ones, so every term can still be asked
+      [lvl, lvl - 1, lvl - 2, lvl + 1, lvl + 2].filter(function (L) { return L >= 1 && L <= 3; }).some(function (L) {
+        shuffle(QLEVELS[L].kinds.slice()).some(function (k) { var m = questionMaterial(t, k); if (m) { kind = k; text = m; } return !!m; });
+        return !!kind;
       });
+      if (!kind) return;
+      // wrong options: from Level 2, related terms first, because they are harder to tell apart
+      var same = pool.filter(function (x) { return x !== t && x.group === t.group; });
+      if (same.length < 3) same = window.GLOSSARY.filter(function (x) { return x !== t && x.group === t.group; });
+      var related = lvl >= 2 ? same.filter(function (x) { return (t.rel || []).indexOf(x.id) !== -1; }) : [];
+      var rest = shuffle(same.filter(function (x) { return related.indexOf(x) === -1; }));
+      var others = shuffle(related).concat(rest).slice(0, 3);
+      qs.push({ id: t.id, kind: kind, text: text, level: lvl, opts: shuffle([t].concat(others)).map(function (x) { return x.id; }) });
     });
     return qs;
   }
 
-  function renderSubjectQuiz(area) {
+  function renderSubjectQuiz(area, retryIds) {
     teardown();
     var valid = area === 'all' || window.GLOSSARY_GROUPS.some(function (g) { return g.id === area; });
     if (!valid) { window.location.hash = '#/review'; return; }
-    cq = { area: area, qs: buildSubjectQuiz(area), i: 0, score: 0, missed: [], saved: false };
+    cq = { area: area, qs: buildSubjectQuiz(area, retryIds), i: 0, score: 0, missed: [], saved: false, retry: !!retryIds,
+      level: area === 'all' ? 0 : Progress.quizLevel(area), mastered0: masteredCount(area) };
+    if (!cq.retry) Progress.setRecentTerms(area, cq.qs.map(function (q) { return q.id; }));
     paintSubjectQuestion();
   }
 
   function paintSubjectQuestion() {
     if (cq.i >= cq.qs.length) { paintSubjectResults(); return; }
     var q = cq.qs[cq.i], n = cq.qs.length, k = cq.i + 1;
-    var label = cq.area === 'all' ? 'All areas' : QUIZ_AREA[cq.area];
-    var prompt = q.kind === 'def' ? 'Which term fits this meaning?' : 'A colleague asks the question below. Which term helps you answer it?';
+    var crumb = cq.retry ? 'Retry: ' + areaLabel(cq.area) : areaLabel(cq.area) + ' quiz' + (cq.level ? ', ' + levelLabel(cq.level) : '');
+    var t0 = gTerm(q.id);
+    var shown = q.kind === 'rev' ? '<p class="sq-term">' + esc(t0.term) + '</p>'
+      : q.kind === 'ex' && t0.exCode ? '<pre class="t-code sq-code">' + esc(q.text) + '</pre>'
+      : '<blockquote class="sq-text">' + esc(q.text) + '</blockquote>';
     view.innerHTML = '<section class="review subject-quiz"' + (cq.area === 'all' ? '' : ' data-area="' + cq.area + '"') + '>' +
-      '<p class="crumb"><a href="#/review">Review</a> / ' + esc(label) + ' quiz, question ' + k + ' of ' + n + '</p>' +
+      '<p class="crumb"><a href="#/review">Review</a> / ' + esc(crumb) + ', question ' + k + ' of ' + n + '</p>' +
       '<progress class="bar" max="' + n + '" value="' + (k - 1) + '" aria-label="Progress through the quiz"></progress>' +
-      '<h1 class="sq-prompt" id="sq-prompt" tabindex="-1">' + prompt + '</h1>' +
-      '<blockquote class="sq-text">' + esc(q.text) + '</blockquote>' +
-      '<div class="sq-opts" role="group" aria-labelledby="sq-prompt">' + q.opts.map(function (id) {
-        return '<button type="button" class="sq-opt" data-opt="' + id + '"' + (cq.area === 'all' ? ' data-area="' + gTerm(id).group + '"' : '') + '>' + esc(gTerm(id).term) + '</button>';
+      '<h1 class="sq-prompt" id="sq-prompt" tabindex="-1">' + QPROMPT[q.kind] + '</h1>' + shown +
+      '<div class="sq-opts' + (q.kind === 'rev' ? ' sq-opts-long' : '') + '" role="group" aria-labelledby="sq-prompt">' + q.opts.map(function (id) {
+        var o = gTerm(id);
+        return '<button type="button" class="sq-opt" data-opt="' + id + '"' + (cq.area === 'all' ? ' data-area="' + o.group + '"' : '') + '>' + esc(q.kind === 'rev' ? o.def : o.term) + '</button>';
       }).join('') + '</div>' +
       '<div id="sq-feedback" class="sq-feedback" role="status" aria-live="polite"></div>' +
       '<p class="sq-actions"><button type="button" class="btn" id="sq-skip">Skip this one</button></p>' +
@@ -781,6 +900,7 @@
     function reveal(chosen) {
       if (done) return; done = true;
       var right = chosen === q.id, t = gTerm(q.id);
+      Progress.termResult(q.id, right);
       if (right) cq.score += 1; else cq.missed.push({ id: q.id, skipped: chosen === null });
       Array.prototype.forEach.call(view.querySelectorAll('.sq-opt'), function (b) {
         var id = b.getAttribute('data-opt'); b.disabled = true;
@@ -790,6 +910,7 @@
       var fb = document.getElementById('sq-feedback');
       fb.className = 'sq-feedback ' + (right ? 'good' : 'bad');
       fb.innerHTML = '<p><strong>' + (right ? 'Correct.' : chosen === null ? 'Skipped.' : 'Not quite.') + '</strong> ' + esc(t.term) + ': ' + esc(t.def) + '</p>' +
+        (right && Progress.isMastered(t.id) ? '<p class="sq-mastered">You have now mastered ' + esc(t.term) + '.</p>' : '') +
         '<p><a href="' + termLink(t) + '">Read the full page for ' + esc(t.term) + '</a></p>' +
         '<p><button type="button" class="btn primary" id="sq-next">' + (k === n ? 'See results' : 'Next question') + '</button></p>';
       document.getElementById('sq-skip').parentNode.hidden = true;
@@ -803,25 +924,91 @@
     document.getElementById('sq-skip').addEventListener('click', function () { reveal(null); });
   }
 
+  // The subject that most needs work: fewest terms mastered, as a share of its size.
+  function weakestSubject(except) {
+    var best = null, bestShare = 2;
+    window.GLOSSARY_GROUPS.forEach(function (g) {
+      if (g.id === except) return;
+      var share = masteredCount(g.id) / Math.max(1, termCount(g.id));
+      if (share < bestShare) { bestShare = share; best = g.id; }
+    });
+    return best;
+  }
+
   function paintSubjectResults() {
-    var total = cq.qs.length, label = cq.area === 'all' ? 'All areas' : QUIZ_AREA[cq.area];
-    if (!cq.saved) { Progress.addQuiz(cq.score, total, 'area:' + cq.area); cq.saved = true; }
-    view.innerHTML = '<section class="review"' + (cq.area === 'all' ? '' : ' data-area="' + cq.area + '"') + '><h1>' + esc(label) + ' quiz results</h1>' +
-      '<p class="lede">You got ' + cq.score + ' of ' + total + ' right.' + (cq.missed.length ? ' These are worth another look:' : ' Every one, no bugs found.') + '</p>' +
-      (cq.missed.length ? '<ul class="plain results">' + cq.missed.map(function (m) {
+    var total = cq.qs.length, label = areaLabel(cq.area), area = cq.area;
+    var strong = total >= CQ_SIZE && cq.score >= CQ_SIZE - 1;
+    if (!cq.saved) {
+      cq.saved = true;
+      if (!cq.retry) Progress.addQuiz(cq.score, total, 'area:' + area);
+      cq.pass = (!cq.retry && strong && area !== 'all' && cq.level < 3) ? Progress.quizPass(area) : null;
+    }
+    var level = area === 'all' ? 0 : Progress.quizLevel(area);
+    var nTerms = areaTerms(area).length, mastered = masteredCount(area), gained = mastered - cq.mastered0;
+    var unseen = areaTerms(area).filter(function (t) { return !Progress.termStat(t.id); }).length;
+    var missedIds = cq.missed.map(function (m) { return m.id; });
+
+    // one clear next step
+    var step;
+    if (cq.retry) {
+      step = missedIds.length
+        ? { kind: 'retry', label: missedIds.length === 1 ? 'Retry the one still missed' : 'Retry the ' + missedIds.length + ' still missed', why: 'Read their glossary pages first, then try again.' }
+        : { kind: 'again', label: 'Back to a full ' + label.toLowerCase() + ' quiz', why: 'All fixed. Those terms will come back later to check they stuck.' };
+    } else if (cq.pass && cq.pass.levelledUp) {
+      step = { kind: 'again', label: 'Start a ' + levelLabel(cq.pass.level) + ' quiz', why: 'Level up! ' + QLEVELS[cq.pass.level].blurb };
+    } else if (cq.score <= total / 2 && missedIds.length) {
+      step = { kind: 'retry', label: missedIds.length === 1 ? 'Retry the one you missed' : 'Retry just the ' + missedIds.length + ' you missed', why: 'A short round on your misses fixes them faster than a new quiz.' };
+    } else if (area !== 'all' && level === 3 && mastered === nTerms) {
+      var w = weakestSubject(area);
+      step = { kind: 'go', href: '#/quiz/' + w, label: 'Try ' + QUIZ_AREA[w] + ' next', why: 'You have mastered every ' + label + ' term at the top level. This subject is complete.' };
+    } else {
+      var why;
+      if (area !== 'all' && level < 3 && strong) why = 'One more score of ' + (CQ_SIZE - 1) + ' or more moves you up to ' + levelLabel(level + 1) + '.';
+      else if (area !== 'all' && level < 3) why = 'Score ' + (CQ_SIZE - 1) + ' or more twice to reach ' + levelLabel(level + 1) + '.';
+      else why = unseen ? 'The next quiz starts with the ' + plural(unseen, 'term', 'terms') + ' you have not seen yet.' : 'The next quiz focuses on terms you have not mastered yet.';
+      step = { kind: 'again', label: unseen ? 'Next quiz: new terms first' : 'Next quiz: terms to master', why: why };
+    }
+
+    view.innerHTML = '<section class="review"' + (area === 'all' ? '' : ' data-area="' + area + '"') + '>' +
+      '<h1 tabindex="-1" id="sq-results">' + esc(cq.retry ? 'Retry results' : label + ' quiz results') + '</h1>' +
+      '<p class="lede">You got ' + cq.score + ' of ' + total + ' right.' + (cq.missed.length ? '' : ' Every one, no bugs found.') + '</p>' +
+      '<div class="sq-next-step"><p class="sq-why">' + esc(step.why) + '</p>' +
+        (step.kind === 'go' ? '<a class="btn primary" href="' + step.href + '">' + esc(step.label) + '</a>'
+          : '<button type="button" class="btn primary" id="sq-step">' + esc(step.label) + '</button>') + '</div>' +
+      '<div class="sq-standing"><h2>Where you are</h2>' +
+        masteryBar(area) +
+        (gained > 0 ? '<p class="meta-line">' + plural(gained, 'term', 'terms') + ' newly mastered in this quiz.</p>' : '') +
+        (area !== 'all' ? '<p class="meta-line">' + esc(levelLabel(level)) + (level < 3 ? ', ' + plural(Progress.quizPasses(area), 'strong score', 'strong scores') + ' of 2 towards the next level' : ', the top level') + '.</p>' : '') +
+      '</div>' +
+      (cq.missed.length ? '<h2>Worth another look</h2><ul class="plain results">' + cq.missed.map(function (m) {
         var t = gTerm(m.id);
         return '<li><a href="' + termLink(t) + '">' + esc(t.term) + '</a><span class="meta">' + (m.skipped ? 'Skipped' : 'Missed') + '</span></li>';
       }).join('') + '</ul>' : '') +
-      '<p class="intro-actions"><a class="btn primary" href="#/quiz/' + cq.area + '" id="sq-again">Try another ' + esc(label.toLowerCase()) + ' quiz</a>' +
-      '<a class="btn" href="#/review">Back to review</a></p></section>';
+      '<p class="intro-actions"><a class="btn" href="#/review">Back to review</a></p></section>';
     window.scrollTo(0, 0);
+    var hh = document.getElementById('sq-results'); if (hh) hh.focus();
     if (window.Byte) {
       var share = total ? cq.score / total : 0;
-      if (share >= 0.75) byteLater(function () { Byte.say('happy', cq.score === total ? 'A perfect run! Not one bug got past you.' : 'Strong work. ' + cq.score + ' of ' + total + '. The rest are worth a glance.'); }, 500);
+      if (cq.pass && cq.pass.levelledUp) byteLater(function () { Byte.say('happy', 'Level up! The questions change now, so it will feel new again.'); }, 500);
+      else if (share >= 0.75) byteLater(function () { Byte.say('happy', cq.score === total ? 'A perfect run! Not one bug got past you.' : 'Strong work. ' + cq.score + ' of ' + total + '. The rest are worth a glance.'); }, 500);
       else byteLater(function () { Byte.say('idle', 'Every miss is a lesson. Open those pages, then come back for another go.'); }, 500);
     }
-    var again = document.getElementById('sq-again');
-    if (again) again.addEventListener('click', function (e) { e.preventDefault(); renderSubjectQuiz(cq.area); });
+    var btn = document.getElementById('sq-step');
+    if (btn) btn.addEventListener('click', function () {
+      if (step.kind === 'retry') renderSubjectQuiz(area, missedIds);
+      else renderSubjectQuiz(area);
+    });
+  }
+
+  // read-only peek for the automated tests
+  window.__quizState = function () { return cq; };
+  window.__quizJump = function (i) { cq.i = i; paintSubjectQuestion(); };
+
+  // "9 of 16 terms mastered" with a bar
+  function masteryBar(area) {
+    var n = areaTerms(area).length, m = masteredCount(area);
+    return '<div class="mastery"><span class="mastery-text">' + m + ' of ' + plural(n, 'term', 'terms') + ' mastered</span>' +
+      '<span class="mastery-track" aria-hidden="true"><span class="mastery-fill" style="width:' + Math.round(100 * m / Math.max(1, n)) + '%"></span></span></div>';
   }
 
   function sessionLabel() {
@@ -872,107 +1059,8 @@
     }
   }
 
-  // ---------- view: dialects ----------
-  function dialectTabs(active) {
-    return '<nav class="tabs" aria-label="Dialect sections">' +
-      '<a href="#/dialects"' + (active === 'compare' ? ' aria-current="page"' : '') + '>Compare</a>' +
-      '<a href="#/dialects/translate"' + (active === 'translate' ? ' aria-current="page"' : '') + '>Translate drills</a></nav>';
-  }
-
-  function renderDialects() {
-    teardown();
-    var groups = [];
-    window.DIALECT_ROWS.forEach(function (r) { if (groups.indexOf(r.group) === -1) groups.push(r.group); });
-    var shownCount = window.DIALECTS.filter(function (d) { return dialectShow[d.id]; }).length;
-
-    var html = '<section class="dialects"><h1>SQL dialects</h1>' +
-      '<p class="lede">The core of SQL is the same everywhere. What changes is mostly dates, text functions and a few clauses. Only SQLite runs inside this site; the others are shown for comparison.</p>' +
-      dialectTabs('compare') +
-      '<div class="g-groups" role="group" aria-label="Dialects to show">' + window.DIALECTS.map(function (d) {
-        return '<button type="button" class="pill' + (dialectShow[d.id] ? ' on' : '') + '" data-dialect="' + d.id + '" aria-pressed="' + dialectShow[d.id] + '">' + esc(d.name) + '</button>';
-      }).join('') + '</div>';
-
-    groups.forEach(function (g) {
-      html += '<h2 class="dgroup">' + esc(g) + '</h2>';
-      window.DIALECT_ROWS.filter(function (r) { return r.group === g; }).forEach(function (r) {
-        html += '<article class="dcard"><h3>' + esc(r.title) + '</h3><div class="dgrid cols-' + shownCount + '">' +
-          window.DIALECTS.filter(function (d) { return dialectShow[d.id]; }).map(function (d) {
-            return '<div class="dcol"><h4>' + esc(d.name) + '</h4><pre>' + esc(r[d.id]) + '</pre></div>';
-          }).join('') + '</div>' +
-          '<p class="dnote">' + esc(r.note) + '</p>' +
-          (r.try ? '<div class="actions"><button type="button" class="btn quiet" data-try="' + r.id + '">Run the SQLite version</button></div><div class="try-out" id="out-' + r.id + '"></div>' : '') +
-          '</article>';
-      });
-    });
-    html += '</section>';
-    view.innerHTML = html;
-
-    Array.prototype.forEach.call(view.querySelectorAll('[data-dialect]'), function (b) {
-      b.addEventListener('click', function () {
-        var id = b.getAttribute('data-dialect');
-        var on = window.DIALECTS.filter(function (d) { return dialectShow[d.id]; }).length;
-        if (dialectShow[id] && on === 1) return; // keep at least one column
-        dialectShow[id] = !dialectShow[id]; renderDialects();
-      });
-    });
-    Array.prototype.forEach.call(view.querySelectorAll('[data-try]'), function (b) {
-      b.addEventListener('click', function () {
-        var row = byId(window.DIALECT_ROWS, b.getAttribute('data-try'));
-        var out = document.getElementById('out-' + row.id);
-        loadEngine().then(function () {
-          try { out.innerHTML = '<pre class="tried">' + esc(row.try) + '</pre>' + resultTable(LabDB.run(window.SEED_SQL, row.try)); }
-          catch (e) { out.innerHTML = '<p class="feedback bad">SQL error: ' + esc(e.message) + '</p>'; }
-        }, function () { out.innerHTML = '<p class="feedback bad">The SQL engine could not load. Open the site with Live Server.</p>'; });
-      });
-    });
-  }
-
-  function renderTranslate(id) {
-    teardown();
-    var q = byId(window.TRANSLATE, id) || window.TRANSLATE.filter(function (x) { return !Progress.dialectDone(x.id); })[0] || window.TRANSLATE[0];
-    var idx = window.TRANSLATE.indexOf(q);
-    var options = shuffle(q.options.map(function (text, i) { return { text: text, correct: i === q.answer }; }));
-    var done = window.TRANSLATE.filter(function (x) { return Progress.dialectDone(x.id); }).length;
-    var isQuestion = q.kind === 'question';
-
-    view.innerHTML = '<section class="dialects"><h1>Translate drills</h1>' + dialectTabs('translate') +
-      '<p class="drill-count">Question ' + (idx + 1) + ' of ' + window.TRANSLATE.length + ', ' + done + ' answered correctly' +
-        (Progress.dialectDone(q.id) ? ' <span class="badge">Done</span>' : '') + '</p>' +
-      '<h2 class="goal">' + (isQuestion ? 'A question about ' + esc(q.to) : 'Translate from ' + esc(q.from) + ' to ' + esc(q.to)) + '</h2>' +
-      '<pre class="q-code">' + esc(q.code) + '</pre>' +
-      '<div class="opts" role="group" aria-label="Choose one answer">' + options.map(function (o, i) {
-        return '<button type="button" class="opt" data-i="' + i + '"><code>' + esc(o.text) + '</code></button>';
-      }).join('') + '</div>' +
-      '<div id="feedback" role="status" aria-live="polite"></div>' +
-      '<div id="after"></div>' +
-      '<nav class="pager" aria-label="Translate drills">' +
-        (idx > 0 ? '<a href="#/dialects/translate/' + window.TRANSLATE[idx - 1].id + '">Previous question</a>' : '<span></span>') +
-        (idx < window.TRANSLATE.length - 1 ? '<a href="#/dialects/translate/' + window.TRANSLATE[idx + 1].id + '">Next question</a>' : '<a href="#/dialects">Back to the comparison</a>') +
-      '</nav></section>';
-
-    var locked = false;
-    Array.prototype.forEach.call(view.querySelectorAll('.opt'), function (btn) {
-      btn.addEventListener('click', function () {
-        if (locked) return;
-        var pick = options[Number(btn.getAttribute('data-i'))];
-        var fb = document.getElementById('feedback');
-        if (pick.correct) {
-          locked = true; Progress.markDialect(q.id); btn.classList.add('right');
-          fb.className = 'feedback good'; fb.textContent = 'Correct. ' + q.why;
-          if (window.Byte) Byte.happy();
-          if (idx < window.TRANSLATE.length - 1) {
-            document.getElementById('after').innerHTML = '<a class="btn primary" href="#/dialects/translate/' + window.TRANSLATE[idx + 1].id + '">Next question</a>';
-          }
-        } else {
-          btn.classList.add('wrong'); btn.disabled = true;
-          fb.className = 'feedback bad'; fb.textContent = 'Not that one. Look again at how the clauses and function names are written in ' + q.to + ', then try another option.';
-        }
-      });
-    });
-  }
-
   // ---------- view: glossary ----------
-  var glossaryState = { q: '', group: 'All', mode: 'index', card: 0, revealed: false };
+  var glossaryState = { q: '', group: 'All', mode: 'index', card: 0, revealed: false, open: {} }; // open: areas the visitor has expanded
   function gGroup(id) { return byId(window.GLOSSARY_GROUPS, id); }
   function gTerm(id) { return byId(window.GLOSSARY, id); }
   function byTerm(a, b) { return a.term.toLowerCase() < b.term.toLowerCase() ? -1 : 1; }
@@ -1029,6 +1117,46 @@
     paintGlossary();
   }
 
+  // An area heading is a button that opens or closes its terms. Areas start closed, so the page stays short.
+  // They open on their own when a search is typed, or when only one area is showing.
+  function areaIsOpen(id, onlyOne) { return onlyOne || !!glossaryState.q.trim() || !!glossaryState.open[id]; }
+  function areaSection(g, onlyOne, tally, inner) {
+    var open = areaIsOpen(g.id, onlyOne);
+    return '<section class="g-area" data-area="' + g.id + '">' +
+      '<h2 class="g-area-head"><button type="button" class="g-toggle" data-toggle="' + g.id + '" aria-expanded="' + open + '" aria-controls="gb-' + g.id + '" id="ga-' + g.id + '">' +
+        '<span class="g-chev" aria-hidden="true"></span><span class="g-name">' + esc(g.name) + '</span><span class="tally">' + esc(tally) + '</span></button></h2>' +
+      '<div class="g-area-body" id="gb-' + g.id + '"' + (open ? '' : ' hidden') + '>' + inner + '</div></section>';
+  }
+  function wireAreaToggles(onlyOne) {
+    var heads = view.querySelectorAll('[data-toggle]');
+    Array.prototype.forEach.call(heads, function (b) {
+      b.addEventListener('click', function () {
+        var id = b.getAttribute('data-toggle'), open = b.getAttribute('aria-expanded') !== 'true';
+        glossaryState.open[id] = open;
+        b.setAttribute('aria-expanded', String(open));
+        document.getElementById('gb-' + id).hidden = !open;
+        syncOpenAll();
+      });
+    });
+    var all = document.getElementById('g-open-all');
+    if (all) all.addEventListener('click', function () {
+      var openNow = all.getAttribute('data-state') !== 'open';
+      Array.prototype.forEach.call(heads, function (b) {
+        var id = b.getAttribute('data-toggle');
+        glossaryState.open[id] = openNow; b.setAttribute('aria-expanded', String(openNow));
+        document.getElementById('gb-' + id).hidden = !openNow;
+      });
+      syncOpenAll();
+    });
+    function syncOpenAll() {
+      if (!all) return;
+      var anyClosed = Array.prototype.some.call(heads, function (b) { return b.getAttribute('aria-expanded') !== 'true'; });
+      all.textContent = anyClosed ? 'Open all areas' : 'Close all areas';
+      all.setAttribute('data-state', anyClosed ? 'closed' : 'open');
+    }
+    syncOpenAll();
+  }
+
   function paintGlossary() {
     var body = document.getElementById('g-body'), count = document.getElementById('g-count');
     var items = glossaryItems().sort(byTerm);
@@ -1038,16 +1166,18 @@
 
     if (glossaryState.mode === 'index') {
       count.textContent = q ? plural(items.length, 'term matches', 'terms match') + ' "' + q + '"' : '';
-      body.innerHTML = groupsShown.map(function (g) {
-        var list = items.filter(function (t) { return t.group === g.id; });
-        return '<section class="g-area" data-area="' + g.id + '" aria-labelledby="ga-' + g.id + '">' +
-          '<div class="g-area-head"><h2 id="ga-' + g.id + '">' + esc(g.name) + '</h2><span class="tally">' + plural(list.length, 'term', 'terms') + '</span></div>' +
-          '<p class="g-blurb">' + esc(g.blurb) + '</p>' +
-          '<ul class="g-index">' + list.map(function (t) {
-            return '<li class="term"><a href="' + termLink(t) + '"><span class="g-term">' + esc(t.term) + '</span>' +
-              '<span class="g-def">' + esc(t.def) + '</span><span class="area sr">' + esc(t.group) + '</span></a></li>';
-          }).join('') + '</ul></section>';
-      }).join('');
+      var one = groupsShown.length === 1;
+      body.innerHTML = (one || q ? '' : '<p class="g-open-all-row"><button type="button" class="linkish" id="g-open-all">Open all areas</button></p>') +
+        groupsShown.map(function (g) {
+          var list = items.filter(function (t) { return t.group === g.id; });
+          return areaSection(g, one, plural(list.length, 'term', 'terms'),
+            '<p class="g-blurb">' + esc(g.blurb) + '</p>' +
+            '<ul class="g-index">' + list.map(function (t) {
+              return '<li class="term"><a href="' + termLink(t) + '"><span class="g-term">' + esc(t.term) + '</span>' +
+                '<span class="g-def">' + esc(t.def) + '</span><span class="area sr">' + esc(t.group) + '</span></a></li>';
+            }).join('') + '</ul>');
+        }).join('');
+      wireAreaToggles(one);
       return;
     }
 
@@ -1055,13 +1185,17 @@
       var withQ = items.filter(function (t) { return t.questions && t.questions.length; });
       var total = withQ.reduce(function (n, t) { return n + t.questions.length; }, 0);
       count.textContent = plural(total, 'question', 'questions') + ' the business asks, each linked to the term that helps answer it.';
-      body.innerHTML = groupsShown.filter(function (g) { return withQ.some(function (t) { return t.group === g.id; }); }).map(function (g) {
-        var rows = [];
-        withQ.filter(function (t) { return t.group === g.id; }).forEach(function (t) {
-          t.questions.forEach(function (qq) { rows.push('<li><span class="bq-q">' + esc(qq) + '</span><a class="bq-t" href="' + termLink(t) + '">' + esc(t.term) + '</a></li>'); });
-        });
-        return '<section class="g-area" data-area="' + g.id + '"><div class="g-area-head"><h2>' + esc(g.name) + '</h2></div><ul class="bq-list">' + rows.join('') + '</ul></section>';
-      }).join('');
+      var qGroups = groupsShown.filter(function (g) { return withQ.some(function (t) { return t.group === g.id; }); });
+      var oneQ = qGroups.length === 1;
+      body.innerHTML = (oneQ || q ? '' : '<p class="g-open-all-row"><button type="button" class="linkish" id="g-open-all">Open all areas</button></p>') +
+        qGroups.map(function (g) {
+          var rows = [];
+          withQ.filter(function (t) { return t.group === g.id; }).forEach(function (t) {
+            t.questions.forEach(function (qq) { rows.push('<li><span class="bq-q">' + esc(qq) + '</span><a class="bq-t" href="' + termLink(t) + '">' + esc(t.term) + '</a></li>'); });
+          });
+          return areaSection(g, oneQ, plural(rows.length, 'question', 'questions'), '<ul class="bq-list">' + rows.join('') + '</ul>');
+        }).join('');
+      wireAreaToggles(oneQ);
       return;
     }
 
@@ -1087,6 +1221,26 @@
   }
 
   // ---------- view: one glossary term ----------
+  // the side-by-side table on the "SQL dialect" term: one closed section per topic, so the page stays short
+  function dialectCompare() {
+    var rows = window.DIALECT_ROWS || [], groups = [];
+    rows.forEach(function (r) { if (groups.indexOf(r.group) === -1) groups.push(r.group); });
+    return '<section class="t-sec dialect-compare"><h2>How the databases differ</h2>' +
+      '<p>Open a topic to compare. SQLite is the one that runs on this site.</p>' +
+      groups.map(function (g) {
+        return '<details class="dc-group"><summary>' + esc(g) + '</summary>' +
+          rows.filter(function (r) { return r.group === g; }).map(function (r) {
+            return '<div class="dc-row"><h3>' + esc(r.title) + '</h3>' +
+              '<table class="dc-table"><caption class="sr">' + esc(r.title) + ' in each database</caption>' +
+              '<thead><tr><th scope="col">Database</th><th scope="col">How it is written</th></tr></thead><tbody>' +
+              window.DIALECTS.map(function (d) {
+                return '<tr><th scope="row">' + esc(d.name) + '</th><td><pre>' + esc(r[d.id]) + '</pre></td></tr>';
+              }).join('') + '</tbody></table>' +
+              '<p class="dc-note">' + esc(r.note) + '</p></div>';
+          }).join('') + '</details>';
+      }).join('') + '</section>';
+  }
+
   function renderTerm(id) {
     teardown();
     var t = gTerm(id);
@@ -1109,6 +1263,7 @@
         '<div class="t-main">' +
           '<section class="t-sec"><h2>Understand it</h2><p>' + esc(t.deep) + '</p></section>' +
           (t.ex ? '<section class="t-sec"><h2>Example</h2>' + (t.exCode ? '<pre class="t-code">' + esc(t.ex) + '</pre>' : '<p class="t-ex">' + esc(t.ex).replace(/\n/g, '<br>') + '</p>') + '</section>' : '') +
+          (t.compare ? dialectCompare() : '') +
           (t.mistakes ? '<section class="t-sec"><h2 class="with-byte">' + (window.Byte && Byte.enabled() ? Byte.mini('search', 30) : '') + '<span>Bugs Byte often finds</span></h2>' + list(t.mistakes) + '</section>' : '') +
         '</div>' +
         '<aside class="t-side" aria-label="Practise and connect">' +
@@ -1122,6 +1277,113 @@
         (prev ? '<a href="' + termLink(prev) + '">Previous: ' + esc(prev.term) + '</a>' : '<span></span>') +
         (next ? '<a href="' + termLink(next) + '">Next: ' + esc(next.term) + '</a>' : '<a href="#/glossary/' + t.group + '">All ' + esc(grp.name) + ' terms</a>') +
       '</nav></article>';
+  }
+
+  // ---------- view: Projects hub ----------
+  // data/projects.js holds one short entry per project. The full write-up is projects/<id>/PROJECT.md,
+  // which the site fetches and shows with js/markdown.js. Each "## 1. ..." heading in it is a step.
+  var SITE_URL_PUBLIC = 'https://danikabuilds.github.io/the-joinery/'; // links to this address inside a PROJECT.md stay in the site
+
+  function renderProjects() {
+    teardown();
+    var list = window.PROJECTS || [], soon = window.PROJECTS_COMING || [];
+    view.innerHTML = '<section class="projects"><h1>Projects</h1>' +
+      '<p class="lede">End-to-end projects with a business brief, data to download and free tools. Each one takes you from raw files to answers a manager can act on, with model answers to check your work.</p>' +
+      '<div class="pj-cards">' + list.map(function (p) {
+        var done = Progress.projectStepsDone(p.id), n = p.steps.length;
+        return '<a class="pj-card" href="#/projects/' + p.id + '">' +
+          '<h2>' + esc(p.fullTitle) + '</h2>' +
+          '<p class="pj-card-tag">' + esc(p.blurb) + '</p>' +
+          '<p class="pj-card-meta">' + esc(p.time) + '.</p>' +
+          '<p class="pj-card-progress">' + (done ? done + ' of ' + n + ' steps done' : n + ' steps') + '</p>' +
+          '<span class="mastery-track" aria-hidden="true"><span class="mastery-fill" style="width:' + Math.round(100 * done / n) + '%"></span></span></a>';
+      }).join('') +
+      soon.map(function (p) {
+        return '<div class="pj-card pj-soon"><h2>' + esc(p.level + ' ' + p.track + ': ' + p.title) + '</h2>' +
+          '<p class="pj-card-tag">' + esc(p.blurb) + '</p><p class="pj-card-progress">Coming next</p></div>';
+      }).join('') + '</div></section>';
+  }
+
+  var mdCache = {};
+  function renderProject(id, stepNo) {
+    teardown();
+    var p = byId(window.PROJECTS || [], id);
+    if (!p) { window.location.hash = '#/projects'; return; }
+    view.innerHTML = '<article class="project"><p class="crumb"><a href="#/projects">Projects</a> / ' + esc(p.title) + '</p><p class="empty">Loading the project…</p></article>';
+    var at = window.location.hash;
+    var got = mdCache[p.md] ? Promise.resolve(mdCache[p.md]) :
+      fetch(p.md).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); }).then(function (t) { mdCache[p.md] = t; return t; });
+    got.then(function (md) {
+      if (window.location.hash !== at) return; // the visitor moved on
+      paintProject(p, md, stepNo);
+    }, function () {
+      view.querySelector('.empty').innerHTML = 'The project could not be loaded. If you opened the site from a file, open it with Live Server instead. Otherwise refresh the page.';
+    });
+  }
+
+  function paintProject(p, md, stepNo) {
+    var base = p.md.replace(/[^/]+$/, '');
+    var html = Markdown.render(md, { base: base, site: SITE_URL_PUBLIC });
+    var art = document.createElement('article');
+    art.className = 'project';
+    art.innerHTML = '<p class="crumb"><a href="#/projects">Projects</a> / ' + esc(p.title) + '</p>' + html;
+    // group each "## N. Title" heading and what follows it into a step with a tick box
+    var steps = [], cur = null;
+    Array.prototype.slice.call(art.children).forEach(function (el) {
+      var m = el.tagName === 'H2' && /^(\d+)\.\s/.exec(el.textContent);
+      if (m) {
+        cur = document.createElement('section');
+        cur.className = 'pj-step'; cur.id = 'step-' + m[1];
+        cur.setAttribute('aria-labelledby', 'h-step-' + m[1]);
+        el.id = 'h-step-' + m[1];
+        el.innerHTML = '<span class="pj-num">' + m[1] + '</span>' + esc(el.textContent.replace(/^\d+\.\s*/, ''));
+        art.insertBefore(cur, el); cur.appendChild(el); steps.push(cur);
+      } else if (cur && el.tagName === 'HR') { cur = null; }
+      else if (cur) cur.appendChild(el);
+    });
+    var n = steps.length;
+    var progress = document.createElement('div');
+    progress.className = 'pj-progress';
+    progress.innerHTML = '<span id="pj-count"></span><span class="mastery-track" aria-hidden="true"><span class="mastery-fill" id="pj-bar"></span></span>';
+    if (steps[0]) art.insertBefore(progress, steps[0]);
+    steps.forEach(function (sec) {
+      var key = sec.id; // step-1, step-2 ...
+      var label = document.createElement('label');
+      label.className = 'pj-done';
+      label.innerHTML = '<input type="checkbox" data-step="' + key + '"' + (Progress.projectStep(p.id, key) ? ' checked' : '') + '> I have done this step';
+      sec.appendChild(label);
+    });
+    var first = art.querySelector('h1'); if (first) first.id = 'pj-title';
+    // lists made of download links (the .zip files) become download cards
+    Array.prototype.forEach.call(art.querySelectorAll('ul.pj-list'), function (ul) {
+      var items = ul.querySelectorAll('li');
+      if (items.length && Array.prototype.every.call(items, function (li) { var a = li.querySelector('a'); return a && /\.zip$/.test(a.getAttribute('href')); })) ul.classList.add('pj-dl-list');
+    });
+    view.innerHTML = ''; view.appendChild(art);
+
+    function sync() {
+      var done = Progress.projectStepsDone(p.id);
+      document.getElementById('pj-count').textContent = done + ' of ' + n + ' steps done';
+      document.getElementById('pj-bar').style.width = Math.round(100 * done / Math.max(1, n)) + '%';
+    }
+    Array.prototype.forEach.call(view.querySelectorAll('[data-step]'), function (cb) {
+      cb.addEventListener('change', function () {
+        Progress.setProjectStep(p.id, cb.getAttribute('data-step'), cb.checked); sync();
+        if (cb.checked && window.Byte && Progress.projectStepsDone(p.id) === n) Byte.say('happy', 'Project complete! Put it on GitHub and tell the world.');
+      });
+    });
+    Array.prototype.forEach.call(view.querySelectorAll('.pj-copy'), function (btn) {
+      btn.addEventListener('click', function () {
+        var text = btn.parentNode.nextElementSibling.textContent;
+        function done() { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); }
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () {});
+      });
+    });
+    sync();
+    if (stepNo) {
+      var target = document.getElementById('step-' + stepNo);
+      if (target) { target.scrollIntoView({ block: 'start' }); var hd = target.querySelector('h2'); if (hd) { hd.setAttribute('tabindex', '-1'); hd.focus({ preventScroll: true }); } }
+    }
   }
 
   // ---------- view: settings ----------
@@ -1309,7 +1571,7 @@
     review: ['A wrong answer in review is not a failure. It just brings the exercise back sooner.', 'A subject quiz feels like a screening test. Try one before an interview.'],
     quiz: ['Say the answer out loud before you pick. That is what an interview feels like.', 'A miss here is useful. The glossary page for it is one tap away.'],
     session: ['Skipping is allowed. The model answer will teach you, and it comes back later.'],
-    dialects: ['Dates, LIMIT and string functions are where dialects differ most. The rest is mostly the same.'],
+    projects: ['Try each step before opening the model answer. Getting stuck is where the learning happens.', 'Messy data is normal. Cleaning it well is half the job.'],
     glossary: ['Try the Business questions view. It is how interviewers actually ask.', 'Say the interview sentence out loud before you read it.', 'Flashcards work best when you explain the term to me first. I am a great listener.'],
     settings: ['You can turn me off here. I will not be offended. Much.'],
     progress: ['Look at "Needs attention" first. It is the shortest path to the next win.', 'Rest days are allowed. Bugs do not run away.']
@@ -1346,11 +1608,11 @@
     if (page === 'start') t = 'Choose your route';
     else if (page === 'lab') { var ex = parts[1] && (byId(window.EXERCISES, parts[1]) || nextUndone() || window.EXERCISES[0]); t = ex ? ex.title : 'SQL lab'; }
     else if (page === 'review' || page === 'session' || page === 'quiz') t = 'Review and quiz';
-    else if (page === 'dialects') t = 'Dialects';
     else if (page === 'glossary') { var gt = parts[1] === 'term' && gTerm(decodeURIComponent(parts[2] || '')); t = gt ? gt.term + ' (glossary)' : 'Glossary'; }
     else if (page === 'settings') t = 'Settings';
     else if (window.PAGES && window.PAGES[page]) t = window.PAGES[page].title;
     else if (page === 'progress') t = 'Your progress';
+    else if (page === 'projects') { var pj = parts && parts[1] && byId(window.PROJECTS || [], parts[1]); t = pj ? pj.title : 'Projects'; }
     else { var r = currentRoute(); t = r ? r.name : ''; }
     document.title = t ? t + ': ' + SITE : SITE;
   }
@@ -1359,6 +1621,7 @@
     var parts = (window.location.hash || '#/home').replace(/^#\//, '').split('/');
     var page = parts[0] || 'home';
     if (page === 'drills') { window.location.replace('#/lab'); return; } // the clause-order page was removed; old links land in the SQL lab
+    if (page === 'dialects') { window.location.replace('#/glossary/term/sql-dialect'); return; } // the Dialects page now lives in the glossary
     if (page === 'home' && !currentRoute()) page = 'start'; // first visit: ask where they are starting
     teardown();
     setMenu(false);
@@ -1368,9 +1631,9 @@
     else if (page === 'review') renderReview();
     else if (page === 'session') renderSession();
     else if (page === 'quiz') renderSubjectQuiz(decodeURIComponent(parts[1] || 'all'));
-    else if (page === 'dialects') { if (parts[1] === 'translate') renderTranslate(parts[2]); else renderDialects(); }
     else if (page === 'glossary') { if (parts[1] === 'term') renderTerm(decodeURIComponent(parts[2] || '')); else renderGlossary(decodeURIComponent(parts[1] || '')); }
     else if (page === 'settings') renderSettings();
+    else if (page === 'projects') { if (parts[1]) renderProject(decodeURIComponent(parts[1]), parseInt(parts[2], 10) || 0); else renderProjects(); }
     else if (window.PAGES && window.PAGES[page]) renderInfo(page);
     else if (page === 'progress') { renderHome(); var yp = document.getElementById('your-progress'); if (yp) setTimeout(function () { yp.scrollIntoView(); }, 0); }
     else { page = 'home'; renderHome(); }

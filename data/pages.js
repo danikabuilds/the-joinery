@@ -15,12 +15,14 @@ window.PAGES = {
         '<li><strong>SQL lab:</strong> ' + window.EXERCISES.length + ' exercises that run in your browser, with hints and a model answer.</li>' +
         '<li><strong>Glossary:</strong> ' + window.GLOSSARY.length + ' data terms in six areas, each with a deeper explanation, business questions and a sentence you can say in an interview.</li>' +
         '<li><strong>Review and quizzes:</strong> spaced reviews and quizzes by subject.</li>' +
-        '<li><strong>Dialects:</strong> SQLite, PostgreSQL, SQL Server and BigQuery side by side.</li>' +
+        '<li><strong>Translate to another database:</strong> run a query in the lab and see it written for PostgreSQL, SQL Server, BigQuery or Snowflake.</li>' +
+        '<li><strong>Projects:</strong> end-to-end projects with a business brief, data to download, Python and SQL steps, and model answers.</li>' +
         '<li><strong>Say it out loud:</strong> timed spoken explanations, because explaining an answer is a skill of its own.</li>' +
         '</ul>' +
         '<h2>Good to know</h2>' +
         '<ul>' +
         '<li>It is free, with no accounts and no ads.</li>' +
+        '<li>Visits are counted with <a href="https://www.goatcounter.com">GoatCounter</a>, which uses no cookies and collects no personal data. Your progress stays in your own browser.</li>' +
         '<li>The practice data is made up. It is shaped like the Olist online-shop dataset, but no real customers are in it.</li>' +
         '<li>Byte the beetle gives scripted tips. Byte is not an AI chatbot.</li>' +
         '<li>This is a side project, built carefully but by one person. If something is wrong, <a href="#/contact">tell me</a>.</li>' +
@@ -79,19 +81,19 @@ window.PAGES = {
         '<ul>' +
         '<li>SQL lab with ' + window.EXERCISES.length + ' exercises across seven topics.</li>' +
         '<li>Glossary with ' + window.GLOSSARY.length + ' terms, flashcards and business questions.</li>' +
-        '<li>Spaced review and quizzes by subject.</li>' +
-        '<li>Dialects: compare and translate.</li>' +
+        '<li>Spaced review, and quizzes by subject with three levels and term mastery.</li>' +
+        '<li>Translate a lab query into PostgreSQL, SQL Server, BigQuery or Snowflake, plus a comparison on the SQL dialect glossary page.</li>' +
         '<li>Say-it-out-loud practice, a progress dashboard, and settings for text size and timers.</li>' +
+        '<li>Projects hub, starting with Just Now Deliveries: cleaning with Python, modelling, SQL, a dashboard and a first pipeline.</li>' +
         '</ul>' +
         '<h2>Ideas I am exploring</h2>' +
         '<p>In no fixed order:</p>' +
         '<ul>' +
         '<li>A quick skills check that suggests where to start.</li>' +
         '<li>Daily questions and interview scenarios to answer out loud.</li>' +
+        '<li>A data engineering and architecture project: layers, tests, dbt and a scheduled pipeline.</li>' +
+        '<li>A customer churn project.</li>' +
         '<li>Light Python practice for working with data.</li>' +
-        '<li>More practice datasets.</li>' +
-        '<li>Dashboard and business-intelligence practice.</li>' +
-        '<li>Data engineering lessons on pipelines and the cloud.</li>' +
         '</ul>' +
         '<p>Want something moved up the list? <a href="#/contact">Request a topic</a>.</p>';
     }

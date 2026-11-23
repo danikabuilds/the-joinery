@@ -286,8 +286,9 @@ window.addGlossary('SQL', [
   {
     id: 'sql-dialect', term: 'SQL dialect',
     def: 'A database\'s own flavour of SQL. The core is shared, but functions and some syntax differ.',
-    deep: 'SELECT, JOIN and GROUP BY work everywhere. Dates, string functions, LIMIT versus TOP, and quoting differ. AI tools often mix dialects, so knowing which one you are in is a real check.',
+    deep: 'SELECT, JOIN and GROUP BY work everywhere. Dates, text functions, LIMIT versus TOP, and quoting differ. AI tools often mix dialects, so knowing which one you are in is a real check. The table below shows the same idea in SQLite (which runs on this site), PostgreSQL, SQL Server, BigQuery and Snowflake. In the SQL lab, run a query and choose "Translate to another database" to see your own query rewritten.',
     say: 'Each database has its own dialect. The core is the same, but I check date functions, LIMIT versus TOP and string handling.',
-    rel: ['date-functions']
+    compare: true,
+    rel: ['date-functions', 'coalesce']
   }
 ]);

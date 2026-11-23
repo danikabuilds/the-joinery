@@ -1,0 +1,38 @@
+{
+ "order": 2,
+ "id": "build-the-plumbing",
+ "track": "Data Engineering",
+ "level": "Intermediate",
+ "title": "Build the plumbing",
+ "fullTitle": "Intermediate Data Engineering: Build the plumbing",
+ "blurb": "Turn Just Now Deliveries' daily files into a pipeline that runs itself: raw, staging and marts layers, dbt models, data quality tests and a scheduled run on GitHub Actions.",
+ "tagline": "Nomsa liked the answers. Now she wants them every morning, without anyone lifting a finger.",
+ "briefFrom": "Nomsa, Head of Operations",
+ "brief": "Your analysis was great, but it took a week of manual work. I want those numbers refreshed automatically every morning before 07:00, and I want to know when the data is wrong before my team sees it. Our systems now drop a file every day. Some days the file is late, and some days it is a mess.",
+ "time": "10 to 14 hours, over a week or two",
+ "skills": [
+  "Pipeline design",
+  "Python ingestion",
+  "dbt",
+  "Incremental loads",
+  "Data quality tests",
+  "Schema drift",
+  "Scheduling with GitHub Actions"
+ ],
+ "md": "projects/build-the-plumbing/PROJECT.md",
+ "steps": [
+  "Design it before you build it",
+  "Set up",
+  "Read the source and write a contract",
+  "Ingest the raw files, with Python",
+  "Clean it in the staging layer, with dbt",
+  "Build the fact table incrementally",
+  "Build the business-ready layer",
+  "Add data quality tests",
+  "Handle change: new columns, late files and bad data",
+  "Orchestrate and schedule it",
+  "Watch it: run log, freshness and lineage",
+  "Why it matters, and how to talk about it",
+  "Take it further"
+ ]
+}

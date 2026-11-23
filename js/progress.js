@@ -1,5 +1,5 @@
 // Saves progress in the browser (localStorage). Nothing is sent anywhere.
-// Tracks: completed exercises, wrong attempts, review schedule, spoken explanations and dialect practice.
+// Tracks: completed exercises, wrong attempts, review schedule, spoken explanations, quiz levels and which glossary terms are mastered.
 (function () {
   var KEY = 'data-learning-site-v1';
   var INTERVALS = [3, 7, 14, 30];       // days between reviews
@@ -7,7 +7,8 @@
   var WEAK_AT = 3;                      // wrong checks before an exercise counts as a weak spot
 
   function blank() {
-    return { done: {}, drills: {}, drafts: {}, wrong: {}, doneOn: {}, review: {}, aloud: {}, dialect: {}, quiz: [], route: '', visited: {}, activity: {} };
+    return { done: {}, drills: {}, drafts: {}, wrong: {}, doneOn: {}, review: {}, aloud: {}, dialect: {}, quiz: [], route: '', visited: {}, activity: {},
+      terms: {}, qlevel: {}, qrecent: {}, projects: {} };
   }
   var state = blank();
 
@@ -88,6 +89,42 @@
       state.quiz = state.quiz.slice(0, 10); logActivity(); save();
     },
     quizHistory: function () { return state.quiz.slice(); },
+
+    // ----- glossary terms in quizzes -----
+    // A term is mastered once it has been answered correctly on two different days, and the latest answer was right.
+    termResult: function (id, right) {
+      var t = state.terms[id] || { r: 0, w: 0, days: [], last: '' };
+      var d = today();
+      if (right) { t.r += 1; if (t.days.indexOf(d) === -1) { t.days.push(d); t.days = t.days.slice(-3); } }
+      else t.w += 1;
+      t.last = right ? 'r' : 'w'; t.seen = d;
+      state.terms[id] = t; logActivity(); save();
+    },
+    termStat: function (id) { return state.terms[id] || null; },
+    isMastered: function (id) { var t = state.terms[id]; return !!(t && t.last === 'r' && t.days.length >= 2); },
+
+    // ----- quiz levels per subject: 1 Recognise, 2 Apply, 3 Explain -----
+    // Two strong scores (7 of 8 or better) at a level move the subject up one level.
+    quizLevel: function (area) { var q = state.qlevel[area]; return q ? q.level : 1; },
+    quizPasses: function (area) { var q = state.qlevel[area]; return q ? q.passes : 0; },
+    quizPass: function (area) {
+      var q = state.qlevel[area] || { level: 1, passes: 0 }, up = false;
+      if (q.level < 3) { q.passes += 1; if (q.passes >= 2) { q.level += 1; q.passes = 0; up = true; } }
+      state.qlevel[area] = q; save();
+      return { levelledUp: up, level: q.level, passes: q.passes };
+    },
+    // terms used in the last quiz for a subject, so the next one can avoid them
+    recentTerms: function (area) { return (state.qrecent[area] || []).slice(); },
+    setRecentTerms: function (area, ids) { state.qrecent[area] = ids.slice(0, 16); save(); },
+
+    // ----- project steps the learner has ticked -----
+    projectStep: function (pid, step) { return !!(state.projects[pid] && state.projects[pid][step]); },
+    setProjectStep: function (pid, step, on) {
+      state.projects[pid] = state.projects[pid] || {};
+      if (on) state.projects[pid][step] = true; else delete state.projects[pid][step];
+      logActivity(); save();
+    },
+    projectStepsDone: function (pid) { return Object.keys(state.projects[pid] || {}).length; },
 
     // ----- editor drafts -----
     getDraft: function (id) { return (state.drafts && state.drafts[id]) || ''; },

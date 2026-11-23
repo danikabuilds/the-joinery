@@ -16,8 +16,8 @@ Double-clicking `index.html` will show the pages, but the SQL engine will not lo
 - **SQL lab**: 23 exercises with a built-in editor, hints, instant checking and model answers. Topics: SELECT, WHERE, GROUP BY and HAVING, JOIN, UNION ALL and CASE, CTEs, window functions with PARTITION BY.
   - **Smarter feedback**: a wrong answer shows only the rows that differ, plus up to three tips naming the likely mistake (for example a filter on a total that belongs in HAVING). SQL errors are explained in plain language.
   - **Explain it out loud**: after you solve an exercise, a three-sentence frame, a 60-second timer and a model explanation. Mark it when you have said it.
-- **Review**: solved exercises come back after 3, 7, 14 and 30 days (sooner if they took three or more wrong checks). Includes a weak-spots list and 8-question multiple-choice quizzes by subject (one area or all areas).
-- **Dialects**: SQLite, PostgreSQL, SQL Server and BigQuery side by side (dates, text, NULLs, LIMIT versus TOP, QUALIFY and more), with runnable SQLite versions and 13 translate drills.
+- **Review**: solved exercises come back after 3, 7, 14 and 30 days (sooner if they took three or more wrong checks). Includes a weak-spots list and 8-question multiple-choice quizzes by subject (one area or all areas). Each subject has three levels: Recognise (meaning to term), Apply (business question or example to term) and Explain (term to meaning, common mistake to term, interview answer to term). Two scores of 7 or more move a subject up a level. A term is mastered once it is answered correctly on two different days. Each quiz picks unseen terms first, then missed ones, then terms not yet mastered, skips the previous quiz's terms, and brings one mastered term back now and then. The results page offers one next step: retry just the misses, level up, the next quiz, or the weakest subject once a subject is complete. All of this is stored in the browser with the rest of the progress.
+- **Translate to another database**: after a query runs in the SQL lab, "Translate to another database" rewrites it for PostgreSQL, SQL Server, BigQuery or Snowflake, lists what changed, and flags anything to check by hand (`js/translate.js`). It covers the common differences only. The side-by-side comparison (dates, text, NULLs, LIMIT versus TOP, QUALIFY and more) is on the "SQL dialect" glossary term. The old `#/dialects` link redirects there.
 - **Glossary**: 38 data terms with a sentence to say in an interview, plus a flashcard mode.
 - **Dark only**: the site uses one dark "night console" look (deep blue-black, cool cyan glow). Body text is Inter, code is JetBrains Mono, both stored in `vendor/fonts`.
 
@@ -35,7 +35,8 @@ Progress is saved in your browser on this computer only.
 | `js/hints.js` | Turns wrong answers and errors into plain-language advice |
 | `data/exercises.js` | The exercises. Add your own here |
 | `data/aloud.js` | The model explanations for explain-it-out-loud |
-| `data/dialects.js` | The dialect comparison rows and translate drills |
+| `data/dialect-notes.js` | The side-by-side dialect comparison shown on the "SQL dialect" glossary term |
+| `js/translate.js` | The "Translate to another database" rules used in the SQL lab |
 | `data/glossary.js` | The glossary terms |
 | `data/seed.js` | The practice database |
 | `vendor/` | Third-party libraries and fonts, stored locally so the site works offline |
@@ -46,7 +47,7 @@ The practice database is synthetic. It is shaped like the public Olist Brazilian
 
 ## About the SQL
 
-The engine is SQLite. The exercises use standard SQL that also works in PostgreSQL and BigQuery. The Dialects page shows how the main differences look in PostgreSQL, SQL Server and BigQuery. Only SQLite runs inside the site, so the other dialects are for reading and the translate drills.
+The engine is SQLite. The exercises use standard SQL that also works in PostgreSQL and BigQuery. The "Translate to another database" button and the "SQL dialect" glossary term show how the main differences look in PostgreSQL, SQL Server, BigQuery and Snowflake. Only SQLite runs inside the site, so translations are for reading and copying.
 
 ## How answers are checked
 
@@ -106,3 +107,20 @@ The dashboard shows the learner's own numbers. It has four tiles (exercises solv
 ## About, Privacy, Contact and Roadmap
 
 The footer links to four short pages. Their words live in `data/pages.js`, along with the contact email, the portfolio link and the "last updated" date (`window.SITE`). Edit that one file to change them. The footer's "Report a mistake" link opens an email that already contains the page the visitor was on.
+
+## Projects (#/projects)
+
+End-to-end projects with a business brief, downloadable data, numbered steps and model answers.
+Each step has a tick box, saved in the browser like the rest of the progress.
+
+- `data/projects.js`: one short entry per project for the Projects page (title, blurb, brief, step titles). Generated.
+- `projects/<id>/PROJECT.md`: the full write-up of a project. The site fetches it and shows it with `js/markdown.js`; every `## 1. ...` heading becomes a step with a tick box. It is also inside the data zip and reads well on GitHub.
+- `projects/just-now-deliveries/`: PROJECT.md, the data zip, the model-answers zip and the four chart images.
+- The Projects page shows each project as a card (for example "Beginner Data Analytics: Just Now Deliveries") with a short blurb and progress. A card opens the full project page. `#/projects/<id>/<n>` jumps to step n.
+
+Just Now Deliveries is a fictional South African online store with synthetic data (about 50,000 orders, 2024 to 2025).
+The source for it lives outside the site folder, in `project-sources/just-now-deliveries/`:
+`generate.py` makes the data (seeded, so it is always the same), `solution/` holds the model scripts,
+and `build_project.py` runs everything and rebuilds `data/projects.js` and the zips from the real results.
+To change a project: edit the source, run `python build_project.py`, then upload the changed site files.
+Keep `project-sources` off GitHub: `generate.py` reveals the patterns learners are meant to discover.
