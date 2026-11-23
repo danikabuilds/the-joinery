@@ -14,7 +14,7 @@ window.PAGES = {
         '<ul>' +
         '<li><strong>SQL lab:</strong> ' + window.EXERCISES.length + ' exercises that run in your browser, with hints and a model answer.</li>' +
         '<li><strong>Glossary:</strong> ' + window.GLOSSARY.length + ' data terms in six areas, each with a deeper explanation, business questions and a sentence you can say in an interview.</li>' +
-        '<li><strong>Review and quizzes:</strong> spaced reviews, a mixed quiz, topic quizzes and subject quizzes.</li>' +
+        '<li><strong>Review and quizzes:</strong> spaced reviews and quizzes by subject.</li>' +
         '<li><strong>Dialects:</strong> SQLite, PostgreSQL, SQL Server and BigQuery side by side.</li>' +
         '<li><strong>Say it out loud:</strong> timed spoken explanations, because explaining an answer is a skill of its own.</li>' +
         '</ul>' +
@@ -35,7 +35,7 @@ window.PAGES = {
       return '<h1>Privacy</h1>' +
         '<p class="lede">In short: no accounts, no tracking and no ads. What you type stays on your device.</p>' +
         '<h2>What is saved, and where</h2>' +
-        '<p>Your progress, draft answers, settings and light or dark choice are saved in this browser, on your device, so the site remembers where you were. They are never sent to me or to anyone else. You can clear them with “Reset my progress” in the footer, or by clearing this site’s data in your browser settings. “Export my progress” and “Import progress” let you move them to another browser yourself.</p>' +
+        '<p>Your progress, draft answers and settings are saved in this browser, on your device, so the site remembers where you were. They are never sent to me or to anyone else. You can clear them with “Reset my progress” in the footer, or by clearing this site’s data in your browser settings. “Export my progress” and “Import progress” let you move them to another browser yourself.</p>' +
         '<h2>Your SQL</h2>' +
         '<p>Queries run inside your browser, on the practice data. The text you write is not sent anywhere.</p>' +
         '<h2>What the site does not do</h2>' +
@@ -79,7 +79,7 @@ window.PAGES = {
         '<ul>' +
         '<li>SQL lab with ' + window.EXERCISES.length + ' exercises across seven topics.</li>' +
         '<li>Glossary with ' + window.GLOSSARY.length + ' terms, flashcards and business questions.</li>' +
-        '<li>Spaced review, a mixed quiz, topic quizzes and subject quizzes.</li>' +
+        '<li>Spaced review and quizzes by subject.</li>' +
         '<li>Dialects: compare and translate.</li>' +
         '<li>Say-it-out-loud practice, a progress dashboard, and settings for text size and timers.</li>' +
         '</ul>' +

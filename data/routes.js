@@ -32,7 +32,7 @@ window.ROUTES = [
     steps: [
       { label: 'Try joins', text: 'Check you know what each join keeps and drops.', topic: 'join' },
       { label: 'Try window functions', text: 'Rank, running totals and latest-per-group.', topic: 'window' },
-      { label: 'Test yourself with a mixed quiz', text: 'Questions from every topic, weighted towards your weak spots.', href: '#/review' },
+      { label: 'Test yourself with a subject quiz', text: 'Multiple-choice questions on one area at a time, or all of them.', href: '#/review' },
       { label: 'Compare how dialects differ', text: 'The same idea written in four SQL dialects.', href: '#/dialects' }
     ],
     note: 'A quick skills check is planned. Until then, choose any topic below.'
@@ -49,7 +49,7 @@ window.ROUTES = [
     steps: [
       { label: 'Solve, then explain it out loud', text: 'Each solved exercise unlocks a timed spoken explanation.', next: true },
       { label: 'Practise counts and totals', text: 'A common interview theme: GROUP BY, and the questions that follow it.', topic: 'group' },
-      { label: 'Take the mixed quiz', text: 'Eight questions across topics, like a screening test.', href: '#/review' },
+      { label: 'Take a subject quiz', text: 'Eight multiple-choice questions, like a screening test.', href: '#/review' },
       { label: 'Rehearse terms with flashcards', text: 'Say each definition aloud before you reveal it.', href: '#/glossary' }
     ],
     note: 'Daily 5 trivia and scenario questions are planned.'

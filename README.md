@@ -16,10 +16,10 @@ Double-clicking `index.html` will show the pages, but the SQL engine will not lo
 - **SQL lab**: 23 exercises with a built-in editor, hints, instant checking and model answers. Topics: SELECT, WHERE, GROUP BY and HAVING, JOIN, UNION ALL and CASE, CTEs, window functions with PARTITION BY.
   - **Smarter feedback**: a wrong answer shows only the rows that differ, plus up to three tips naming the likely mistake (for example a filter on a total that belongs in HAVING). SQL errors are explained in plain language.
   - **Explain it out loud**: after you solve an exercise, a three-sentence frame, a 60-second timer and a model explanation. Mark it when you have said it.
-- **Review**: solved exercises come back after 3, 7, 14 and 30 days (sooner if they took three or more wrong checks). Includes a weak-spots list and an 8-question mixed quiz.
+- **Review**: solved exercises come back after 3, 7, 14 and 30 days (sooner if they took three or more wrong checks). Includes a weak-spots list and 8-question multiple-choice quizzes by subject (one area or all areas).
 - **Dialects**: SQLite, PostgreSQL, SQL Server and BigQuery side by side (dates, text, NULLs, LIMIT versus TOP, QUALIFY and more), with runnable SQLite versions and 13 translate drills.
 - **Glossary**: 38 data terms with a sentence to say in an interview, plus a flashcard mode.
-- **Dark mode**: the button at the top right. It follows your computer's setting until you choose, then remembers your choice.
+- **Dark only**: the site uses one dark "night console" look (deep blue-black, cool cyan glow). Body text is Inter, code is JetBrains Mono, both stored in `vendor/fonts`.
 
 Progress is saved in your browser on this computer only.
 
@@ -56,7 +56,7 @@ Your query and the model answer both run against a fresh copy of the database, a
 
 - sql.js (SQLite compiled for the browser), MIT licence
 - CodeMirror 5 (the code editor), MIT licence
-- Atkinson Hyperlegible and JetBrains Mono fonts, SIL Open Font Licence
+- Inter and JetBrains Mono fonts, SIL Open Font Licence (the Atkinson Hyperlegible files in `vendor/fonts` are no longer used and can be deleted)
 
 
 ## Start screen and routes (step 1 of the public beta)
@@ -79,10 +79,10 @@ with the "Route" link in the header. Everything stays open whichever route is ch
 
 - **Name and look.** The site is now called The Joinery. The Workshop palette (graphite, ash, walnut and brass) lives in the variables at the top of `css/styles.css`, in light and dark versions. The dovetail logo is an inline SVG in `index.html`, also used as the favicon.
 - **Route map.** The home page shows each route's steps as checkpoints: done, you are here, and coming up. A step counts as reached when its work is done, or once it has been opened for pages with nothing to finish (such as the glossary).
-- **Lab layout.** On small screens the exercise splits into Task, Query and Result tabs. Running or checking a query jumps to Result.
+- **Lab layout.** On small screens the exercise is one flowing page: task, then editor, then result. Run, Check and Tables sit in a bar fixed to the bottom of the screen, running a query scrolls to the result, and Tables opens the table list as a panel from the bottom. The header links fold behind a Menu button.
 - **Diagrams.** The lab's table list starts with a diagram of how the tables link. The clause order page shows the order you write a query next to the order it runs.
 - **Speaking frames.** "Explain it out loud" gives a sentence starter for each of the three sentences.
-- **Settings** (`#/settings`). Text size, speaking timer length and colours, plus a list of keyboard shortcuts. Saved in the browser under `data-learning-settings`.
+- **Settings** (`#/settings`). Text size, speaking timer length and Byte on or off, plus a list of keyboard shortcuts. Saved in the browser under `data-learning-settings`.
 - **Keyboard.** Ctrl + Enter runs, Ctrl + Shift + Enter checks, and Esc leaves the editor so Tab moves on.
 
 Saved progress files still use the app id `data-learning-site`, so older exports keep importing.

@@ -7,7 +7,6 @@
   var timerId = null;       // explain-out-loud countdown
   var session = null;      // current review or quiz session
   var dialectShow = { sqlite: true, pg: true, mssql: true, bq: true };
-  var THEME_KEY = 'data-learning-theme';
   var QUIZ_SIZE = 8;
   var SETTINGS_KEY = 'data-learning-settings';
   var TEXT_SIZES = [['standard', 'Standard'], ['large', 'Large'], ['larger', 'Larger']];
@@ -212,7 +211,7 @@
   function resourceCard(id) {
     var tDone = window.TRANSLATE.filter(function (q) { return Progress.dialectDone(q.id); }).length;
     var c = {
-      'review': ['#/review', 'Review and mixed quiz', 'Spaced reviews of what you have solved, plus an ' + QUIZ_SIZE + '-question quiz across topics.'],
+      'review': ['#/review', 'Review and quizzes', 'Spaced reviews of what you have solved, plus multiple-choice quizzes by subject.'],
       'dialects': ['#/dialects', 'Dialects', 'SQLite, PostgreSQL, SQL Server and BigQuery side by side, with translate drills. ' + tDone + ' of ' + window.TRANSLATE.length + ' done.'],
       'glossary': ['#/glossary', 'Glossary and flashcards', window.GLOSSARY.length + ' data terms with deeper explanations, business questions and a sentence to say in an interview.'],
       'glossary-sql': ['#/glossary/SQL', 'SQL terms', termCount('SQL') + ' terms: joins, keys, NULL, CTEs, window functions and more.'],
@@ -266,7 +265,6 @@
   function renderHome() {
     teardown();
     var rt = currentRoute() || byId(window.ROUTES, 'explore');
-    var act = nextAction(rt);
     var total = window.EXERCISES.length, done = doneCount();
     var due = dueList().length, weak = weakList().length;
     var aloudCount = window.EXERCISES.filter(function (e) { return Progress.isAloud(e.id); }).length;
@@ -275,10 +273,6 @@
       '<section class="intro">' +
       '<h1>' + esc(rt.headline) + '</h1>' +
       '<p class="lede">' + esc(rt.lede) + '</p>' +
-      '<p class="intro-actions">' +
-      (act ? '<a class="btn primary" href="' + act.href + '">' + esc(act.label) + '</a>'
-           : '<span class="all-done">All ' + total + ' exercises complete.</span>') +
-      '<span class="count">' + done + ' of ' + total + ' exercises done</span></p>' +
       (rt.note ? '<p class="route-note">' + esc(rt.note) + ' <a href="#/roadmap">See the roadmap</a>.</p>' : '') +
       '</section>';
 
@@ -406,42 +400,35 @@
     });
   }
 
-  // ---------- lab tabs: Task, Query and Result become tabs on small screens ----------
+  // ---------- lab on small screens: one flowing page (task, then query, then result) ----------
+  // showPane() used to switch tabs. Now it gently scrolls to that part of the page on a phone.
   var smallScreen = window.matchMedia ? window.matchMedia('(max-width: 860px)') : { matches: false, addListener: function () {} };
+  var calmMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function showPane(name) {
-    var lab = view.querySelector('.lab');
-    if (!lab) return;
-    lab.setAttribute('data-pane', name);
-    Array.prototype.forEach.call(lab.querySelectorAll('.lab-tabs [role="tab"]'), function (t) {
-      var on = t.getAttribute('data-pane') === name;
-      t.setAttribute('aria-selected', String(on));
-      t.tabIndex = on ? 0 : -1;
-    });
-    if (name === 'query' && editor && smallScreen.matches) setTimeout(function () { editor.refresh(); }, 0);
+    if (!smallScreen.matches) return;
+    var el = document.getElementById('pane-' + name);
+    if (el) el.scrollIntoView({ behavior: calmMotion ? 'auto' : 'smooth', block: 'start' });
   }
-  function syncTabRoles() {
-    var lab = view.querySelector('.lab');
-    if (!lab) return;
-    Array.prototype.forEach.call(lab.querySelectorAll('.pane'), function (p) {
-      if (smallScreen.matches) p.setAttribute('role', 'tabpanel'); else p.removeAttribute('role');
+  function onScreenChange() { if (editor) editor.refresh(); }
+  if (smallScreen.addEventListener) smallScreen.addEventListener('change', onScreenChange); else smallScreen.addListener(onScreenChange);
+  // The tables list opens as a panel from the bottom on a phone.
+  function wireTables() {
+    var det = view.querySelector('details.tables'), btn = document.getElementById('tables-btn');
+    if (!det || !btn) return;
+    function sync() { btn.setAttribute('aria-expanded', String(det.open)); }
+    det.addEventListener('toggle', sync);
+    btn.addEventListener('click', function () {
+      det.open = !det.open;
+      if (det.open) det.querySelector('summary').focus();
     });
-    if (!smallScreen.matches && editor) editor.refresh();
-  }
-  if (smallScreen.addEventListener) smallScreen.addEventListener('change', syncTabRoles); else smallScreen.addListener(syncTabRoles);
-  function wireTabs() {
-    var tabs = Array.prototype.slice.call(view.querySelectorAll('.lab-tabs [role="tab"]'));
-    tabs.forEach(function (t, i) {
-      t.addEventListener('click', function () { showPane(t.getAttribute('data-pane')); });
-      t.addEventListener('keydown', function (e) {
-        var j = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : null;
-        if (j === null) return;
-        e.preventDefault();
-        var next = tabs[(j + tabs.length) % tabs.length];
-        showPane(next.getAttribute('data-pane')); next.focus();
-      });
+    view.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && det.open && smallScreen.matches) { det.open = false; btn.focus(); }
     });
-    showPane('task');
-    syncTabRoles();
+    document.addEventListener('click', function (e) {
+      if (!smallScreen.matches || !det.open || !document.body.contains(det)) return;
+      if (!det.contains(e.target) && e.target !== btn) det.open = false;
+    });
+    sync();
   }
 
   // o: { mode: 'practice' | 'session', crumb, footer, onResult(r), onNext(), isLast }
@@ -452,13 +439,8 @@
     var wrongHere = 0, answered = false;
 
     view.innerHTML =
-      '<div class="lab" data-pane="task">' +
-      '<div class="lab-tabs" role="tablist" aria-label="Exercise panels">' +
-        '<button type="button" role="tab" id="tab-task" data-pane="task" aria-controls="pane-task">Task</button>' +
-        '<button type="button" role="tab" id="tab-query" data-pane="query" aria-controls="pane-query">Query</button>' +
-        '<button type="button" role="tab" id="tab-result" data-pane="result" aria-controls="pane-result">Result</button>' +
-      '</div>' +
-      '<section class="task pane pane-task" id="pane-task" aria-labelledby="tab-task">' + o.crumb +
+      '<div class="lab">' +
+      '<section class="task pane pane-task" id="pane-task" aria-label="Task">' + o.crumb +
         '<h1>' + esc(ex.title) + (!inSession && Progress.isDone(ex.id) ? ' <span class="badge">Done</span>' : '') + '</h1>' +
         '<p class="prompt">' + esc(ex.prompt) + '</p>' +
         '<details class="hint"><summary>Show a hint</summary><p>' + esc(ex.hint) + '</p></details>' +
@@ -470,17 +452,18 @@
         '<p class="schema-note">Select a table name to preview its first rows.</p></details>' +
       '</section>' +
       '<div class="work">' +
-      '<section class="pane pane-query" id="pane-query" aria-labelledby="tab-query">' +
+      '<section class="pane pane-query" id="pane-query" aria-label="Your query">' +
         '<label class="sr" for="sql-input">Your SQL</label>' +
         '<textarea id="sql-input" spellcheck="false"></textarea>' +
-        '<div class="actions">' +
+        '<div class="actions lab-bar">' +
           '<button type="button" class="btn" id="run">Run query</button>' +
           '<button type="button" class="btn primary" id="check">Check answer</button>' +
           (inSession ? '<button type="button" class="btn quiet" id="skip">Skip this one</button>' : '') +
+          '<button type="button" class="btn quiet tables-btn" id="tables-btn" aria-expanded="false">Tables</button>' +
           '<span class="keys">Ctrl + Enter runs the query. Esc leaves the editor. <a href="#/settings">All shortcuts</a></span>' +
         '</div>' +
       '</section>' +
-      '<section class="pane pane-result" id="pane-result" aria-labelledby="tab-result">' +
+      '<section class="pane pane-result" id="pane-result" aria-label="Result">' +
         '<div id="feedback" role="status" aria-live="polite"></div>' +
         '<div id="tips"></div>' +
         '<div id="compare"></div>' +
@@ -509,7 +492,7 @@
       }
     });
     editor.getInputField().setAttribute('aria-label', 'SQL editor. Press Escape to leave the editor.');
-    wireTabs();
+    wireTables();
     if (!inSession) editor.on('change', function () { Progress.setDraft(ex.id, editor.getValue()); });
 
     function show(kind, text) { feedback.className = 'feedback ' + kind; feedback.textContent = text; }
@@ -617,6 +600,7 @@
         var name = btn.getAttribute('data-table');
         loadEngine().then(function () {
           result.innerHTML = resultTable(LabDB.run(window.SEED_SQL, 'SELECT * FROM ' + name + ' LIMIT 8'));
+          if (smallScreen.matches) { var det = view.querySelector('details.tables'); if (det) det.open = false; }
           showPane('result');
           show('info', 'Preview of ' + name + ' (first 8 rows). Your query in the editor is unchanged.');
         }, engineError);
@@ -661,7 +645,7 @@
     });
   }
 
-  // ---------- view: review and mixed quiz ----------
+  // ---------- view: review and subject quizzes ----------
   function pickQuiz() {
     var urgent = shuffle(window.EXERCISES.filter(function (e) { return Progress.isDue(e.id) || (Progress.isWeak(e.id) && !Progress.reviewsFinished(e.id)); }));
     var rest = shuffle(window.EXERCISES.filter(function (e) { return Progress.isDone(e.id) && urgent.indexOf(e) === -1; }));
@@ -708,20 +692,6 @@
     }
     html += '</div>';
 
-    html += '<div class="review-block"><h2>Mixed quiz</h2>' +
-      '<p>' + QUIZ_SIZE + ' questions from across the topics, leaning towards anything due or weak. Every question starts with an empty editor, and you can skip one.</p>' +
-      '<p><button type="button" class="btn primary" id="start-quiz">Start the mixed quiz</button></p>' +
-      '<h3 id="tq-h">Or quiz one topic</h3>' +
-      '<p>Pick a topic to be quizzed on just that. Same rules: an empty editor each time, and you can skip.</p>' +
-      '<div class="topic-quiz" role="group" aria-labelledby="tq-h">' + window.TOPICS.map(function (t) {
-        var list = exercisesIn(t.id), d = list.filter(function (e) { return Progress.isDone(e.id); }).length;
-        return '<button type="button" class="topic-btn" data-topic="' + t.id + '" data-qtopic="' + t.id + '">' +
-          '<span class="tb-clause">' + esc(t.clause) + '</span>' +
-          '<span class="tb-name">' + esc(t.name) + '</span>' +
-          '<span class="tb-meta">' + plural(list.length, 'question', 'questions') + ', ' + d + ' solved</span></button>';
-      }).join('') + '</div>';
-    html += '</div>';
-
     html += '<div class="review-block"><h2>Quiz by subject</h2>' +
       '<p>Multiple-choice questions on the ideas behind the work: ' + CQ_SIZE + ' per quiz, one area at a time or all of them together. Each answer comes with the plain meaning and a link to the glossary page.</p>' +
       '<div class="topic-quiz" role="group" aria-label="Quiz by subject">' +
@@ -748,13 +718,6 @@
 
     var sr = document.getElementById('start-review');
     if (sr) sr.addEventListener('click', function () { startSession('review', shuffle(due).map(function (e) { return e.id; })); });
-    document.getElementById('start-quiz').addEventListener('click', function () { startSession('quiz', pickQuiz()); });
-    Array.prototype.forEach.call(view.querySelectorAll('[data-qtopic]'), function (b) {
-      b.addEventListener('click', function () {
-        var id = b.getAttribute('data-qtopic');
-        startSession('quiz', pickTopicQuiz(id), id);
-      });
-    });
   }
 
   // ---------- subject quizzes: multiple choice from the glossary ----------
@@ -1177,22 +1140,19 @@
         radios('timer', TIMERS.map(function (t) { return [t, t + ' seconds']; }), s.timer) + '</fieldset>' +
       '<fieldset><legend>Byte the beetle</legend><p class="hint-text">Byte pops up with short tips, clues and cheers.</p>' +
         radios('byte', [['on', 'Show Byte'], ['off', 'Hide Byte']], s.byte ? 'on' : 'off') + '</fieldset>' +
-      '<fieldset><legend>Colours</legend>' + radios('theme', [['light', 'Light'], ['dark', 'Dark']], currentTheme()) + '</fieldset>' +
       '<p id="settings-msg" class="progress-msg" role="status"></p>' +
       '<h2 class="section-h">Keyboard shortcuts</h2>' +
       '<dl class="shortcuts">' +
         '<dt><kbd>Ctrl</kbd> + <kbd>Enter</kbd></dt><dd>Run the query (Cmd + Enter on a Mac)</dd>' +
         '<dt><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd></dt><dd>Check your answer</dd>' +
         '<dt><kbd>Esc</kbd></dt><dd>Leave the editor, so <kbd>Tab</kbd> moves to the buttons again</dd>' +
-        '<dt><kbd>Left</kbd> and <kbd>Right</kbd> arrows</dt><dd>Move between the Task, Query and Result tabs on a small screen</dd>' +
-        '<dt><kbd>Tab</kbd></dt><dd>Move to the next link or button. Everything on the site works without a mouse.</dd>' +
+                '<dt><kbd>Tab</kbd></dt><dd>Move to the next link or button. Everything on the site works without a mouse.</dd>' +
       '</dl></section>';
     var msg = document.getElementById('settings-msg');
     Array.prototype.forEach.call(view.querySelectorAll('input[type="radio"]'), function (r) {
       r.addEventListener('change', function () {
         var cur = getSettings();
-        if (r.name === 'theme') { applyTheme(r.value, true); }
-        else if (r.name === 'byte') { cur.byte = r.value === 'on'; saveSettings(cur); if (cur.byte && window.Byte) Byte.say('happy', 'I\'m back! I\'ll keep it short.'); else if (window.Byte) Byte.off(); }
+        if (r.name === 'byte') { cur.byte = r.value === 'on'; saveSettings(cur); if (cur.byte && window.Byte) Byte.say('happy', 'I\'m back! I\'ll keep it short.'); else if (window.Byte) Byte.off(); }
         else { cur[r.name] = r.name === 'timer' ? Number(r.value) : r.value; saveSettings(cur); }
         msg.textContent = 'Saved.';
       });
@@ -1200,17 +1160,19 @@
     var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); }
   }
 
-  // ---------- theme ----------
-  var themeBtn = document.getElementById('theme-toggle');
-  function currentTheme() { return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'; }
-  function applyTheme(theme, remember) {
-    document.documentElement.setAttribute('data-theme', theme);
-    themeBtn.textContent = theme === 'dark' ? 'Light mode' : 'Dark mode';
-    themeBtn.setAttribute('aria-pressed', String(theme === 'dark'));
-    if (remember) { try { window.localStorage.setItem(THEME_KEY, theme); } catch (e) { /* ignore */ } }
+  // ---------- the site is dark only ----------
+  document.documentElement.setAttribute('data-theme', 'dark');
+
+  // ---------- phone menu: the header links fold behind one button on small screens ----------
+  var menuBtn = document.getElementById('menu-btn'), topMenu = document.getElementById('top-menu');
+  function setMenu(open) {
+    menuBtn.setAttribute('aria-expanded', String(open));
+    topMenu.classList.toggle('open', open);
   }
-  themeBtn.addEventListener('click', function () { applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true); });
-  applyTheme(currentTheme(), false);
+  menuBtn.addEventListener('click', function () { setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menuBtn.getAttribute('aria-expanded') === 'true') { setMenu(false); menuBtn.focus(); }
+  });
 
   // ---------- view: My progress (a dashboard of the learner's own numbers) ----------
   function isoDay(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
@@ -1226,7 +1188,7 @@
     var spoken = solved.filter(function (e) { return Progress.isAloud(e.id); });
     var act = Progress.activity(), todayStr = Progress.today(), monthKey = todayStr.slice(0, 7);
     var daysThisMonth = Object.keys(act).filter(function (d) { return d.slice(0, 7) === monthKey; }).length;
-    var hist = Progress.quizHistory().filter(function (h) { return !h.topic; }).reverse(); // oldest first
+    var hist = Progress.quizHistory().filter(function (h) { return h.topic && h.topic.indexOf('area:') === 0; }).reverse(); // subject quizzes, oldest first
 
     function tile(label, value, of, note) {
       return '<div class="kpi"><p class="kpi-label">' + label + '</p><p class="kpi-value">' + value + (of !== null ? '<span class="kpi-of"> of ' + of + '</span>' : '') + '</p><p class="kpi-note">' + note + '</p></div>';
@@ -1258,8 +1220,8 @@
         rows.map(function (r) { return '<tr><td>' + esc(r.t.name) + '</td><td>' + r.d + ' of ' + r.n + '</td><td>' + r.clean + '</td></tr>'; }).join('') +
       '</tbody></table></details></section>';
 
-    // quiz scores: a line of the last 10 mixed quizzes
-    html += '<section class="panel" aria-labelledby="p-quiz"><h3 id="p-quiz">Mixed quiz scores</h3><p class="panel-sub">Questions solved, last ' + Math.max(hist.length, 1) + ' quizzes</p>';
+    // quiz scores: a line of the last 10 subject quizzes
+    html += '<section class="panel" aria-labelledby="p-quiz"><h3 id="p-quiz">Subject quiz scores</h3><p class="panel-sub">Questions correct' + (hist.length ? ', last ' + plural(hist.length, 'quiz', 'quizzes') : '') + '</p>';
     if (hist.length) {
       var W = 420, H = 180, L = 30, R = 12, T = 14, B = 28, maxY = Math.max.apply(null, hist.map(function (h) { return h.total; }));
       var x = function (i) { return hist.length === 1 ? (L + W - R) / 2 : L + i * (W - L - R) / (hist.length - 1); };
@@ -1269,7 +1231,7 @@
       }).join('');
       var path = hist.map(function (h, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(h.score).toFixed(1); }).join(' ');
       var pts = hist.map(function (h, i) {
-        return '<g class="q-pt" tabindex="0" data-tip="' + esc(niceDay(h.on) + ': ' + h.score + ' of ' + h.total + ' solved') + '"><circle class="q-hit" cx="' + x(i) + '" cy="' + y(h.score) + '" r="14"/><circle class="q-dot" cx="' + x(i) + '" cy="' + y(h.score) + '" r="5"/></g>';
+        return '<g class="q-pt" tabindex="0" data-tip="' + esc(niceDay(h.on) + ': ' + h.score + ' of ' + h.total + ' correct') + '"><circle class="q-hit" cx="' + x(i) + '" cy="' + y(h.score) + '" r="14"/><circle class="q-dot" cx="' + x(i) + '" cy="' + y(h.score) + '" r="5"/></g>';
       }).join('');
       var lastI = hist.length - 1;
       html += '<svg class="q-chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Line chart of your last ' + hist.length + ' quiz scores. Latest: ' + hist[lastI].score + ' of ' + hist[lastI].total + '.">' + grid +
@@ -1280,7 +1242,7 @@
         '<details class="as-table"><summary>Show as a table</summary><table><thead><tr><th>Date</th><th>Score</th></tr></thead><tbody>' +
         hist.slice().reverse().map(function (h) { return '<tr><td>' + niceDay(h.on) + '</td><td>' + h.score + ' of ' + h.total + '</td></tr>'; }).join('') + '</tbody></table></details>';
     } else {
-      html += '<p class="empty with-byte">' + (window.Byte && Byte.enabled() ? Byte.mini('idle', 36) : '') + '<span>No quizzes yet. <a href="#/review">Take the mixed quiz</a> and your scores will draw a line here.</span></p>';
+      html += '<p class="empty with-byte">' + (window.Byte && Byte.enabled() ? Byte.mini('idle', 36) : '') + '<span>No quizzes yet. <a href="#/review">Take a subject quiz</a> and your scores will draw a line here.</span></p>';
     }
     html += '</section>';
 
@@ -1344,7 +1306,7 @@
     start: ['Not sure which route? "Just exploring" shows everything, and you can change it any time.'],
     home: ['Do the "You are here" step first. One step a day beats five on a Sunday.', 'Reviews come back after 3, 7, 14 and 30 days. That spacing is what makes it stick.', 'Stuck on a topic? Open the glossary page for it, then try again.'],
     lab: ['Run the query before you check it. Looking at the rows finds most bugs.', 'Count the rows before and after a join. If the number jumps, I smell a fan-out.', 'Press Ctrl + Enter to run, Ctrl + Shift + Enter to check.', 'Write FROM first in your head, then SELECT. That is the order the database thinks in.'],
-    review: ['A wrong answer in review is not a failure. It just brings the exercise back sooner.', 'The mixed quiz feels like a screening test. Try it before an interview.'],
+    review: ['A wrong answer in review is not a failure. It just brings the exercise back sooner.', 'A subject quiz feels like a screening test. Try one before an interview.'],
     quiz: ['Say the answer out loud before you pick. That is what an interview feels like.', 'A miss here is useful. The glossary page for it is one tap away.'],
     session: ['Skipping is allowed. The model answer will teach you, and it comes back later.'],
     dialects: ['Dates, LIMIT and string functions are where dialects differ most. The rest is mostly the same.'],
@@ -1399,6 +1361,7 @@
     if (page === 'drills') { window.location.replace('#/lab'); return; } // the clause-order page was removed; old links land in the SQL lab
     if (page === 'home' && !currentRoute()) page = 'start'; // first visit: ask where they are starting
     teardown();
+    setMenu(false);
     if (window.Byte) { Byte.hide(); currentPage = page; Byte.refresh(); }
     if (page === 'start') renderStart();
     else if (page === 'lab') renderLab(parts[1]);
