@@ -1,5 +1,5 @@
 // The About, Privacy, Contact and Roadmap pages. Edit the words here; no other file needs to change.
-window.SITE = { email: 'danika.builds@gmail.com', portfolio: 'https://danikabuilds.github.io', updated: '19 November 2026' };
+window.SITE = { email: 'danika.builds@gmail.com', portfolio: 'https://danikabuilds.github.io', updated: '23 November 2026' };
 
 window.PAGES = {
   about: {
@@ -35,19 +35,21 @@ window.PAGES = {
     title: 'Privacy',
     html: function () {
       return '<h1>Privacy</h1>' +
-        '<p class="lede">In short: no accounts, no tracking and no ads. What you type stays on your device.</p>' +
+        '<p class="lede">In short: no accounts, no ads and no cookies. Visits are counted in total, never person by person. What you type stays on your device.</p>' +
         '<h2>What is saved, and where</h2>' +
         '<p>Your progress, draft answers and settings are saved in this browser, on your device, so the site remembers where you were. They are never sent to me or to anyone else. You can clear them with “Reset my progress” in the footer, or by clearing this site’s data in your browser settings. “Export my progress” and “Import progress” let you move them to another browser yourself.</p>' +
         '<h2>Your SQL</h2>' +
         '<p>Queries run inside your browser, on the practice data. The text you write is not sent anywhere.</p>' +
+        '<h2>Visit counts</h2>' +
+        '<p>The site uses <a href="https://www.goatcounter.com">GoatCounter</a>, an open-source counter, to see how many people visit and which pages they use. It keeps totals, such as how many visits a page had, which site sent visitors and which browsers they used. It does not keep your IP address and does not use cookies, so it cannot follow you around the web. Downloads of project files are counted the same way.</p>' +
         '<h2>What the site does not do</h2>' +
         '<ul>' +
-        '<li>No analytics and no advertising scripts.</li>' +
+        '<li>No advertising scripts and no cookies.</li>' +
         '<li>No sign-up, so no name, email or password is collected.</li>' +
-        '<li>The fonts and code libraries are served from the site itself, not from other companies’ servers.</li>' +
+        '<li>The fonts and code libraries are served from the site itself. The only outside script is the GoatCounter counter.</li>' +
         '</ul>' +
         '<h2>Hosting</h2>' +
-        '<p>The site is hosted on GitHub Pages. As with any web host, GitHub may keep standard server records, such as visitors’ IP addresses. I add no tracking of my own and I do not collect visitor data.</p>' +
+        '<p>The site is hosted on GitHub Pages. As with any web host, GitHub may keep standard server records, such as visitors’ IP addresses. Apart from the visit totals above, I do not collect visitor data.</p>' +
         '<h2>If you email me</h2>' +
         '<p>I receive your address and message, and I use them only to reply. I will not add you to a list or share them.</p>' +
         '<p class="meta">Last updated ' + window.SITE.updated + '.</p>';

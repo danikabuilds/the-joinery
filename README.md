@@ -12,14 +12,15 @@ Double-clicking `index.html` will show the pages, but the SQL engine will not lo
 
 ## What is in it
 
-- **Path**: the topics laid out in the order a query is written, with a Today panel showing what is due.
+- **Path**: the route map, a one-line note when reviews are due, and the practice calendar. The full numbers live on their own page at `#/progress`.
 - **SQL lab**: 23 exercises with a built-in editor, hints, instant checking and model answers. Topics: SELECT, WHERE, GROUP BY and HAVING, JOIN, UNION ALL and CASE, CTEs, window functions with PARTITION BY.
   - **Smarter feedback**: a wrong answer shows only the rows that differ, plus up to three tips naming the likely mistake (for example a filter on a total that belongs in HAVING). SQL errors are explained in plain language.
   - **Explain it out loud**: after you solve an exercise, a three-sentence frame, a 60-second timer and a model explanation. Mark it when you have said it.
 - **Review**: solved exercises come back after 3, 7, 14 and 30 days (sooner if they took three or more wrong checks). Includes a weak-spots list and 8-question multiple-choice quizzes by subject (one area or all areas). Each subject has three levels: Recognise (meaning to term), Apply (business question or example to term) and Explain (term to meaning, common mistake to term, interview answer to term). Two scores of 7 or more move a subject up a level. A term is mastered once it is answered correctly on two different days. Each quiz picks unseen terms first, then missed ones, then terms not yet mastered, skips the previous quiz's terms, and brings one mastered term back now and then. The results page offers one next step: retry just the misses, level up, the next quiz, or the weakest subject once a subject is complete. All of this is stored in the browser with the rest of the progress.
 - **Translate to another database**: after a query runs in the SQL lab, "Translate to another database" rewrites it for PostgreSQL, SQL Server, BigQuery or Snowflake, lists what changed, and flags anything to check by hand (`js/translate.js`). It covers the common differences only. The side-by-side comparison (dates, text, NULLs, LIMIT versus TOP, QUALIFY and more) is on the "SQL dialect" glossary term. The old `#/dialects` link redirects there.
 - **Glossary**: 38 data terms with a sentence to say in an interview, plus a flashcard mode.
-- **Dark only**: the site uses one dark "night console" look (deep blue-black, cool cyan glow). Body text is Inter, code is JetBrains Mono, both stored in `vendor/fonts`.
+- **Light and dark**: the site follows the visitor's device setting, and the sun and moon button in the header (or Settings) switches it. Dark is the "night console" look (deep blue-black, cool cyan glow); light is a calmer version with the same cyan. Code areas stay dark in both. Body text is Inter, code is JetBrains Mono, both stored in `vendor/fonts`.
+- **Logo**: a dovetail joint (two boards locking together). It is drawn in `index.html` (header and favicon) and on `preview.png`, the picture LinkedIn and WhatsApp show when the link is shared.
 
 Progress is saved in your browser on this computer only.
 
@@ -57,7 +58,7 @@ Your query and the model answer both run against a fresh copy of the database, a
 
 - sql.js (SQLite compiled for the browser), MIT licence
 - CodeMirror 5 (the code editor), MIT licence
-- Inter and JetBrains Mono fonts, SIL Open Font Licence (the Atkinson Hyperlegible files in `vendor/fonts` are no longer used and can be deleted)
+- Inter and JetBrains Mono fonts, SIL Open Font Licence
 
 
 ## Start screen and routes (step 1 of the public beta)
@@ -72,8 +73,8 @@ with the "Route" link in the header. Everything stays open whichever route is ch
 - The home page shows the route's next best action, a "Your steps" list, and the SQL path.
 - Glossary links accept a group, for example `#/glossary/Pipelines`.
 - Deep links to exercises are not redirected to the start screen.
-- Each route also decides which SQL topics and resource cards the home page shows
-  (`topics`, `pathTitle` and `cards` in `data/routes.js`). The other topics sit under
+- Each route also decides which SQL topics the home page shows
+  (`topics` and `pathTitle` in `data/routes.js`). The other topics sit under
   "More SQL topics", so nothing is locked. Interview prep adds a "Say it out loud" list.
 
 ## The Joinery: look and smarter design (November 2026)

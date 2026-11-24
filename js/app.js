@@ -14,12 +14,13 @@
 
   // ---------- settings (text size and speaking timer), saved in this browser ----------
   function getSettings() {
-    var s = { text: 'standard', timer: 60, byte: true };
+    var s = { text: 'standard', timer: 60, byte: true, theme: 'device' };
     try {
       var raw = JSON.parse(window.localStorage.getItem(SETTINGS_KEY) || '{}');
       if (TEXT_SIZES.some(function (t) { return t[0] === raw.text; })) s.text = raw.text;
       if (TIMERS.indexOf(raw.timer) !== -1) s.timer = raw.timer;
       if (raw.byte === false) s.byte = false;
+      if (raw.theme === 'light' || raw.theme === 'dark') s.theme = raw.theme;
     } catch (e) { /* ignore */ }
     return s;
   }
@@ -82,7 +83,9 @@
     return engineReady;
   }
   // Removes the editor and any running timer before the page changes.
+  var stopNetwork = null;
   function teardown() {
+    if (stopNetwork) { stopNetwork(); stopNetwork = null; }
     if (editor) { try { editor.toTextArea(); } catch (e) { /* page already replaced */ } editor = null; }
     if (timerId) { clearInterval(timerId); timerId = null; }
   }
@@ -165,27 +168,48 @@
   function renderStart() {
     teardown();
     var cur = currentRoute();
-    view.innerHTML = '<section class="start">' +
-      '<p class="welcome">Welcome to The Joinery: free, hands-on data learning, with no sign-up.</p>' +
-      '<h1>' + (cur ? 'Change your route' : 'Where are you starting?') + '</h1>' +
-      '<p class="lede">Pick the closest fit. Everything stays open whichever you choose, and you can change your mind at any time.</p>' +
+    // First visit: the welcome section with the moving network, then the routes below it.
+    var hero = cur ? '' : '<section class="hero-home" aria-labelledby="hero-h">' +
+      '<canvas class="net-bg" aria-hidden="true"></canvas>' +
+      '<div class="hero-copy">' +
+      '<p class="hero-tag">Free, no sign-up</p>' +
+      '<h1 id="hero-h">Practise data skills, <span>piece by piece.</span></h1>' +
+      '<p class="hero-blurb">Every part of the data journey, joined up. Write SQL in your browser, learn the terms data teams use, and build projects that go from messy files to tested pipelines and real business answers.</p>' +
+      '<div class="picks">' +
+      '<a class="pick main" href="#routes-h" id="pick-route"><b>Choose a route</b><span>A step-by-step path for where you are now.</span></a>' +
+      '<a class="pick" href="#/projects"><b>Start a project</b><span>A real business brief, worked end to end.</span></a>' +
+      '<button type="button" class="pick" data-route="explore"><b>Just explore</b><span>Open everything and look around.</span></button>' +
+      '</div></div></section>';
+    view.innerHTML = hero + '<section class="start' + (cur ? '' : ' start-below') + '">' +
+            (cur ? '<h1>Change your route</h1>' : '<h2 id="routes-h" tabindex="-1">Where are you starting?</h2>') +
+      '<p class="lede">Everything stays open, and you can change your route at any time.</p>' +
       '<div class="route-grid" role="group" aria-label="Choose a route">' + window.ROUTES.map(function (r, ri) {
         var on = cur && cur.id === r.id;
         return '<button type="button" class="route-card' + (on ? ' on' : '') + '" data-accent="' + (ri + 1) + '" data-route="' + r.id + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
           '<span class="rc-name">' + esc(r.name) + (on ? '<span class="sr"> (your current route)</span>' : '') + '</span>' +
           '<span class="rc-blurb">' + esc(r.blurb) + '</span></button>';
       }).join('') + '</div>' +
-      '<p class="start-skip">' + (cur
-        ? '<a href="#/home">Keep my current route</a>'
-        : '<button type="button" class="link" data-route="explore">Skip for now and show me everything</button>') + '</p>' +
+      (cur ? '<p class="start-skip"><a href="#/home">Keep my current route</a></p>' : '') +
       '</section>';
+    if (!cur) {
+      var canvas = view.querySelector('.net-bg');
+      if (canvas && window.Network) stopNetwork = Network.start(canvas);
+      var pr = view.querySelector('#pick-route');
+      if (pr) pr.addEventListener('click', function (e) {
+        e.preventDefault();
+        var h2 = view.querySelector('#routes-h');
+        var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        h2.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+        h2.focus({ preventScroll: true });
+      });
+    }
     Array.prototype.forEach.call(view.querySelectorAll('[data-route]'), function (b) {
       b.addEventListener('click', function () {
         Progress.setRoute(b.getAttribute('data-route'));
         if (window.location.hash === '#/home') route(); else window.location.hash = '#/home';
       });
     });
-    var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
+    var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
     if (window.Byte && !cur) byteLater(function () { Byte.say('idle', 'Hi, I\'m Byte. I live in code, so I know where the bugs hide. Pick a route and I\'ll tag along.', null, 11000); }, 600);
   }
 
@@ -208,16 +232,6 @@
     }).join('') + '</ol>';
   }
   function termCount(group) { return window.GLOSSARY.filter(function (g) { return g.group === group; }).length; }
-  function resourceCard(id) {
-    var c = {
-      'review': ['#/review', 'Review and quizzes', 'Spaced reviews of what you have solved, plus multiple-choice quizzes by subject.'],
-      'glossary': ['#/glossary', 'Glossary and flashcards', window.GLOSSARY.length + ' data terms with deeper explanations, business questions and a sentence to say in an interview.'],
-      'glossary-sql': ['#/glossary/SQL', 'SQL terms', termCount('SQL') + ' terms: joins, keys, NULL, CTEs, window functions and more.'],
-      'glossary-pipelines': ['#/glossary/Pipelines', 'Pipeline terms', termCount('Pipelines') + ' terms: ETL, ELT, batch, streaming, warehouses and lakes.'],
-      'glossary-modelling': ['#/glossary/Modelling', 'Modelling terms', termCount('Modelling') + ' terms: facts, dimensions, star schemas, grain and keys.']
-    }[id];
-    return c ? '<a class="also-item" href="' + c[0] + '"><h2>' + esc(c[1]) + '</h2><p>' + esc(c[2]) + '</p></a>' : '';
-  }
   // A step counts as reached when its work is done, or (for pages with nothing to finish) once it has been opened.
   function stepKey(rt, i) { return rt.id + ':' + i; }
   function stepDone(rt, st, i) {
@@ -258,13 +272,20 @@
       '</section>';
   }
 
+  // ---------- view: progress ----------
+  function renderProgress() {
+    teardown();
+    view.innerHTML = '<section class="progress-page"><h1>Your progress</h1>' + progressBody() + '</section>';
+    wireTips();
+    var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
+  }
+
   // ---------- view: path (home) ----------
   function renderHome() {
     teardown();
     var rt = currentRoute() || byId(window.ROUTES, 'explore');
     var total = window.EXERCISES.length, done = doneCount();
     var due = dueList().length, weak = weakList().length;
-    var aloudCount = window.EXERCISES.filter(function (e) { return Progress.isAloud(e.id); }).length;
 
     var html = '<p class="route-bar">Your route: <strong>' + esc(rt.name) + '</strong> <a href="#/start">Change route</a></p>' +
       '<section class="intro">' +
@@ -273,12 +294,9 @@
       (rt.note ? '<p class="route-note">' + esc(rt.note) + ' <a href="#/roadmap">See the roadmap</a>.</p>' : '') +
       '</section>';
 
-    if (done) {
-      html += '<section class="today" aria-label="Today"><h2>Today</h2><ul>' +
-        '<li>' + (due ? '<a href="#/review">' + plural(due, 'exercise is', 'exercises are') + ' due for review</a>' : 'Nothing is due for review') + '</li>' +
-        (weak ? '<li><a href="#/review">' + plural(weak, 'weak spot', 'weak spots') + ' to revisit</a></li>' : '') +
-        '<li>' + aloudCount + ' of ' + total + ' explained out loud</li>' +
-        '</ul></section>';
+    if (due || weak) {
+      html += '<p class="today-line">' + [due ? plural(due, 'review', 'reviews') + ' due' : '', weak ? plural(weak, 'weak spot', 'weak spots') : ''].filter(Boolean).join(' and ') +
+        '. <a href="#/review">Go to Review</a></p>';
     }
 
     if (rt.steps && rt.steps.length) html += routeMap(rt);
@@ -286,13 +304,9 @@
     if (rt.id === 'interview') html += aloudQueue();
 
     html += '<section class="home-progress" id="your-progress" aria-labelledby="prog-h">' +
-      '<div class="section-row"><h2 id="prog-h" class="section-h">Your progress</h2><a href="#/lab">Open the SQL lab</a></div>' +
-      progressBody() + '</section>';
-
-    var cards = (rt.cards || []).map(resourceCard).filter(Boolean);
-    if (cards.length) {
-      html += '<section class="also" aria-label="Other things to practise">' + cards.join('') + '</section>';
-    }
+      '<h2 id="prog-h" class="section-h">Your progress</h2>' +
+      '<p class="prog-line">' + done + ' of ' + plural(total, 'exercise', 'exercises') + ' solved. <a href="#/progress">See all your progress</a></p>' +
+      activityPanel() + '<div class="tip" id="dash-tip" role="tooltip" hidden></div></section>';
     view.innerHTML = html;
     wireTips();
     if (window.Byte) {
@@ -465,7 +479,7 @@
         '<div id="tips"></div>' +
         '<div id="compare"></div>' +
         '<div id="after"></div>' +
-        '<div id="result"><p class="empty">Write a query and run it. Results appear here.</p></div>' +
+        '<div id="result"><p class="empty">Results appear here.</p></div>' +
         '<div id="xlate" hidden></div>' +
         (inSession ? '' : aloudPanel(ex)) +
         '<details class="model" id="model"' + (inSession ? ' hidden' : '') + '><summary>Show the model answer</summary>' +
@@ -674,7 +688,7 @@
     var total = window.EXERCISES.length, done = doneCount(), next = nextUndone();
     view.innerHTML = '<section class="lab-index">' +
       '<h1>SQL lab</h1>' +
-      '<p class="lede">Practise on a small online shop\'s data: customers, orders, products, sellers and payments. Each line below is a clause of a query, in the order you write it.</p>' +
+      '<p class="lede">Practise on a small online shop\'s data: customers, orders, products, sellers and payments.</p>' +
       '<p class="intro-actions">' + (next ? '<a class="btn primary" href="#/lab/' + next.id + '">' + (done ? 'Continue with ' : 'Start with ') + esc(next.title) + '</a>' : '<span class="all-done">All ' + total + ' exercises complete.</span>') +
         '<span class="count">' + done + ' of ' + total + ' exercises done</span></p>' +
       '<section class="route-path" aria-labelledby="path-h"><h2 id="path-h" class="section-h">' + esc(rt.pathTitle || 'SQL topics') + '</h2>' + pathRows(shownTopics) + '</section>' +
@@ -724,7 +738,7 @@
     teardown();
     var due = dueList(), weak = weakList(), hist = Progress.quizHistory();
     var html = '<section class="review"><h1>Review</h1>' +
-      '<p class="lede">Exercises come back 3, 7, 14 and 30 days after you solve them, so they stick. Ones that took three or more wrong checks come back sooner.</p>';
+      '<p class="lede">Solved exercises come back after 3, 7, 14 and 30 days. Ones you found hard come back sooner.</p>';
 
     html += '<div class="review-block"><h2>Due now</h2>';
     if (due.length) {
@@ -746,9 +760,8 @@
     html += '</div>';
 
     html += '<div class="review-block"><h2>Quiz by subject</h2>' +
-      '<p>' + CQ_SIZE + ' multiple-choice questions at a time. Each subject has three levels: ' +
-        '<strong>Recognise</strong>, <strong>Apply</strong> and <strong>Explain</strong>. Score ' + (CQ_SIZE - 1) + ' or more twice to move up. ' +
-        'A term counts as mastered once you get it right on two different days.</p>' +
+      '<p>' + CQ_SIZE + ' questions at a time, over three levels: <strong>Recognise</strong>, <strong>Apply</strong> and <strong>Explain</strong>. ' +
+        'Score ' + (CQ_SIZE - 1) + ' or more twice to move up a level.</p>' +
       '<div class="topic-quiz" role="group" aria-label="Quiz by subject">' +
       ['all'].concat(window.GLOSSARY_GROUPS.map(function (g) { return g.id; })).map(function (id) {
         var g = id === 'all' ? null : gGroup(id);
@@ -1085,7 +1098,7 @@
     view.innerHTML =
       '<section class="glossary">' +
       '<h1>Glossary</h1>' +
-      '<p class="lede">' + window.GLOSSARY.length + ' data terms in six areas. Each one opens a page with the plain meaning, a deeper explanation, examples, common mistakes, the business questions it answers and a sentence to say out loud.</p>' +
+      '<p class="lede">' + window.GLOSSARY.length + ' data terms in plain English, with examples and a line to say in an interview.</p>' +
       '<div class="g-controls">' +
         '<label class="sr" for="g-search">Search terms</label>' +
         '<input id="g-search" type="search" placeholder="Search, for example churn or join" value="' + esc(glossaryState.q) + '">' +
@@ -1288,7 +1301,7 @@
     teardown();
     var list = window.PROJECTS || [], soon = window.PROJECTS_COMING || [];
     view.innerHTML = '<section class="projects"><h1>Projects</h1>' +
-      '<p class="lede">End-to-end projects with a business brief, data to download and free tools. Each one takes you from raw files to answers a manager can act on, with model answers to check your work.</p>' +
+      '<p class="lede">End-to-end projects with a business brief, data to download, free tools and model answers.</p>' +
       '<div class="pj-cards">' + list.map(function (p) {
         var done = Progress.projectStepsDone(p.id), n = p.steps.length;
         return '<a class="pj-card" href="#/projects/' + p.id + '">' +
@@ -1396,7 +1409,9 @@
       }).join('');
     };
     view.innerHTML = '<section class="settings"><h1>Settings</h1>' +
-      '<p class="lede">Make the site comfortable to use. Changes save straight away, in this browser only.</p>' +
+      '<p class="lede">Changes save straight away, in this browser only.</p>' +
+      '<fieldset><legend>Appearance</legend>' +
+        radios('theme', [['device', 'Match my device'], ['light', 'Light'], ['dark', 'Dark']], s.theme) + '</fieldset>' +
       '<fieldset><legend>Text size</legend>' + radios('text', TEXT_SIZES, s.text) + '</fieldset>' +
       '<fieldset><legend>Speaking timer</legend><p class="hint-text">How long the "Explain it out loud" timer runs.</p>' +
         radios('timer', TIMERS.map(function (t) { return [t, t + ' seconds']; }), s.timer) + '</fieldset>' +
@@ -1414,7 +1429,8 @@
     Array.prototype.forEach.call(view.querySelectorAll('input[type="radio"]'), function (r) {
       r.addEventListener('change', function () {
         var cur = getSettings();
-        if (r.name === 'byte') { cur.byte = r.value === 'on'; saveSettings(cur); if (cur.byte && window.Byte) Byte.say('happy', 'I\'m back! I\'ll keep it short.'); else if (window.Byte) Byte.off(); }
+        if (r.name === 'theme') { cur.theme = r.value; saveSettings(cur); applyTheme(); }
+        else if (r.name === 'byte') { cur.byte = r.value === 'on'; saveSettings(cur); if (cur.byte && window.Byte) Byte.say('happy', 'I\'m back! I\'ll keep it short.'); else if (window.Byte) Byte.off(); }
         else { cur[r.name] = r.name === 'timer' ? Number(r.value) : r.value; saveSettings(cur); }
         msg.textContent = 'Saved.';
       });
@@ -1422,8 +1438,37 @@
     var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); }
   }
 
-  // ---------- the site is dark only ----------
-  document.documentElement.setAttribute('data-theme', 'dark');
+  // ---------- light and dark: follows the device until the visitor picks one ----------
+  var themeBtn = document.getElementById('theme-btn');
+  var darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  function currentTheme() {
+    var t = getSettings().theme;
+    if (t === 'light' || t === 'dark') return t;
+    return darkQuery && !darkQuery.matches ? 'light' : 'dark';
+  }
+  function applyTheme() {
+    var t = currentTheme();
+    document.documentElement.setAttribute('data-theme', t);
+    if (themeBtn) {
+      var next = t === 'dark' ? 'light' : 'dark';
+      themeBtn.setAttribute('aria-label', 'Switch to ' + next + ' mode');
+      themeBtn.title = 'Switch to ' + next + ' mode';
+      themeBtn.setAttribute('data-mode', t);
+    }
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#05080B' : '#F3F6F8');
+  }
+  if (themeBtn) themeBtn.addEventListener('click', function () {
+    var cur = getSettings();
+    cur.theme = currentTheme() === 'dark' ? 'light' : 'dark';
+    saveSettings(cur); applyTheme();
+    var radio = view.querySelector('input[name="theme"][value="' + cur.theme + '"]'); if (radio) radio.checked = true;
+  });
+  if (darkQuery) {
+    var onDevice = function () { if (getSettings().theme === 'device') applyTheme(); };
+    if (darkQuery.addEventListener) darkQuery.addEventListener('change', onDevice); else if (darkQuery.addListener) darkQuery.addListener(onDevice);
+  }
+  applyTheme();
 
   // ---------- phone menu: the header links fold behind one button on small screens ----------
   var menuBtn = document.getElementById('menu-btn'), topMenu = document.getElementById('top-menu');
@@ -1442,7 +1487,28 @@
   var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   function niceDay(str) { var d = dayFrom(str); return d.getDate() + ' ' + MONTHS[d.getMonth()]; }
 
-  // The dashboard body, shown on the home page under "Your progress".
+  // The last 12 weeks, shaded by how much was done each day. Shown on the home page and the progress page.
+  function activityPanel() {
+    var act = Progress.activity(), todayStr = Progress.today();
+    var end = dayFrom(todayStr), start = new Date(end); start.setDate(start.getDate() - 7 * 12 + 1);
+    start.setDate(start.getDate() - ((start.getDay() + 6) % 7)); // back to a Monday
+    var cells = [], d = new Date(start), weeks = 0, activeDays = 0;
+    while (d <= end) {
+      var key = isoDay(d), n = act[key] || 0, lvl = n === 0 ? 0 : n < 3 ? 1 : n < 6 ? 2 : 3;
+      if (n) activeDays += 1;
+      cells.push('<span class="cal-cell lvl-' + lvl + (key === todayStr ? ' is-today' : '') + '" tabindex="0" data-tip="' + esc(niceDay(key) + ': ' + (n ? plural(n, 'thing practised', 'things practised') : 'no practice')) + '"></span>');
+      if (d.getDay() === 0) weeks += 1;
+      d.setDate(d.getDate() + 1);
+    }
+    return '<section class="panel" aria-labelledby="p-cal"><h3 id="p-cal">Activity</h3><p class="panel-sub">Last 12 weeks: ' + plural(activeDays, 'day', 'days') + ' with practice.</p>' +
+      '<div class="cal" role="img" aria-label="Calendar of the last 12 weeks. ' + activeDays + ' days with practice.">' +
+        '<div class="cal-days" aria-hidden="true"><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span><span></span></div>' +
+        '<div class="cal-grid">' + cells.join('') + '</div></div>' +
+      '<p class="cal-key" aria-hidden="true">Less <span class="cal-cell lvl-0"></span><span class="cal-cell lvl-1"></span><span class="cal-cell lvl-2"></span><span class="cal-cell lvl-3"></span> More</p></section>';
+
+  }
+
+  // The full dashboard, on its own page at #/progress.
   function progressBody() {
     var ex = window.EXERCISES, total = ex.length;
     var solved = ex.filter(function (e) { return Progress.isDone(e.id); });
@@ -1455,12 +1521,11 @@
     function tile(label, value, of, note) {
       return '<div class="kpi"><p class="kpi-label">' + label + '</p><p class="kpi-value">' + value + (of !== null ? '<span class="kpi-of"> of ' + of + '</span>' : '') + '</p><p class="kpi-note">' + note + '</p></div>';
     }
-    var html = '<p class="panel-sub prog-lede">Your own numbers, saved in this browser. No streaks and no league tables: just what you have done and what to look at next.</p>' +
-      '<div class="kpis">' +
+    var html = '<div class="kpis">' +
         tile('Exercises solved', solved.length, total, total - solved.length ? (total - solved.length) + ' still to try' : 'Every exercise solved') +
         tile('Right first time', firstTry.length, solved.length || 0, solved.length ? Math.round(firstTry.length / solved.length * 100) + '% of what you solved' : 'Solve one to start') +
         tile('Explained out loud', spoken.length, solved.length || 0, solved.length ? 'Solved exercises you have said aloud' : 'Unlocks after a solve') +
-        tile('Days practised', daysThisMonth, null, 'in ' + MONTHS[Number(monthKey.slice(5)) - 1] + ', any amount counts') +
+        tile('Days practised', daysThisMonth, null, 'in ' + MONTHS[Number(monthKey.slice(5)) - 1]) +
       '</div>';
 
     // strength by topic: share of each topic solved, and how many first time
@@ -1508,22 +1573,7 @@
     }
     html += '</section>';
 
-    // activity calendar: the last 12 weeks, shaded by how much was done each day
-    var end = dayFrom(todayStr), start = new Date(end); start.setDate(start.getDate() - 7 * 12 + 1);
-    start.setDate(start.getDate() - ((start.getDay() + 6) % 7)); // back to a Monday
-    var cells = [], d = new Date(start), weeks = 0, activeDays = 0;
-    while (d <= end) {
-      var key = isoDay(d), n = act[key] || 0, lvl = n === 0 ? 0 : n < 3 ? 1 : n < 6 ? 2 : 3;
-      if (n) activeDays += 1;
-      cells.push('<span class="cal-cell lvl-' + lvl + (key === todayStr ? ' is-today' : '') + '" tabindex="0" data-tip="' + esc(niceDay(key) + ': ' + (n ? plural(n, 'thing practised', 'things practised') : 'no practice')) + '"></span>');
-      if (d.getDay() === 0) weeks += 1;
-      d.setDate(d.getDate() + 1);
-    }
-    html += '<section class="panel" aria-labelledby="p-cal"><h3 id="p-cal">Activity</h3><p class="panel-sub">Last 12 weeks: ' + plural(activeDays, 'day', 'days') + ' with practice. Rest days are fine.</p>' +
-      '<div class="cal" role="img" aria-label="Calendar of the last 12 weeks. ' + activeDays + ' days with practice.">' +
-        '<div class="cal-days" aria-hidden="true"><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span><span></span></div>' +
-        '<div class="cal-grid">' + cells.join('') + '</div></div>' +
-      '<p class="cal-key" aria-hidden="true">Less <span class="cal-cell lvl-0"></span><span class="cal-cell lvl-1"></span><span class="cal-cell lvl-2"></span><span class="cal-cell lvl-3"></span> More</p></section>';
+    html += activityPanel();
 
     // needs attention
     var due = dueList(), weak = weakList(), unspoken = solved.filter(function (e) { return !Progress.isAloud(e.id) && (window.ALOUD || {})[e.id]; });
@@ -1533,7 +1583,7 @@
     weak.slice(0, 3).forEach(function (e) { items.push(['Weak spot', e.title, '#/lab/' + e.id]); });
     unspoken.slice(0, 2).forEach(function (e) { items.push(['Say it out loud', e.title, '#/lab/' + e.id]); });
     untouched.slice(0, 2).forEach(function (r) { var f = firstIn(r.t.id); items.push(['Not started', r.t.name, '#/lab/' + f.id]); });
-    html += '<section class="panel" aria-labelledby="p-need"><h3 id="p-need">Needs attention</h3><p class="panel-sub">The most useful things to do next</p>' +
+    html += '<section class="panel" aria-labelledby="p-need"><h3 id="p-need">Needs attention</h3>' +
       (items.length ? '<ul class="need">' + items.slice(0, 7).map(function (it) {
         return '<li><span class="need-tag">' + it[0] + '</span><a href="' + it[2] + '">' + esc(it[1]) + '</a></li>';
       }).join('') + '</ul>' : '<p class="empty with-byte">' + (window.Byte && Byte.enabled() ? Byte.mini('happy', 36) : '') + '<span>Nothing needs attention. Not a bug in sight.</span></p>') +
@@ -1596,8 +1646,6 @@
     Array.prototype.forEach.call(document.querySelectorAll('[data-nav]'), function (a) {
       if (a.getAttribute('data-nav') === page) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
-    var rl = document.getElementById('route-link'), cr = currentRoute();
-    if (rl) rl.textContent = cr ? 'Route: ' + cr.name : 'Choose a route';
     var due = dueList().length, link = document.querySelector('[data-nav="review"]');
     if (link) link.innerHTML = 'Review' + (due ? ' <span class="nav-count">' + due + '<span class="sr"> due</span></span>' : '');
   }
@@ -1635,7 +1683,7 @@
     else if (page === 'settings') renderSettings();
     else if (page === 'projects') { if (parts[1]) renderProject(decodeURIComponent(parts[1]), parseInt(parts[2], 10) || 0); else renderProjects(); }
     else if (window.PAGES && window.PAGES[page]) renderInfo(page);
-    else if (page === 'progress') { renderHome(); var yp = document.getElementById('your-progress'); if (yp) setTimeout(function () { yp.scrollIntoView(); }, 0); }
+    else if (page === 'progress') renderProgress();
     else { page = 'home'; renderHome(); }
     updateNav(page === 'session' || page === 'quiz' ? 'review' : page === 'progress' ? 'home' : page);
     updateReportLink();

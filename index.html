@@ -4,26 +4,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#05080B">
   <title>The Joinery</title>
   <meta name="description" content="The Joinery: free, hands-on data learning. Practise SQL in your browser with no sign-up.">
   <!-- Preview card when the link is shared (LinkedIn, WhatsApp and others). The address assumes the site is published at danikabuilds.github.io/the-joinery/ -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The Joinery">
-  <meta property="og:title" content="The Joinery: learn data skills, free, in your browser">
-  <meta property="og:description" content="SQL practice, a plain-English glossary and interview-style quizzes. No sign-up.">
+  <meta property="og:title" content="The Joinery: practise data skills, free, in your browser">
+  <meta property="og:description" content="Real SQL in your browser, a plain-English glossary, quizzes and end-to-end data projects. No sign-up, no paywall.">
   <meta property="og:url" content="https://danikabuilds.github.io/the-joinery/">
   <meta property="og:image" content="https://danikabuilds.github.io/the-joinery/preview.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="The Joinery, with Byte the beetle: learn data skills, free, in your browser.">
+  <meta property="og:image:alt" content="The Joinery logo beside a SQL query and its result: practise data skills, free, in your browser.">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2032%2032%27%3E%3Crect%20width=%2732%27%20height=%2732%27%20rx=%276%27%20fill=%27%2305080B%27/%3E%3Cpath%20d=%27M3%204H29V10H20L24%2019H8L12%2010H3Z%27%20fill=%27%232A9FB0%27/%3E%3Cpath%20d=%27M3%2011H11L7%2020H25L21%2011H29V28H3Z%27%20fill=%27%23E2E9EF%27/%3E%3C/svg%3E">
-  <!-- Applies the saved text size before the page paints, so there is no jump. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2032%2032%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20rx=%227%22%20fill=%22%2305080B%22/%3E%3Crect%20x=%224%22%20y=%2212%22%20width=%2224%22%20height=%2215%22%20rx=%222%22%20fill=%22%23DCE4EA%22/%3E%3Cpath%20d=%22M6%205H26Q28%205%2028%207V13H22.8L24.2%2021.5H17.6L19%2013H13L14.4%2021.5H7.8L9.2%2013H4V7Q4%205%206%205Z%22%20fill=%22%232A9FB0%22%20stroke=%22%2305080B%22%20stroke-width=%221.8%22%20stroke-linejoin=%22round%22%20paint-order=%22stroke%22/%3E%3C/svg%3E">
+  <!-- Applies the saved text size and light or dark mode before the page paints, so there is no jump. -->
   <script>
     (function () {
       try {
         var st = JSON.parse(window.localStorage.getItem('data-learning-settings') || '{}');
         if (st.text === 'large' || st.text === 'larger') document.documentElement.setAttribute('data-text', st.text);
+        // light or dark, before the page paints, so there is no flash
+        var t = st.theme === 'light' || st.theme === 'dark' ? st.theme
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', t);
       } catch (e) { /* ignore */ }
     })();
   </script>
@@ -33,7 +38,8 @@
 <body>
   <a class="skip" href="#view">Skip to content</a>
   <header class="top">
-    <a class="brand" href="#/home"><svg class="mark-logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><path class="m-tail" d="M3 4H29V10H20L24 19H8L12 10H3Z"/><path class="m-board" d="M3 11H11L7 20H25L21 11H29V28H3Z"/></svg><span>The Joinery</span></a>
+    <a class="brand" href="#/home"><svg class="mark-logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect class="m-board" x="3" y="12" width="26" height="16" rx="2"/><path class="m-tail" d="M5 4H27Q29 4 29 6V13H23.5L25 22H18L19.5 13H12.5L14 22H7L8.5 13H3V6Q3 4 5 4Z"/></svg><span>The Joinery</span></a>
+    <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch to light mode" title="Switch to light mode"><svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3 7 7M17 17l1.7 1.7M5.3 18.7 7 17M17 7l1.7-1.7"/></svg><svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z"/></svg></button>
     <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="top-menu">Menu</button>
     <div class="top-menu" id="top-menu">
     <nav aria-label="Main">
@@ -44,7 +50,6 @@
       <a href="#/projects" data-nav="projects">Projects</a>
       <a href="#/settings" data-nav="settings">Settings</a>
     </nav>
-    <a href="#/start" class="route-link" id="route-link">Choose a route</a>
     </div>
   </header>
 
@@ -52,7 +57,7 @@
 
   <footer class="foot">
     <p><strong>The Joinery</strong> is free to use, with no sign-up. Practice data is synthetic and shaped like the Olist e-commerce dataset. Progress is saved in this browser only.</p>
-    <p class="credits">Built with sql.js, CodeMirror, Inter and JetBrains Mono, all open source.</p>
+    <p class="credits">Built by <a href="https://danikabuilds.github.io/">Danika Singh</a>. Made with sql.js, CodeMirror, Inter and JetBrains Mono, all open source.</p>
     <nav class="foot-links" aria-label="About and help">
       <a href="#/about">About</a>
       <a href="#/privacy">Privacy</a>
@@ -97,6 +102,7 @@
   <script src="js/db.js"></script>
   <script src="js/hints.js"></script>
   <script src="js/byte.js"></script>
+  <script src="js/network.js"></script>
   <script src="js/app.js"></script>
   <script src="js/analytics.js"></script>
 </body>
