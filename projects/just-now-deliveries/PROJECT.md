@@ -99,7 +99,7 @@ Your scripts go in the `just-now-deliveries` folder, next to `data`. Open `DATA_
 | payments.csv | 51 769 | one payment |
 | reviews.csv | 38 910 | one review |
 
-The tables link together through their IDs. An order belongs to a customer; it has one or more items; each item is a product sold by a seller. That is a [foreign key](https://danikabuilds.github.io/the-joinery/#/glossary/term/foreign-key) at work.
+The tables link together through their IDs. An order belongs to a customer; it has one or more items; each item is a product sold by a seller. That is a [foreign key](https://thejoinery.dev/#/glossary/term/foreign-key) at work.
 
 ## 3. First look, with Python
 
@@ -188,7 +188,7 @@ This is the biggest step, and the most realistic one. Create `clean.py`. It shou
 
 > **Tip:** Hints: write one function per table. `s.str.strip()` removes spaces at the ends, `.str.lower()` makes text lower case, and a Python dictionary with `.map()` turns nicknames into official names. For the two date formats, try `pd.to_datetime(s, format="%Y-%m-%d %H:%M:%S", errors="coerce")`, then the second format for whatever is still empty.
 
-Make the script print what it changed. A cleaning report is how you explain your work to a manager, and it is a great thing to talk about in an interview. Related terms: [data quality](https://danikabuilds.github.io/the-joinery/#/glossary/term/data-quality), [deduplication](https://danikabuilds.github.io/the-joinery/#/glossary/term/deduplication), [NULL](https://danikabuilds.github.io/the-joinery/#/glossary/term/null).
+Make the script print what it changed. A cleaning report is how you explain your work to a manager, and it is a great thing to talk about in an interview. Related terms: [data quality](https://thejoinery.dev/#/glossary/term/data-quality), [deduplication](https://thejoinery.dev/#/glossary/term/deduplication), [NULL](https://thejoinery.dev/#/glossary/term/null).
 
 <details>
 <summary>Show the expected cleaning report</summary>
@@ -490,13 +490,13 @@ if __name__ == "__main__":
 
 *About 1 to 2 hours*
 
-Raw tables are shaped for storing data, not for answering questions. Build a [star schema](https://danikabuilds.github.io/the-joinery/#/glossary/term/star-schema): one [fact table](https://danikabuilds.github.io/the-joinery/#/glossary/term/fact-table) with the numbers, and [dimension tables](https://danikabuilds.github.io/the-joinery/#/glossary/term/dimension-table) to slice them by.
+Raw tables are shaped for storing data, not for answering questions. Build a [star schema](https://thejoinery.dev/#/glossary/term/star-schema): one [fact table](https://thejoinery.dev/#/glossary/term/fact-table) with the numbers, and [dimension tables](https://thejoinery.dev/#/glossary/term/dimension-table) to slice them by.
 
-- `fact_orders`: [one row per order](https://danikabuilds.github.io/the-joinery/#/glossary/term/grain). Columns: order, customer, seller, order date, status, item count, revenue, freight, promised date, delivered date, days late, is late, a delivery timing group, days to deliver and the review score.
+- `fact_orders`: [one row per order](https://thejoinery.dev/#/glossary/term/grain). Columns: order, customer, seller, order date, status, item count, revenue, freight, promised date, delivered date, days late, is late, a delivery timing group, days to deliver and the review score.
 - `dim_customer`, `dim_product`: one row per customer and per product.
 - `dim_date`: one row per day for 2024 and 2025, with year, month and weekday. Every chart then uses the same calendar.
 
-> **Tip:** Hint: add up the items per order in a [CTE](https://danikabuilds.github.io/the-joinery/#/glossary/term/cte) first, then join that to orders. If you join the item rows straight to orders and then sum, you get a [join fan-out](https://danikabuilds.github.io/the-joinery/#/glossary/term/fan-out): orders with three items are counted three times. Use `date_diff('day', promised, delivered)` for days late.
+> **Tip:** Hint: add up the items per order in a [CTE](https://thejoinery.dev/#/glossary/term/cte) first, then join that to orders. If you join the item rows straight to orders and then sum, you get a [join fan-out](https://thejoinery.dev/#/glossary/term/fan-out): orders with three items are counted three times. Use `date_diff('day', promised, delivered)` for days late.
 
 Write the SQL in `model.sql`, and a small `model.py` that runs it. Also save each model table as a CSV in `model_export`: you need those for Power BI in step 8.
 
@@ -617,7 +617,7 @@ Now the questions the head of operations asked. Write each query in `questions.s
 
 ### Q1. Are we growing?
 
-Revenue and number of orders per month, then the growth from 2024 to 2025. *Uses: [Growth rate](https://danikabuilds.github.io/the-joinery/#/glossary/term/growth-rate), [seasonality](https://danikabuilds.github.io/the-joinery/#/glossary/term/seasonality), [LAG](https://danikabuilds.github.io/the-joinery/#/glossary/term/lag-lead).*
+Revenue and number of orders per month, then the growth from 2024 to 2025. *Uses: [Growth rate](https://thejoinery.dev/#/glossary/term/growth-rate), [seasonality](https://thejoinery.dev/#/glossary/term/seasonality), [LAG](https://thejoinery.dev/#/glossary/term/lag-lead).*
 
 <details>
 <summary>Show the Q1 answer</summary>
@@ -661,7 +661,7 @@ ORDER BY yr;
 
 ### Q2. What sells?
 
-Revenue by category in 2025, with each category's share of the total. *Uses: [window functions](https://danikabuilds.github.io/the-joinery/#/glossary/term/window-function) (the share uses `SUM(...) OVER ()`).*
+Revenue by category in 2025, with each category's share of the total. *Uses: [window functions](https://thejoinery.dev/#/glossary/term/window-function) (the share uses `SUM(...) OVER ()`).*
 
 <details>
 <summary>Show the Q2 answer</summary>
@@ -701,7 +701,7 @@ ORDER BY revenue DESC;
 
 ### Q3. Where are deliveries failing?
 
-For delivered orders: the share that arrived after the promised date, by the customer's province. *Uses: [joins](https://danikabuilds.github.io/the-joinery/#/glossary/term/left-join).*
+For delivered orders: the share that arrived after the promised date, by the customer's province. *Uses: [joins](https://thejoinery.dev/#/glossary/term/left-join).*
 
 <details>
 <summary>Show the Q3 answer</summary>
@@ -739,7 +739,7 @@ ORDER BY late_pct DESC;
 
 ### Q4. Does slow delivery hurt our reviews?
 
-Average review score, and the share of 1 or 2 star reviews, by delivery timing. *Uses: [CASE](https://danikabuilds.github.io/the-joinery/#/glossary/term/case).*
+Average review score, and the share of 1 or 2 star reviews, by delivery timing. *Uses: [CASE](https://thejoinery.dev/#/glossary/term/case).*
 
 <details>
 <summary>Show the Q4 answer</summary>
@@ -765,13 +765,13 @@ ORDER BY delivery;
 | 2. 1 to 3 days late | 3 998 | 3.24 | 28.4% |
 | 3. 4 or more days late | 616 | 2.11 | 68.2% |
 
-**What it means:** Yes, sharply. On-time orders average **4.4** stars. Orders 4 or more days late average **2.1**, and 68% of those reviews are 1 or 2 stars. Even 1 to 3 days late costs more than a star. (This shows the two move together; it does not prove lateness is the only cause. See [correlation versus causation](https://danikabuilds.github.io/the-joinery/#/glossary/term/correlation-causation).)
+**What it means:** Yes, sharply. On-time orders average **4.4** stars. Orders 4 or more days late average **2.1**, and 68% of those reviews are 1 or 2 stars. Even 1 to 3 days late costs more than a star. (This shows the two move together; it does not prove lateness is the only cause. See [correlation versus causation](https://thejoinery.dev/#/glossary/term/correlation-causation).)
 
 </details>
 
 ### Q5. Do customers come back?
 
-Of customers who ordered, the share with two or more orders, and their share of revenue. *Uses: [repeat purchase rate](https://danikabuilds.github.io/the-joinery/#/glossary/term/repeat-purchase-rate), [retention](https://danikabuilds.github.io/the-joinery/#/glossary/term/retention).*
+Of customers who ordered, the share with two or more orders, and their share of revenue. *Uses: [repeat purchase rate](https://thejoinery.dev/#/glossary/term/repeat-purchase-rate), [retention](https://thejoinery.dev/#/glossary/term/retention).*
 
 <details>
 <summary>Show the Q5 answer</summary>
@@ -802,7 +802,7 @@ FROM per_customer;
 
 ### Q6. Detective question: when and where did it go most wrong?
 
-The month and province with the highest late rate (only where there were 100 or more deliveries). *Uses: [GROUP BY](https://danikabuilds.github.io/the-joinery/#/glossary/term/group-by) with [HAVING](https://danikabuilds.github.io/the-joinery/#/glossary/term/where-vs-having).*
+The month and province with the highest late rate (only where there were 100 or more deliveries). *Uses: [GROUP BY](https://thejoinery.dev/#/glossary/term/group-by) with [HAVING](https://thejoinery.dev/#/glossary/term/where-vs-having).*
 
 <details>
 <summary>Show the Q6 answer</summary>
@@ -837,7 +837,7 @@ LIMIT 5;
 
 ### Q7. How do customers pay?
 
-Share of payments, average amount and average instalments by payment type. *Uses: [aggregate functions](https://danikabuilds.github.io/the-joinery/#/glossary/term/aggregate-function).*
+Share of payments, average amount and average instalments by payment type. *Uses: [aggregate functions](https://thejoinery.dev/#/glossary/term/aggregate-function).*
 
 <details>
 <summary>Show the Q7 answer</summary>
@@ -919,7 +919,7 @@ if __name__ == "__main__":
 
 *About 1 to 2 hours*
 
-One page, for the head of operations. Each chart answers one question, and its title says the answer, not just the topic. See [dashboard design](https://danikabuilds.github.io/the-joinery/#/glossary/term/dashboard-design) and [chart choice](https://danikabuilds.github.io/the-joinery/#/glossary/term/chart-choice).
+One page, for the head of operations. Each chart answers one question, and its title says the answer, not just the topic. See [dashboard design](https://thejoinery.dev/#/glossary/term/dashboard-design) and [chart choice](https://thejoinery.dev/#/glossary/term/chart-choice).
 
 - Top row: four headline numbers: revenue, orders, late %, average review score.
 - A line chart of revenue by month (Q1).
@@ -949,7 +949,7 @@ DIVIDE (
 Average review = AVERAGE ( fact_orders[review_score] )
 ```
 
-> **You should see:** With no filters: Late % for Gauteng shows 6.4%, and Revenue for 2025 shows R31 872 840. If yours differ, check the status filter in the measures. Related: [measures versus columns](https://danikabuilds.github.io/the-joinery/#/glossary/term/measure-vs-column), [filter context](https://danikabuilds.github.io/the-joinery/#/glossary/term/filter-context).
+> **You should see:** With no filters: Late % for Gauteng shows 6.4%, and Revenue for 2025 shows R31 872 840. If yours differ, check the status filter in the measures. Related: [measures versus columns](https://thejoinery.dev/#/glossary/term/measure-vs-column), [filter context](https://thejoinery.dev/#/glossary/term/filter-context).
 
 ### Route B: Python charts (any computer)
 
@@ -1046,7 +1046,7 @@ if __name__ == "__main__":
 
 *About 30 minutes*
 
-Right now you run five scripts by hand. Write `run_all.py` that runs clean, load, model, analyse and charts in order, prints how long each took, and stops with a clear message if one fails. This is a small [data pipeline](https://danikabuilds.github.io/the-joinery/#/glossary/term/data-pipeline): the same idea data engineers schedule to run every night. Because each step replaces its output instead of adding to it, running it twice gives the same result. That is called [idempotency](https://danikabuilds.github.io/the-joinery/#/glossary/term/idempotency).
+Right now you run five scripts by hand. Write `run_all.py` that runs clean, load, model, analyse and charts in order, prints how long each took, and stops with a clear message if one fails. This is a small [data pipeline](https://thejoinery.dev/#/glossary/term/data-pipeline): the same idea data engineers schedule to run every night. Because each step replaces its output instead of adding to it, running it twice gives the same result. That is called [idempotency](https://thejoinery.dev/#/glossary/term/idempotency).
 
 > **Tip:** Hint: give each script a `main()` function and end it with `if __name__ == "__main__": main()`. Then `run_all.py` can import each script and call its `main()`.
 
@@ -1118,8 +1118,8 @@ Practise these out loud. They follow situation, action, result:
 
 - Add a `fact_order_items` table (one row per item) so Power BI can show revenue by category and by seller.
 - Rank sellers by late rate. Are a few slow sellers dragging the average down? (Hint: there are.)
-- Group customers by when they first bought and track how many come back each month: a [cohort analysis](https://danikabuilds.github.io/the-joinery/#/glossary/term/cohort-analysis).
-- Split customers by recency, frequency and spend: [RFM segmentation](https://danikabuilds.github.io/the-joinery/#/glossary/term/rfm).
+- Group customers by when they first bought and track how many come back each month: a [cohort analysis](https://thejoinery.dev/#/glossary/term/cohort-analysis).
+- Split customers by recency, frequency and spend: [RFM segmentation](https://thejoinery.dev/#/glossary/term/rfm).
 - Put your project on GitHub with a short README: the question, what you did, the answer and one chart. Then link it from your CV and LinkedIn.
 
 ### Try it on real data
@@ -1128,4 +1128,4 @@ Practise these out loud. They follow situation, action, result:
 
 ---
 
-Part of [The Joinery](https://danikabuilds.github.io/the-joinery/), free data practice in your browser.
+Part of [The Joinery](https://thejoinery.dev/), free data practice in your browser.

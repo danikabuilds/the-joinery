@@ -5,7 +5,7 @@
 // To change the account, change GOATCOUNTER_CODE to your site code. To turn counting off, set it to ''.
 (function () {
   var GOATCOUNTER_CODE = 'thejoinery';
-  var LIVE_HOST = 'danikabuilds.github.io';
+  var LIVE_HOST = 'thejoinery.dev';
   if (!GOATCOUNTER_CODE || location.hostname !== LIVE_HOST) return;
 
   // The site changes page with #/... links, so count each of those as a page view.

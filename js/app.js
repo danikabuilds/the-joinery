@@ -1304,7 +1304,8 @@
   // ---------- view: Projects hub ----------
   // data/projects.js holds one short entry per project. The full write-up is projects/<id>/PROJECT.md,
   // which the site fetches and shows with js/markdown.js. Each "## 1. ..." heading in it is a step.
-  var SITE_URL_PUBLIC = 'https://danikabuilds.github.io/the-joinery/'; // links to this address inside a PROJECT.md stay in the site
+  var SITE_URL_PUBLIC = 'https://thejoinery.dev/'; // links to this address inside a PROJECT.md stay in the site
+  var SITE_URL_OLD = 'https://danikabuilds.github.io/the-joinery/'; // the address before November 2026, still found in older downloads
 
   function renderProjects() {
     teardown();
@@ -1345,7 +1346,7 @@
 
   function paintProject(p, md, stepNo) {
     var base = p.md.replace(/[^/]+$/, '');
-    var html = Markdown.render(md, { base: base, site: SITE_URL_PUBLIC });
+    var html = Markdown.render(md, { base: base, site: [SITE_URL_PUBLIC, SITE_URL_OLD] });
     var art = document.createElement('article');
     art.className = 'project';
     art.innerHTML = '<p class="crumb"><a href="#/projects">Projects</a> / ' + esc(p.title) + '</p>' + html;

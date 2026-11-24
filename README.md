@@ -54,6 +54,10 @@ The engine is SQLite. The exercises use standard SQL that also works in PostgreS
 
 Your query and the model answer both run against a fresh copy of the database, and the two results are compared. Column names do not matter. Column order, values and (when the task asks for sorting) row order do. Numbers are compared to 2 decimal places.
 
+## Licence
+
+Copyright © 2026 Danika Singh. All rights reserved. See `LICENSE`. The third-party libraries below keep their own licences.
+
 ## Third-party libraries
 
 - sql.js (SQLite compiled for the browser), MIT licence

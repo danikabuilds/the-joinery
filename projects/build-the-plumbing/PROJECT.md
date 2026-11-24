@@ -14,7 +14,7 @@
 | Time | 10 to 14 hours, over a week or two |
 | Skills | Pipeline design, Python ingestion, dbt, Incremental loads, Data quality tests, Schema drift, Scheduling with GitHub Actions |
 | Tools | Python (free, open source), DuckDB (free, open source), dbt Core (free, open source), Git and GitHub (free), GitHub Actions (free for public repositories), VS Code (free) |
-| Before you start | [Beginner Data Analytics: Just Now Deliveries](https://danikabuilds.github.io/the-joinery/#/projects/just-now-deliveries) helps, but is not required. You should be comfortable running a Python script and writing a SELECT with a GROUP BY. |
+| Before you start | [Beginner Data Analytics: Just Now Deliveries](https://thejoinery.dev/#/projects/just-now-deliveries) helps, but is not required. You should be comfortable running a Python script and writing a SELECT with a GROUP BY. |
 
 ## Downloads
 
@@ -31,7 +31,7 @@ The data arrives in three batches, like real daily files. **Only unzip a batch w
 
 *About 1 hour*
 
-Data engineers draw the pipeline before writing code. A drawing shows the gaps: where data comes from, where it is stored, what checks it, and what runs when. This project uses the [medallion pattern](https://danikabuilds.github.io/the-joinery/#/glossary/term/medallion): three layers, each with one job.
+Data engineers draw the pipeline before writing code. A drawing shows the gaps: where data comes from, where it is stored, what checks it, and what runs when. This project uses the [medallion pattern](https://thejoinery.dev/#/glossary/term/medallion): three layers, each with one job.
 
 | Layer | Also called | Its one job | Built with |
 |---|---|---|---|
@@ -48,7 +48,7 @@ Draw your own version first, with boxes for each layer and arrows for each step.
 
 </details>
 
-> **Tip:** Two ideas make everything else easier. **Idempotent:** running a step twice gives the same result as running it once ([idempotency](https://danikabuilds.github.io/the-joinery/#/glossary/term/idempotency)). **Fail loudly:** if the data is wrong, stop and say so, rather than publish wrong numbers.
+> **Tip:** Two ideas make everything else easier. **Idempotent:** running a step twice gives the same result as running it once ([idempotency](https://thejoinery.dev/#/glossary/term/idempotency)). **Fail loudly:** if the data is wrong, stop and say so, rather than publish wrong numbers.
 
 ## 2. Set up
 
@@ -111,9 +111,9 @@ Open a few order files. The important thing to notice: **an order appears more t
 | O001949 | shipped | 2025-10-16 11:04:39 | orders_2025-10-16.csv |
 | O001949 | delivered | 2025-10-19 05:41:46 | orders_2025-10-19.csv |
 
-So the source sends **changes**, not a finished table. Your pipeline has to keep the latest version of each order: a simple form of [change data capture](https://danikabuilds.github.io/the-joinery/#/glossary/term/change-data-capture).
+So the source sends **changes**, not a finished table. Your pipeline has to keep the latest version of each order: a simple form of [change data capture](https://thejoinery.dev/#/glossary/term/change-data-capture).
 
-Now write `CONTRACT.md`: a short [data contract](https://danikabuilds.github.io/the-joinery/#/glossary/term/data-contract) that says what the feed promises. For each file: the columns, their types and rules, when it arrives, and what happens when a rule is broken.
+Now write `CONTRACT.md`: a short [data contract](https://thejoinery.dev/#/glossary/term/data-contract) that says what the feed promises. For each file: the columns, their types and rules, when it arrives, and what happens when a rule is broken.
 
 <details>
 <summary>Show a model contract</summary>
@@ -163,7 +163,7 @@ Write `ingest.py`. It moves new files from `landing/` into a DuckDB file, `wareh
 4. **One transaction per file**, so a crash halfway through a file leaves nothing half-loaded.
 5. **Reference files** (customers, sellers, products) are a full snapshot: replace those tables each run.
 
-> **Tip:** DuckDB reads a CSV with `read_csv('path', all_varchar = true)`. To add rows by column name rather than position, use `INSERT INTO raw.orders BY NAME SELECT ...`. That matters in step 9. Related: [incremental load](https://danikabuilds.github.io/the-joinery/#/glossary/term/incremental-load).
+> **Tip:** DuckDB reads a CSV with `read_csv('path', all_varchar = true)`. To add rows by column name rather than position, use `INSERT INTO raw.orders BY NAME SELECT ...`. That matters in step 9. Related: [incremental load](https://thejoinery.dev/#/glossary/term/incremental-load).
 
 <details>
 <summary>Show the model script</summary>
@@ -320,7 +320,7 @@ Then write `models/staging/sources.yml` to describe the raw tables, and these mo
 - `stg_orders`: **one row per order, its latest version**.
 - `stg_order_items`: typed, one row per order and item number.
 
-> **Tip:** For the latest version, number each order's rows from newest to oldest and keep number 1: `QUALIFY row_number() OVER (PARTITION BY order_id ORDER BY updated_at DESC) = 1`. See [window functions](https://danikabuilds.github.io/the-joinery/#/glossary/term/window-function) and [deduplication](https://danikabuilds.github.io/the-joinery/#/glossary/term/deduplication).
+> **Tip:** For the latest version, number each order's rows from newest to oldest and keep number 1: `QUALIFY row_number() OVER (PARTITION BY order_id ORDER BY updated_at DESC) = 1`. See [window functions](https://thejoinery.dev/#/glossary/term/window-function) and [deduplication](https://thejoinery.dev/#/glossary/term/deduplication).
 
 Run it from the `transform` folder with `dbt build --profiles-dir .`
 
@@ -490,7 +490,7 @@ The `-- depends_on:` line is there because dbt cannot see a `ref()` that is insi
 
 *About 1 hour*
 
-Add the rest of the [star schema](https://danikabuilds.github.io/the-joinery/#/glossary/term/star-schema), and the table the morning dashboard will read:
+Add the rest of the [star schema](https://thejoinery.dev/#/glossary/term/star-schema), and the table the morning dashboard will read:
 
 - `dim_customer`: one row per customer.
 - `dim_date`: one row per day from 1 October to 31 December 2025.
@@ -534,7 +534,7 @@ from range(date '2025-10-01', date '2026-01-01', interval 1 day) as t(d)
 
 *About 1 to 2 hours*
 
-Tests are how the pipeline knows the data is wrong before a person does. In dbt there are two kinds, and `dbt build` runs each test straight after the model it checks. See [data quality](https://danikabuilds.github.io/the-joinery/#/glossary/term/data-quality).
+Tests are how the pipeline knows the data is wrong before a person does. In dbt there are two kinds, and `dbt build` runs each test straight after the model it checks. See [data quality](https://thejoinery.dev/#/glossary/term/data-quality).
 
 - **Generic tests** in `models/schema.yml`: `unique`, `not_null`, `accepted_values` and `relationships`, one line each.
 - **Singular tests**: a `.sql` file in `tests/` that selects the bad rows. The test fails if it returns any.
@@ -709,7 +709,7 @@ where customer_id is not null
 
 *About 1 to 2 hours*
 
-Write `run_pipeline.py` to run everything in order with one command: ingest, then `dbt build`, then a freshness check. It records every run, successful or not, in a table called `ops.run_log`, and **exits with an error** if anything fails. That error is how a scheduler knows a run went wrong. See [orchestration](https://danikabuilds.github.io/the-joinery/#/glossary/term/orchestration).
+Write `run_pipeline.py` to run everything in order with one command: ingest, then `dbt build`, then a freshness check. It records every run, successful or not, in a table called `ops.run_log`, and **exits with an error** if anything fails. That error is how a scheduler knows a run went wrong. See [orchestration](https://thejoinery.dev/#/glossary/term/orchestration).
 
 <details>
 <summary>Show the model script</summary>
@@ -842,8 +842,8 @@ jobs:
 A pipeline nobody watches fails quietly. Three habits:
 
 - **The run log.** `SELECT * FROM ops.run_log ORDER BY started_at DESC` shows every run, how many new files it loaded, and whether it failed.
-- **Freshness.** `sources.yml` says the raw data should be less than a day old. `dbt source freshness` warns when it is not. See [data freshness](https://danikabuilds.github.io/the-joinery/#/glossary/term/data-freshness).
-- **Lineage.** Run `dbt docs generate --profiles-dir .`, then `dbt docs serve --profiles-dir .`, and open the graph: it draws every model and what it depends on. When a number looks wrong, this shows where to look. See [data lineage](https://danikabuilds.github.io/the-joinery/#/glossary/term/data-lineage).
+- **Freshness.** `sources.yml` says the raw data should be less than a day old. `dbt source freshness` warns when it is not. See [data freshness](https://thejoinery.dev/#/glossary/term/data-freshness).
+- **Lineage.** Run `dbt docs generate --profiles-dir .`, then `dbt docs serve --profiles-dir .`, and open the graph: it draws every model and what it depends on. When a number looks wrong, this shows where to look. See [data lineage](https://thejoinery.dev/#/glossary/term/data-lineage).
 
 > **You should see:** after loading the three batches one at a time, the run log holds one successful row per batch (if you ran a batch twice, the second shows 0 new files), and the lineage graph shows the raw tables flowing into staging and then the marts.
 
@@ -872,11 +872,11 @@ A pipeline nobody watches fails quietly. Three habits:
 *As long as you like*
 
 - **Move it to the cloud.** Swap DuckDB for Snowflake (it has a free trial) by installing `dbt-snowflake` and changing `profiles.yml`. The models barely change, and that is the point of dbt.
-- **Keep history of customers.** If a customer moves province, the old value disappears. Add a dbt snapshot to track changes over time: a [slowly changing dimension](https://danikabuilds.github.io/the-joinery/#/glossary/term/scd).
+- **Keep history of customers.** If a customer moves province, the old value disappears. Add a dbt snapshot to track changes over time: a [slowly changing dimension](https://thejoinery.dev/#/glossary/term/scd).
 - **Get told when it fails.** GitHub can email you when a workflow fails. Turn it on in your notification settings.
 - **Try a real orchestrator.** Rebuild the schedule in Dagster or Airflow, which add retries, backfills and a visual run history.
 - **Store files as Parquet,** partitioned by date, and compare the speed and size with CSV.
 
 ---
 
-Part of [The Joinery](https://danikabuilds.github.io/the-joinery/), free data practice in your browser.
+Part of [The Joinery](https://thejoinery.dev/), free data practice in your browser.

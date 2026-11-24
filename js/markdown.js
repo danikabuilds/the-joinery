@@ -30,7 +30,8 @@
   }
 
   function fixUrl(url, opt) {
-    if (opt.site && url.indexOf(opt.site) === 0) return url.slice(opt.site.length) || '#/home'; // a link to this site
+    var sites = [].concat(opt.site || []);
+    for (var k = 0; k < sites.length; k++) if (url.indexOf(sites[k]) === 0) return url.slice(sites[k].length) || '#/home'; // a link to this site
     if (/^(https?:|#|mailto:)/.test(url)) return url;
     return (opt.base || '') + url;                                                            // relative to the .md file
   }

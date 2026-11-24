@@ -1,0 +1,13 @@
+Copyright (c) 2026 Danika Singh. All rights reserved.
+
+The code, writing, glossary, exercises, projects and design of The Joinery
+are the work of Danika Singh. You are welcome to use the live site and to
+read this repository, but you may not copy, modify, publish or distribute
+any part of it without written permission.
+
+Third-party parts keep their own licences:
+- sql.js (vendor/sql-wasm.js, vendor/sql-wasm.wasm): MIT licence
+- CodeMirror (vendor/codemirror*): MIT licence
+- Inter and JetBrains Mono fonts (vendor/fonts): SIL Open Font Licence 1.1
+
+Contact: https://danikabuilds.github.io/

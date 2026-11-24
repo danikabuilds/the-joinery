@@ -67,26 +67,8 @@
     function colours() {
       var dark = document.documentElement.getAttribute('data-theme') !== 'light';
       var bg = getComputedStyle(document.documentElement).getPropertyValue('--mist').trim() || (dark ? '#05080B' : '#FFFFFF');
-      return { dark: dark, blue: dark ? '64,184,200' : '15,110,140', beige: '201,169,106', dot: bg, bg: bg };
+      return { dark: dark, blue: dark ? '64,184,200' : '15,110,140', beige: '201,169,106', dot: bg };
     }
-    function wash(c) {
-      // keeps the words readable: the network fades out towards the text
-      var g, a = narrow ? (c.dark ? [0.6, 0.8, 0.86] : [0.72, 0.86, 0.9]) : null;
-      if (narrow) {
-        g = ctx.createLinearGradient(0, 0, 0, H);
-        g.addColorStop(0, hexA(c.bg, a[0])); g.addColorStop(0.35, hexA(c.bg, a[1])); g.addColorStop(1, hexA(c.bg, a[2]));
-      } else {
-        g = ctx.createLinearGradient(0, 0, W, 0);
-        g.addColorStop(0, hexA(c.bg, 0.97)); g.addColorStop(0.44, hexA(c.bg, 0.9)); g.addColorStop(0.62, hexA(c.bg, 0.12)); g.addColorStop(1, hexA(c.bg, 0));
-      }
-      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-    }
-    function hexA(hex, a) {
-      var h = hex.replace('#', '');
-      if (h.length === 3) h = h.split('').map(function (x) { return x + x; }).join('');
-      return 'rgba(' + parseInt(h.slice(0, 2), 16) + ',' + parseInt(h.slice(2, 4), 16) + ',' + parseInt(h.slice(4, 6), 16) + ',' + a + ')';
-    }
-
     function draw(t) {
       var c = colours(), appear = ease(t / 1.0), glow = new Map();
       ctx.clearRect(0, 0, W, H);
@@ -115,7 +97,6 @@
         ctx.strokeStyle = n.id % 5 === 0 ? 'rgba(' + c.beige + ',' + appear + ')' : 'rgba(' + c.blue + ',' + ((0.45 + 0.45 * g) * appear) + ')';
         ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(p[0], p[1], 4.6, 0, 7); ctx.fill(); ctx.stroke();
       });
-      wash(c);
     }
 
     function frame(now) {

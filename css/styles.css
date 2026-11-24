@@ -1034,6 +1034,11 @@ ol.pj-list { list-style: decimal; }
 /* ---------- welcome section: the moving network behind the first screen ---------- */
 .hero-home { position: relative; min-height: min(38rem, 82vh); display: flex; align-items: center; margin: calc(-1 * clamp(1.5rem, 4vw, 3rem)) calc(-1 * clamp(1rem, 4vw, 3rem)) 0; padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem); overflow: hidden; }
 .net-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* The fade that keeps the words readable is CSS, not part of the drawing, so browsers that repaint pages
+   in their own dark mode (Samsung Internet) repaint it together with the background. */
+.hero-home::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--mist) 97%, transparent) 0%, color-mix(in srgb, var(--mist) 90%, transparent) 44%, color-mix(in srgb, var(--mist) 12%, transparent) 62%, transparent 100%); }
+.hero-copy { z-index: 1; }
 .hero-copy { position: relative; max-width: 33rem; }
 .hero-tag { display: inline-block; font-size: .85rem; font-weight: 600; color: var(--beige-ink); background: var(--sand); padding: .3rem .75rem; border-radius: 999px; margin: 0; }
 [data-theme="light"] .hero-tag { color: var(--pine); }
@@ -1057,6 +1062,7 @@ ol.pj-list { list-style: decimal; }
 .start-below h2:focus { outline: none; box-shadow: none; }
 @media (max-width: 760px) {
   .hero-home { min-height: 0; align-items: flex-start; }
+  .hero-home::after { background: linear-gradient(180deg, color-mix(in srgb, var(--mist) 62%, transparent) 0%, color-mix(in srgb, var(--mist) 84%, transparent) 35%, color-mix(in srgb, var(--mist) 90%, transparent) 100%); }
   .picks { grid-template-columns: 1fr; gap: .6rem; }
   .pick { padding: .75rem .9rem; }
   .hero-blurb { font-size: 1.02rem; }
