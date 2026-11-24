@@ -180,7 +180,7 @@
       '<a class="pick" href="#/projects"><b>Start a project</b><span>A real business brief, worked end to end.</span></a>' +
       '<button type="button" class="pick" data-route="explore"><b>Just explore</b><span>Open everything and look around.</span></button>' +
       '</div></div></section>';
-    view.innerHTML = hero + '<section class="start' + (cur ? '' : ' start-below') + '">' +
+    view.innerHTML = hero + '<section class="start' + (cur ? '' : ' start-below') + '"' + (cur ? '' : ' id="route-choice" hidden') + '>' +
             (cur ? '<h1>Change your route</h1>' : '<h2 id="routes-h" tabindex="-1">Where are you starting?</h2>') +
       '<p class="lede">Everything stays open, and you can change your route at any time.</p>' +
       '<div class="route-grid" role="group" aria-label="Choose a route">' + window.ROUTES.map(function (r, ri) {
@@ -195,8 +195,12 @@
       var canvas = view.querySelector('.net-bg');
       if (canvas && window.Network) stopNetwork = Network.start(canvas);
       var pr = view.querySelector('#pick-route');
+      pr.setAttribute('aria-expanded', 'false'); pr.setAttribute('aria-controls', 'route-choice');
       if (pr) pr.addEventListener('click', function (e) {
         e.preventDefault();
+        var box = view.querySelector('#route-choice'), first = box.hidden;
+        box.hidden = false; pr.setAttribute('aria-expanded', 'true');
+        if (first && window.Byte) byteLater(function () { Byte.say('idle', 'Hi, I\'m Byte. I live in code, so I know where the bugs hide. Pick a route and I\'ll tag along.', null, 9000); }, 700);
         var h2 = view.querySelector('#routes-h');
         var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         h2.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
@@ -210,7 +214,6 @@
       });
     });
     var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
-    if (window.Byte && !cur) byteLater(function () { Byte.say('idle', 'Hi, I\'m Byte. I live in code, so I know where the bugs hide. Pick a route and I\'ll tag along.', null, 11000); }, 600);
   }
 
   // ---------- home page building blocks ----------
@@ -1254,6 +1257,12 @@
       }).join('') + '</section>';
   }
 
+  // A small picture under a term's example, from js/glossary-visuals.js.
+  function termVisual(id) {
+    var v = window.GLOSSARY_VISUALS && window.GLOSSARY_VISUALS[id];
+    return v ? '<figure class="t-vis">' + v() + '</figure>' : '';
+  }
+
   function renderTerm(id) {
     teardown();
     var t = gTerm(id);
@@ -1275,7 +1284,7 @@
       '<div class="t-grid">' +
         '<div class="t-main">' +
           '<section class="t-sec"><h2>Understand it</h2><p>' + esc(t.deep) + '</p></section>' +
-          (t.ex ? '<section class="t-sec"><h2>Example</h2>' + (t.exCode ? '<pre class="t-code">' + esc(t.ex) + '</pre>' : '<p class="t-ex">' + esc(t.ex).replace(/\n/g, '<br>') + '</p>') + '</section>' : '') +
+          (t.ex ? '<section class="t-sec"><h2>Example</h2>' + (t.exCode ? '<pre class="t-code" tabindex="0" aria-label="Example code">' + esc(t.ex) + '</pre>' : '<p class="t-ex">' + esc(t.ex).replace(/\n/g, '<br>') + '</p>') + termVisual(t.id) + '</section>' : '') +
           (t.compare ? dialectCompare() : '') +
           (t.mistakes ? '<section class="t-sec"><h2 class="with-byte">' + (window.Byte && Byte.enabled() ? Byte.mini('search', 30) : '') + '<span>Bugs Byte often finds</span></h2>' + list(t.mistakes) + '</section>' : '') +
         '</div>' +
@@ -1653,7 +1662,7 @@
   var SITE = 'The Joinery';
   function setTitle(page, parts) {
     var t = '';
-    if (page === 'start') t = 'Choose your route';
+    if (page === 'start') { if (!currentRoute()) { document.title = SITE + ': practise data skills, piece by piece'; return; } t = 'Change your route'; }
     else if (page === 'lab') { var ex = parts[1] && (byId(window.EXERCISES, parts[1]) || nextUndone() || window.EXERCISES[0]); t = ex ? ex.title : 'SQL lab'; }
     else if (page === 'review' || page === 'session' || page === 'quiz') t = 'Review and quiz';
     else if (page === 'glossary') { var gt = parts[1] === 'term' && gTerm(decodeURIComponent(parts[2] || '')); t = gt ? gt.term + ' (glossary)' : 'Glossary'; }

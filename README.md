@@ -91,7 +91,7 @@ Saved progress files still use the app id `data-learning-site`, so older exports
 
 ## Glossary (November 2026)
 
-The glossary has 113 terms in six areas: SQL, Modelling, Pipelines, Business, Statistics, and BI and dashboards. Each area has its own file, `data/glossary-<area>.js`, and `data/glossary.js` explains every field. The glossary has three views: an A to Z index grouped by area, a list of business questions linked to terms, and flashcards. Each term also has its own page at `#/glossary/term/<id>`, with the plain meaning, a deeper explanation, an example, common mistakes, the business questions it answers, a sentence to say out loud and related terms. To add a term, copy a block in the right area file and give it a new id. The `rel` list may only use ids that exist.
+The glossary has 146 terms in six areas: SQL, Modelling, Pipelines, Business, Statistics, and BI and dashboards. Each area has its own file, `data/glossary-<area>.js`, and `data/glossary.js` explains every field. The glossary has three views: an A to Z index grouped by area, a list of business questions linked to terms, and flashcards. Each term also has its own page at `#/glossary/term/<id>`, with the plain meaning, a deeper explanation, an example, common mistakes, the business questions it answers, a sentence to say out loud and related terms. Some terms also have a small picture in their Example section, drawn in `js/glossary-visuals.js` and keyed by the term id. To add a term, copy a block in the right area file and give it a new id. The `rel` list may only use ids that exist.
 
 ## Byte the beetle
 

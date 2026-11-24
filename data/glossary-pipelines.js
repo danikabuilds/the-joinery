@@ -89,6 +89,7 @@ window.addGlossary('Pipelines', [
     def: 'Organising data in layers: bronze (raw), silver (cleaned) and gold (business-ready).',
     deep: 'Bronze keeps the raw copy as delivered. Silver fixes types, removes duplicates and standardises values. Gold holds modelled tables and metrics for reports. The names vary (raw, staging, marts), but the idea is the same: each layer has one job.',
     questions: ['If a report looks wrong, which layer introduced the problem?'],
+    ex: 'raw.orders  →  staging.stg_orders  →  marts.fct_orders',
     say: 'Medallion layers go from raw bronze to cleaned silver to business-ready gold, so each step has one clear job.',
     rel: ['elt', 'lakehouse', 'data-quality']
   },
@@ -132,5 +133,77 @@ window.addGlossary('Pipelines', [
     questions: ['Who is told, and when, if the app team renames a column we rely on?'],
     say: 'A data contract fixes the shape and meaning of a source, so changes are caught by the producer, not discovered in a broken report.',
     rel: ['data-quality', 'schema']
+  },
+  {
+    id: 'schema-drift', term: 'Schema drift',
+    def: 'When the structure of incoming data changes without warning: a new column, a renamed one, or a different data type.',
+    deep: 'Source systems change for their own reasons, and nobody tells the data team. A pipeline that relies on column positions can break, or worse, quietly load values into the wrong columns. Defensive pipelines match columns by name, store raw data as text, add new columns automatically and alert someone, and fail loudly when a required column disappears.',
+    ex: 'orders_2025-11-14.csv: order_id, status\norders_2025-11-15.csv: order_id, status, delivery_method',
+    mistakes: ['Inserting by column position.', 'Silently dropping columns the pipeline does not recognise.'],
+    questions: ['Why did yesterday\'s load fail?', 'When did this column start appearing?'],
+    say: 'I design for schema drift: load by column name, keep the raw layer as text, add new columns automatically, and alert when a required one disappears.',
+    rel: ['data-contract', 'data-quality', 'medallion']
+  },
+  {
+    id: 'backfill', term: 'Backfill',
+    def: 'Loading or reprocessing past data, for example after fixing a bug, adding a new column or when old files arrive late.',
+    deep: 'Pipelines are usually built to process today\'s data, but sooner or later you need to rerun history: a calculation was wrong, a new metric needs past values, or last month\'s files turn up late. A pipeline that is idempotent and processes by date range makes backfills safe and boring. Run them in batches and compare totals before and after.',
+    ex: 'Bug fixed in the revenue calculation on 20 Nov.\nBackfill: rerun the model for 1 Oct to 19 Nov, then compare monthly totals with the old version.',
+    mistakes: ['Backfilling with a pipeline that appends, so history gets duplicated.', 'Rerunning everything at once and overloading the warehouse.'],
+    questions: ['Can we show the new metric for last year too?', 'Are the numbers before the fix still wrong in the reports?'],
+    say: 'Because my loads are idempotent and work by date range, a backfill is just rerunning those dates, and I compare totals before and after.',
+    rel: ['idempotency', 'incremental-load', 'orchestration']
+  },
+  {
+    id: 'quarantine', term: 'Quarantine (handling bad rows)',
+    def: 'Setting rows that fail quality rules aside in a separate table, with a reason, instead of loading them or deleting them.',
+    deep: 'When a few rows are broken, stopping the whole pipeline punishes everyone, but loading them corrupts the numbers. Quarantining moves bad rows to a holding table with the rule they failed, so the clean data still flows and someone can fix the source. Add a threshold too: if a large share of rows fail, something bigger is wrong and the pipeline should stop.',
+    ex: 'quarantine_orders\norder_id | reason\nO9912    | missing customer_id\nO9917    | unknown status: delivred',
+    exCode: true,
+    mistakes: ['Deleting bad rows silently, so nobody fixes the source.', 'Quarantining without a limit, so a broken feed is quietly emptied into quarantine.'],
+    questions: ['How many rows did we reject yesterday, and why?', 'Is this a one-off bad file or a broken feed?'],
+    say: 'I quarantine bad rows with a reason so clean data keeps flowing, and I stop the pipeline if the quarantined share crosses a threshold.',
+    rel: ['data-quality', 'data-contract', 'deduplication']
+  },
+  {
+    id: 'columnar-storage', term: 'Columnar storage (Parquet)',
+    def: 'Storing data column by column rather than row by row, which makes analytical queries much faster and files much smaller.',
+    deep: 'Analytical queries usually read a few columns across millions of rows. A CSV stores whole rows, so the engine reads everything. Columnar formats like Parquet store each column together, so a query can read just the columns it needs, and similar values compress well. Parquet also stores data types, so dates stay dates. It is the default format for data lakes and tools like DuckDB, Spark and BigQuery.',
+    ex: 'orders.csv      412 MB, every query reads every column\norders.parquet   58 MB, SELECT SUM(price) reads one column',
+    mistakes: ['Keeping large analytical datasets as CSV.', 'Writing millions of tiny Parquet files instead of fewer, larger ones.'],
+    questions: ['Why are our queries on the data lake so slow?', 'How do we cut storage costs?'],
+    say: 'For analytics I store data as Parquet, a columnar format, so queries read only the columns they need and files compress well.',
+    rel: ['data-lake', 'lakehouse', 'table-partitioning']
+  },
+  {
+    id: 'data-observability', term: 'Data observability',
+    def: 'Watching the health of data pipelines continuously: whether data arrived, is fresh, has the expected volume and shape, and passed its tests.',
+    deep: 'Tests catch the problems you thought of; observability helps catch the ones you did not. It tracks signals such as freshness (did today\'s data arrive?), volume (are there far fewer rows than usual?), schema (did a column change?) and distribution (did the share of nulls jump?). Alerts go to the data team before a stakeholder finds the problem in a dashboard.',
+    ex: 'Alert 06:15: orders loaded 1,240 rows, usual range 4,500 to 5,500.\nAlert 06:15: share of null customer_id rose from 0% to 8%.',
+    mistakes: ['Only finding out about broken data when a manager asks.', 'Sending so many alerts that people ignore them.'],
+    questions: ['Did last night\'s data load completely?', 'Can we trust this morning\'s dashboard?'],
+    say: 'Beyond tests, I monitor freshness, volume and schema so the data team hears about problems before the business does.',
+    rel: ['data-quality', 'data-freshness', 'data-lineage']
+  },
+  {
+    id: 'reverse-etl', term: 'Reverse ETL',
+    def: 'Sending cleaned data from the warehouse back into business tools, such as a CRM, email platform or support system.',
+    deep: 'Normally data flows into the warehouse for analysis. Reverse ETL closes the loop: segments and scores built in the warehouse, such as "customers likely to churn" or "lifetime value", are pushed to the tools teams use every day, so marketing or support can act on them. The warehouse stays the single source of truth for the definitions.',
+    ex: 'Warehouse model: churn_risk per customer\nReverse ETL: sync churn_risk to the CRM every morning\nCRM: triggers a win-back email for high-risk customers',
+    mistakes: ['Rebuilding the same segment logic separately inside each tool.', 'Syncing personal data to tools without checking consent and access rules.'],
+    questions: ['How do we get warehouse segments into our email platform?', 'Can the support team see each customer\'s lifetime value?'],
+    say: 'Reverse ETL pushes warehouse data, like churn risk or lifetime value, into tools such as the CRM, so teams act on the same definitions.',
+    rel: ['etl', 'single-source-of-truth', 'customer-segmentation']
+  },
+  {
+    id: 'dbt', term: 'dbt',
+    def: 'An open-source tool that turns SQL SELECT statements into tested, documented tables and views in a warehouse.',
+    deep: 'dbt (data build tool) handles the T in ELT. Each model is a SQL file; ref() links models so dbt builds them in the right order; tests check uniqueness, nulls and relationships; and dbt docs draws the lineage. It brings software habits, such as version control, code review and testing, to analytics work. It runs on most warehouses, including Snowflake, BigQuery and DuckDB.',
+    ex: '-- models/marts/fct_orders.sql\nSELECT o.order_id, o.customer_id, SUM(i.price) AS revenue\nFROM {{ ref(\'stg_orders\') }} o\nJOIN {{ ref(\'stg_order_items\') }} i USING (order_id)\nGROUP BY 1, 2',
+    exCode: true,
+    mistakes: ['Hard-coding table names instead of using ref(), which breaks the build order.', 'Writing models with no tests.'],
+    questions: ['How do we know these tables were built correctly?', 'Which models feed this dashboard?'],
+    say: 'I use dbt for transformations: SQL models linked with ref(), tests on keys and relationships, and the docs site for lineage.',
+    rel: ['elt', 'data-lineage', 'data-quality']
   }
 ]);

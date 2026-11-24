@@ -122,5 +122,76 @@ window.addGlossary('Modelling', [
     deep: 'A query for last week on a table partitioned by day reads seven partitions, not years of data. In BigQuery and Snowflake this cuts both time and cost. It only helps if queries filter on the partition column.',
     say: 'Partitioning splits a big table, usually by date, so a query that filters on that column reads far less data.',
     rel: ['index', 'query-plan']
+  },
+  {
+    id: 'natural-key', term: 'Natural key',
+    def: 'A key that comes from the real world or the source system, such as an ID number, an email address or the shop\'s own order number.',
+    deep: 'Natural keys mean something outside the warehouse, which makes them easy to understand and to join back to the source. But they can change (a customer changes email), be reused, or clash when two systems are combined. That is why warehouses usually add a surrogate key and keep the natural key as an ordinary column.',
+    ex: 'customer_id "C001" from the shop system   (natural key)\ncustomer_key 101 created by the warehouse  (surrogate key)',
+    mistakes: ['Using an email address as a key and breaking history when it changes.', 'Assuming IDs from two different systems never overlap.'],
+    questions: ['How do we match this customer back to the source system?', 'Why did merging two systems create duplicate customers?'],
+    say: 'I keep the natural key from the source for traceability, but join on a surrogate key in the warehouse, because natural keys can change or clash.',
+    rel: ['surrogate-key', 'primary-key', 'scd']
+  },
+  {
+    id: 'composite-key', term: 'Composite key',
+    def: 'A key made of two or more columns that together identify a row.',
+    deep: 'Sometimes no single column is unique, but a combination is. In order_items, order_id repeats for every item and order_item_id restarts at 1 in every order, but the pair (order_id, order_item_id) is unique. Joining on only part of a composite key is a classic cause of fan-out.',
+    ex: 'order_items\norder_id | order_item_id | product_id\nO001     | 1             | P10\nO001     | 2             | P22\nO002     | 1             | P10',
+    exCode: true,
+    mistakes: ['Joining order_items on order_id alone when the other table is at item level.', 'Testing uniqueness on one column of a composite key.'],
+    questions: ['What makes each row in this table unique?', 'Why did this join double the rows?'],
+    say: 'When no single column is unique I use a composite key, and I test that the combination is unique before joining on it.',
+    rel: ['primary-key', 'grain', 'fan-out']
+  },
+  {
+    id: 'erd', term: 'Entity relationship diagram',
+    def: 'A diagram of tables (entities), their key columns, and how they relate to each other.',
+    deep: 'An ERD, or ER diagram, is the map of a database. Boxes are tables, lines are relationships, and the ends of each line show whether it is one-to-one, one-to-many or many-to-many. Drawing one before you build, or reading one before you query, saves a lot of guesswork about how to join. The diagram in the SQL lab is a simple ERD.',
+    ex: 'customers 1 ──< * orders 1 ──< * order_items * >── 1 products\n(one customer has many orders; one order has many items; each item is one product)',
+    mistakes: ['Joining tables without checking the relationship type first.', 'Letting the diagram go out of date as the model changes.'],
+    questions: ['How do these tables connect?', 'Which table should I start my query from?'],
+    say: 'Before I write a complex query, I sketch or read the ER diagram so I know the keys and whether each relationship is one-to-many.',
+    rel: ['cardinality', 'schema', 'foreign-key']
+  },
+  {
+    id: 'fact-table-types', term: 'Types of fact table',
+    def: 'Fact tables come in three main kinds: transaction (one row per event), periodic snapshot (one row per period) and accumulating snapshot (one row per process, updated as it moves).',
+    deep: 'A transaction fact records each event, such as each sale. A periodic snapshot records a state at regular intervals, such as stock on hand every night. An accumulating snapshot follows something with clear stages, such as an order moving from placed to paid to shipped to delivered, with one date column per stage. Picking the right type keeps questions easy to answer.',
+    ex: 'Transaction:   one row per payment\nPeriodic:      one row per product per day (stock level)\nAccumulating:  one row per order with placed, shipped and delivered dates',
+    mistakes: ['Storing stock levels as transactions and summing them, which double counts.', 'Using a transaction table to answer "how long does each stage take?".'],
+    questions: ['How long do orders spend between shipping and delivery?', 'What was stock on hand at the end of each month?'],
+    say: 'I choose the fact table type from the question: transaction facts for events, periodic snapshots for balances, accumulating snapshots for processes with stages.',
+    rel: ['fact-table', 'grain', 'additive-measures']
+  },
+  {
+    id: 'additive-measures', term: 'Additive and semi-additive measures',
+    def: 'Additive measures can be summed across every dimension; semi-additive ones, like balances, can be summed across some but not across time.',
+    deep: 'Revenue is additive: sum it by day, product or region and the total is right. Stock on hand is semi-additive: you can add it across warehouses, but adding Monday\'s stock to Tuesday\'s is meaningless; use the closing or average balance instead. Ratios such as conversion rate are non-additive: recalculate them from their parts rather than summing or averaging them.',
+    ex: 'Revenue (additive): Jan + Feb = Q1 revenue\nStock (semi-additive): Q1 stock = stock on 31 March, not the sum of every day\nConversion rate (non-additive): recalculate from orders ÷ visits',
+    mistakes: ['Summing a balance over time.', 'Averaging daily conversion rates instead of recalculating from totals.'],
+    questions: ['What was our stock at the end of the quarter?', 'What was the overall conversion rate this month?'],
+    say: 'I check whether a measure is additive before I sum it. Balances only add up across some dimensions, and ratios must be recalculated from their parts.',
+    rel: ['fact-table-types', 'aggregate-function', 'weighted-average']
+  },
+  {
+    id: 'role-playing-dimension', term: 'Role-playing dimension',
+    def: 'One dimension table used several times in the same fact table, each time in a different role.',
+    deep: 'An order has a purchase date, a shipped date and a delivered date. Rather than three date tables, the fact table holds three date keys that all point at the same dim_date. In SQL you join dim_date three times with different aliases; in a BI tool you may need one active relationship and the others switched on in specific measures.',
+    ex: 'fact_orders: purchase_date_key, shipped_date_key, delivered_date_key\nall three join to dim_date, once as "purchase date", once as "shipped date", once as "delivered date"',
+    mistakes: ['Joining dim_date once and accidentally filtering every date role at the same time.', 'Copying dim_date into three separate tables that then drift apart.'],
+    questions: ['How many orders were delivered in March, whenever they were placed?', 'How long from purchase to delivery, by month of purchase?'],
+    say: 'Dates are the classic role-playing dimension: one dim_date, joined once per role, such as purchase date and delivery date.',
+    rel: ['dimension-table', 'star-schema', 'bi-relationships']
+  },
+  {
+    id: 'data-vault', term: 'Data vault',
+    def: 'A modelling method that stores business keys, relationships and descriptive history in separate tables called hubs, links and satellites.',
+    deep: 'Data vault is built for change and auditability: new sources and attributes can be added without reworking existing tables, and every change is kept with its load time and source. The trade-off is many more tables and joins, so teams usually build a star schema on top for reporting. It is common in large enterprises and regulated industries.',
+    ex: 'hub_customer       (customer business key)\nlink_customer_order (which customer placed which order)\nsat_customer       (name, city, email, with load dates)',
+    mistakes: ['Pointing dashboards straight at the vault instead of a reporting layer.', 'Choosing data vault for a small project that needs a simple star schema.'],
+    questions: ['How do we keep a full audit trail of every change?', 'How do we add a new source without rebuilding the warehouse?'],
+    say: 'Data vault separates keys, relationships and history into hubs, links and satellites. It is great for audit and change, and I would still put a star schema on top for reporting.',
+    rel: ['star-schema', 'scd', 'normalisation']
   }
 ]);
