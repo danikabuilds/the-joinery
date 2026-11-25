@@ -30,10 +30,10 @@ window.ROUTES = [
     steps: [
       { label: 'Try joins', text: 'Check you know what each join keeps and drops.', topic: 'join' },
       { label: 'Try window functions', text: 'Rank, running totals and latest-per-group.', topic: 'window' },
-      { label: 'Test yourself with a subject quiz', text: 'Multiple-choice questions on one area at a time, or all of them.', href: '#/review' },
+      { label: 'Test yourself with a subject quiz', text: 'Multiple-choice questions on one area at a time, or all of them.', href: '#/quizzes' },
       { label: 'Write clearer queries with CTEs', text: 'Break a long query into named steps.', topic: 'cte' }
     ],
-    note: 'A quick skills check is planned. Until then, choose any topic below.'
+    note: ''
   },
   {
     id: 'interview',
@@ -46,7 +46,7 @@ window.ROUTES = [
     steps: [
       { label: 'Solve, then explain it out loud', text: 'Each solved exercise unlocks a timed spoken explanation.', next: true },
       { label: 'Practise counts and totals', text: 'A common interview theme: GROUP BY, and the questions that follow it.', topic: 'group' },
-      { label: 'Take a subject quiz', text: 'Eight multiple-choice questions, like a screening test.', href: '#/review' },
+      { label: 'Take a subject quiz', text: 'Eight multiple-choice questions, like a screening test.', href: '#/quizzes' },
       { label: 'Rehearse terms with flashcards', text: 'Say each definition aloud before you reveal it.', href: '#/glossary' }
     ],
     note: 'Daily 5 trivia and scenario questions are planned.'
@@ -58,14 +58,15 @@ window.ROUTES = [
     name: 'Data engineering',
     blurb: 'I want to learn how data is modelled, moved and stored.',
     headline: 'Build the data engineering foundations',
-    lede: 'Start with the SQL you will use every day, then learn how data is modelled and moved.',
+    lede: 'Start with the SQL you use every day, then load files with Python and build a real pipeline.',
     steps: [
       { label: 'Combine tables with joins', text: 'The skill behind almost every pipeline.', topic: 'join' },
       { label: 'Write clearer queries with CTEs', text: 'Break a big transformation into named steps.', topic: 'cte' },
+      { label: 'Combine many files with Python', text: 'Load a week of daily files, catch a new column and turn it into a script.', href: '#/projects/python-files' },
       { label: 'Learn the pipeline terms', text: 'ETL, ELT, batch, streaming, warehouses and lakes.', href: '#/glossary/Pipelines' },
-      { label: 'Learn how data is modelled', text: 'Facts, dimensions, star schemas and grain.', href: '#/glossary/Modelling' }
+      { label: 'Build the plumbing', text: 'A real pipeline: raw, staging and marts layers, dbt tests and a daily scheduled run.', href: '#/projects/build-the-plumbing' }
     ],
-    note: 'This is a starter route. Python, pipelines and cloud lessons are planned.'
+    note: ''
   },
   {
     id: 'explore',
@@ -73,8 +74,8 @@ window.ROUTES = [
     topics: ['select', 'where', 'group', 'join', 'union', 'cte', 'window'],
     name: 'Just exploring',
     blurb: 'Show me everything and let me look around.',
-    headline: 'Learn SQL in the order you write it',
-    lede: 'Each line of the query below is a topic. Work down the page and you will have practised every clause, in the place it belongs.',
+    headline: 'Look around, start anywhere',
+    lede: 'Everything on The Joinery in one place. Nothing has to be done in order, and your progress is saved as you go.',
     steps: [],
     note: ''
   }

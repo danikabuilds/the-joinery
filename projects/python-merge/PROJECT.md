@@ -18,13 +18,16 @@ The code reads the practice files straight from The Joinery, so there is nothing
 import pandas as pd
 
 BASE = "https://thejoinery.dev/projects/python-data/"
-orders = pd.read_csv(BASE + "orders.csv")
-customers = pd.read_csv(BASE + "customers.csv")
-items = pd.read_csv(BASE + "order_items.csv")
+headers = {"User-Agent": "Mozilla/5.0"}   # some websites block Python's default request; this sends a browser-style name
+orders = pd.read_csv(BASE + "orders.csv", storage_options=headers)
+customers = pd.read_csv(BASE + "customers.csv", storage_options=headers)
+items = pd.read_csv(BASE + "order_items.csv", storage_options=headers)
 print("orders", orders.shape)
 print("customers", customers.shape)
 print("items", items.shape)
 ```
+
+> **Tip:** The `headers` line tells the website the request comes from a browser. Without it, the site's host turns Python away with an `HTTP Error 403: Forbidden`. You only need it for files on websites, not for files on your own computer.
 
 ```text Output
 orders (355, 8)

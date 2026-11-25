@@ -23,10 +23,14 @@ import pandas as pd
 ```
 
 ```python Python
-df = pd.read_csv(URL)
+URL = "https://thejoinery.dev/projects/python-basics/orders_practice.csv"
+headers = {"User-Agent": "Mozilla/5.0"}   # some websites block Python's default request; this sends a browser-style name
+df = pd.read_csv(URL, storage_options=headers)
 print(df.shape)
 print(df.head())
 ```
+
+> **Tip:** The `headers` line tells the website the request comes from a browser. Without it, the site's host turns Python away with an `HTTP Error 403: Forbidden`. You only need it for files on websites, not for files on your own computer.
 
 > **You should see:** `(376, 8)`, then the first five rows.
 

@@ -21,11 +21,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 BASE = "https://thejoinery.dev/projects/python-data/"
-orders = pd.read_csv(BASE + "orders.csv", parse_dates=["order_date", "delivered_date"])
+headers = {"User-Agent": "Mozilla/5.0"}   # some websites block Python's default request; this sends a browser-style name
+orders = pd.read_csv(BASE + "orders.csv", parse_dates=["order_date", "delivered_date"], storage_options=headers)
 orders["quarter"] = orders["order_date"].dt.to_period("Q").astype(str)
 quarterly = orders.groupby("quarter")["order_total"].sum().round(2)
 print(quarterly)
 ```
+
+> **Tip:** The `headers` line tells the website the request comes from a browser. Without it, the site's host turns Python away with an `HTTP Error 403: Forbidden`. You only need it for files on websites, not for files on your own computer.
 
 ```text Output
 quarter

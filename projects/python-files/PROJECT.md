@@ -22,10 +22,11 @@ The `f` before the quotes makes an [f-string](https://thejoinery.dev/#/glossary/
 import pandas as pd
 
 BASE = "https://thejoinery.dev/projects/python-data/daily/"
+headers = {"User-Agent": "Mozilla/5.0"}   # some websites block Python's default request; this sends a browser-style name
 
 def load_day(day):
     """Read one day's export and note which file each row came from."""
-    df = pd.read_csv(f"{BASE}orders_{day}.csv")
+    df = pd.read_csv(f"{BASE}orders_{day}.csv", storage_options=headers)
     df["source_file"] = f"orders_{day}.csv"
     return df
 
@@ -33,6 +34,8 @@ monday = load_day("2025-11-24")
 print(monday.shape)
 print(monday.head(3))
 ```
+
+> **Tip:** The `headers` line tells the website the request comes from a browser. Without it, the site's host turns Python away with an `HTTP Error 403: Forbidden`. You only need it for files on websites, not for files on your own computer.
 
 ```text Output
 (113, 6)
@@ -156,11 +159,12 @@ In Colab, `%%writefile` at the top of a cell saves the rest of the cell as a fil
 import pandas as pd
 
 BASE = "https://thejoinery.dev/projects/python-data/daily/"
+headers = {"User-Agent": "Mozilla/5.0"}   # some websites block Python's default request; this sends a browser-style name
 DAYS = pd.date_range("2025-11-24", "2025-11-30").strftime("%Y-%m-%d")
 
 
 def load_day(day):
-    df = pd.read_csv(f"{BASE}orders_{day}.csv")
+    df = pd.read_csv(f"{BASE}orders_{day}.csv", storage_options=headers)
     df["source_file"] = f"orders_{day}.csv"
     return df
 

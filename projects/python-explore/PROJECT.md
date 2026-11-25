@@ -22,10 +22,13 @@ A CSV file is plain text, so it cannot remember that a column held dates. Tell `
 import pandas as pd
 
 BASE = "https://thejoinery.dev/projects/python-data/"
-orders = pd.read_csv(BASE + "orders.csv", parse_dates=["order_date", "delivered_date"])
+headers = {"User-Agent": "Mozilla/5.0"}   # some websites block Python's default request; this sends a browser-style name
+orders = pd.read_csv(BASE + "orders.csv", parse_dates=["order_date", "delivered_date"], storage_options=headers)
 print(orders.shape)
 print(orders.dtypes)
 ```
+
+> **Tip:** The `headers` line tells the website the request comes from a browser. Without it, the site's host turns Python away with an `HTTP Error 403: Forbidden`. You only need it for files on websites, not for files on your own computer.
 
 > **You should see:** `(355, 8)`, and both date columns as `datetime64`.
 

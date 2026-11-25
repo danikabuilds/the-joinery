@@ -242,7 +242,7 @@
     if (st.next) return window.EXERCISES.some(function (e) { return Progress.isAloud(e.id); });
     var h = st.href || '';
     if (h.indexOf('#/lab/') === 0) return Progress.isDone(h.slice(6));
-    if (h === '#/review') return Progress.quizHistory().length > 0;
+    if (h === '#/review' || h === '#/quizzes') return Progress.quizHistory().length > 0;
     return Progress.isVisited(stepKey(rt, i));
   }
   function routeMap(rt) {
@@ -261,6 +261,21 @@
           '<span class="st-label">' + esc(st.label) + '</span>' +
           '<span class="st-text">' + esc(st.text) + '</span></a></li>';
       }).join('') + '</ol></section>';
+  }
+
+  // Just exploring: a short map of everything on the site, in no particular order.
+  var EXPLORE = [
+    { href: '#/lab', name: 'SQL lab', text: 'Write queries on a small online-shop database, with hints and instant checks.', accent: 1 },
+    { href: '#/projects', name: 'Python practice', text: 'Short guides in Google Colab: clean, explore, merge and chart real-looking data.', accent: 6 },
+    { href: '#/projects', name: 'Projects', text: 'End-to-end briefs: analyse an online store, then build its data pipeline.', accent: 2 },
+    { href: '#/glossary', name: 'Glossary', text: 'Data terms in plain English, each with an example and a line to say in an interview.', accent: 3 },
+    { href: '#/quizzes', name: 'Quizzes', text: 'Eight quick questions on one subject. Good for a five-minute break.', accent: 5 }
+  ];
+  function exploreMap() {
+    return '<section class="explore" aria-labelledby="explore-h"><h2 id="explore-h" class="section-h">What is here</h2>' +
+      '<ul class="explore-grid">' + EXPLORE.map(function (x) {
+        return '<li><a class="explore-card" data-accent="' + x.accent + '" href="' + x.href + '"><b>' + esc(x.name) + '</b><span>' + esc(x.text) + '</span></a></li>';
+      }).join('') + '</ul></section>';
   }
 
   // Interview route: solved exercises still waiting for a spoken answer.
@@ -305,6 +320,7 @@
     if (rt.steps && rt.steps.length) html += routeMap(rt);
 
     if (rt.id === 'interview') html += aloudQueue();
+    if (rt.id === 'explore') html += exploreMap();
 
     html += '<section class="home-progress" id="your-progress" aria-labelledby="prog-h">' +
       '<h2 id="prog-h" class="section-h">Your progress</h2>' +
@@ -314,7 +330,7 @@
     wireTips();
     if (window.Byte) {
       if (due) byteLater(function () { Byte.say('idle', plural(due, 'review is', 'reviews are') + ' waiting. Little and often keeps the bugs away.', { label: 'Start reviewing', run: function () { window.location.hash = '#/review'; } }); }, 700);
-      else if (!done) byteLater(function () { Byte.say('idle', 'Good choice. Your first step is marked on the route map. I\'ll pop up if I spot a bug.'); }, 700);
+      else if (!done) byteLater(function () { Byte.say('idle', rt.steps && rt.steps.length ? 'Good choice. Your first step is marked on the route map. I\'ll pop up if I spot a bug.' : 'Pick anything that looks interesting. I\'ll pop up if I spot a bug.'); }, 700);
       else if (done === total) byteLater(function () { Byte.happy(); }, 700);
     }
     Array.prototype.forEach.call(view.querySelectorAll('.map a[data-step]'), function (a) {

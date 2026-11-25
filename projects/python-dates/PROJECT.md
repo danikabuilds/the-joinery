@@ -18,9 +18,12 @@ The code reads the practice files straight from The Joinery, so there is nothing
 import pandas as pd
 
 BASE = "https://thejoinery.dev/projects/python-data/"
-orders = pd.read_csv(BASE + "orders.csv", parse_dates=["order_date", "delivered_date"])
+headers = {"User-Agent": "Mozilla/5.0"}   # some websites block Python's default request; this sends a browser-style name
+orders = pd.read_csv(BASE + "orders.csv", parse_dates=["order_date", "delivered_date"], storage_options=headers)
 print(orders[["order_date", "delivered_date"]].dtypes)
 ```
+
+> **Tip:** The `headers` line tells the website the request comes from a browser. Without it, the site's host turns Python away with an `HTTP Error 403: Forbidden`. You only need it for files on websites, not for files on your own computer.
 
 > **You should see:** both columns as `datetime64`. If they say `object` or `str`, the `parse_dates` part is missing.
 
