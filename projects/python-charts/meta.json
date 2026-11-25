@@ -1,0 +1,19 @@
+{
+ "order": 14,
+ "id": "python-charts",
+ "track": "Python",
+ "level": "Practice",
+ "title": "Charts with Matplotlib",
+ "fullTitle": "Charts with Matplotlib",
+ "blurb": "Line, bar and histogram charts with titles that say the point, then save them for a report or slide.",
+ "time": "About 25 minutes",
+ "md": "projects/python-charts/PROJECT.md",
+ "steps": [
+  "Get the numbers ready",
+  "Leave out part periods",
+  "A line chart for change over time",
+  "A sorted bar chart for comparing groups",
+  "A histogram for the shape of the data",
+  "Save a chart"
+ ]
+}

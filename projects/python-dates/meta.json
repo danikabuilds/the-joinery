@@ -1,0 +1,19 @@
+{
+ "order": 13,
+ "id": "python-dates",
+ "track": "Python",
+ "level": "Practice",
+ "title": "Work with dates",
+ "fullTitle": "Work with dates",
+ "blurb": "Delivery times, late orders, weekdays and monthly totals: the date skills every delivery or sales question needs.",
+ "time": "About 25 minutes",
+ "md": "projects/python-dates/PROJECT.md",
+ "steps": [
+  "Read the dates as dates",
+  "Days between two dates",
+  "Flag late orders",
+  "Pull out the year, month and weekday",
+  "Monthly totals",
+  "Filter by date"
+ ]
+}

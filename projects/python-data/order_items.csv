@@ -1,0 +1,501 @@
+order_id,item_number,product_name,category,price
+O000467,1,Dumbbells,Sport and fitness,474.99
+O000561,1,Duvet cover,Home and kitchen,208.79
+O001198,1,Camping chair,Braai and outdoor,584.79
+O001198,2,Rain jacket,Fashion,151.19
+O001198,3,Kettle,Home and kitchen,1911.19
+O001329,1,Skipping rope,Sport and fitness,136.99
+O001398,1,Planner,Books and stationery,46.74
+O001398,2,Cookbook,Books and stationery,496.99
+O001408,1,Braai apron,Braai and outdoor,2208.99
+O001820,1,Coffee plunger,Home and kitchen,876.99
+O001854,1,Garden gloves,Garden,1038.39
+O001854,2,Sneakers,Fashion,1315.79
+O001854,3,Dog bed,Pet supplies,437.99
+O001958,1,Knife set,Home and kitchen,118.99
+O002061,1,Air fryer,Home and kitchen,107.19
+O002061,2,Power bank,Electronics,328.94
+O002061,3,Cap,Fashion,127.99
+O002509,1,Body lotion,Beauty,309.99
+O002509,2,Puzzle,Toys and games,435.99
+O002994,1,Knife set,Home and kitchen,137.99
+O003242,1,Pet shampoo,Pet supplies,50.39
+O003242,2,Skipping rope,Sport and fitness,600.99
+O003242,3,Backpack,Fashion,186.99
+O003242,4,Bath towel set,Home and kitchen,236.99
+O003836,1,Air fryer,Home and kitchen,133.99
+O003836,2,Cycling gloves,Sport and fitness,318.99
+O003836,3,Dog bed,Pet supplies,394.19
+O003902,1,Building blocks,Toys and games,753.94
+O004035,1,USB charger,Electronics,1785.99
+O004035,2,Duvet cover,Home and kitchen,182.69
+O004035,3,Plush toy,Toys and games,1357.99
+O004225,1,Braai tongs,Braai and outdoor,235.99
+O004225,2,Cap,Fashion,102.99
+O004277,1,Running shorts,Sport and fitness,188.09
+O004277,2,Duvet cover,Home and kitchen,202.99
+O004327,1,Bluetooth speaker,Electronics,7660.99
+O004643,1,Dog bed,Pet supplies,75.99
+O004751,1,Plush toy,Toys and games,506.39
+O004811,1,Backpack,Fashion,149.59
+O004830,1,Plush toy,Toys and games,488.99
+O004870,1,Storage jars,Home and kitchen,967.49
+O004991,1,Backpack,Fashion,514.39
+O004991,2,Storage jars,Home and kitchen,135.99
+O005096,1,Coffee plunger,Home and kitchen,134.99
+O005096,2,Duvet cover,Home and kitchen,311.94
+O005108,1,Pruning shears,Garden,55.99
+O005295,1,Power bank,Electronics,386.99
+O005295,2,LED desk lamp,Electronics,6810.99
+O005377,1,Keyboard,Electronics,1046.99
+O005619,1,Novel,Books and stationery,50.39
+O005829,1,Potjie pot,Braai and outdoor,261.89
+O005864,1,Sunscreen,Beauty,103.69
+O006138,1,Seed pack,Garden,1240.99
+O006143,1,Building blocks,Toys and games,436.99
+O006143,2,Air fryer,Home and kitchen,1075.24
+O006222,1,Bluetooth speaker,Electronics,1264.99
+O006381,1,Seed pack,Garden,1116.89
+O006381,2,Frying pan,Home and kitchen,594.39
+O006567,1,Backpack,Fashion,682.99
+O006736,1,Smart watch,Electronics,6340.79
+O006914,1,Pet shampoo,Pet supplies,55.99
+O006914,2,Kids' book,Books and stationery,308.99
+O007532,1,Bath towel set,Home and kitchen,289.99
+O007621,1,Dumbbells,Sport and fitness,111.34
+O007759,1,Rain jacket,Fashion,131.99
+O007759,2,Hosepipe,Garden,200.99
+O007822,1,Camping chair,Braai and outdoor,627.99
+O008167,1,Knife set,Home and kitchen,579.99
+O008310,1,Smart watch,Electronics,285.99
+O008562,1,Hoodie,Fashion,475.99
+O008562,2,Sunglasses,Fashion,108.89
+O008754,1,Cycling gloves,Sport and fitness,108.89
+O008760,1,Sunglasses,Fashion,1263.09
+O008760,2,Potjie pot,Braai and outdoor,290.99
+O008760,3,Router,Electronics,1776.49
+O009207,1,Board game,Toys and games,228.99
+O009336,1,Cooler box,Braai and outdoor,593.29
+O009339,1,Keyboard,Electronics,212.99
+O009479,1,Braai tongs,Braai and outdoor,1450.09
+O009479,2,Bath towel set,Home and kitchen,130.99
+O009533,1,Backpack,Fashion,168.29
+O009666,1,Novel,Books and stationery,230.39
+O009666,2,Fire starters,Braai and outdoor,227.79
+O009844,1,Puzzle,Toys and games,71.99
+O009915,1,LED desk lamp,,277.99
+O010174,1,Pet shampoo,Pet supplies,204.99
+O010216,1,Running shorts,,541.99
+O010300,1,Bluetooth speaker,Electronics,355.99
+O010366,1,Kettle,Home and kitchen,2505.99
+O010373,1,Puzzle,Toys and games,370.59
+O010373,2,Colouring pencils,Books and stationery,119.84
+O010396,1,Camping chair,Braai and outdoor,143.64
+O010473,1,Cycling gloves,Sport and fitness,979.99
+O010473,2,Braai tongs,Braai and outdoor,2275.99
+O010534,1,Duvet cover,Home and kitchen,1451.99
+O010595,1,Sunscreen,Beauty,522.74
+O010631,1,Running shorts,,541.99
+O011466,1,Camping chair,Braai and outdoor,583.94
+O011466,2,Smart watch,Electronics,7133.39
+O011473,1,Building blocks,Toys and games,74.99
+O011488,1,Plush toy,Toys and games,1473.99
+O011617,1,Dumbbells,Sport and fitness,130.99
+O011617,2,Bath towel set,Home and kitchen,130.99
+O011637,1,Novel,Books and stationery,55.99
+O012016,1,Pet shampoo,Pet supplies,86.99
+O012111,1,Sunscreen,Beauty,668.99
+O012111,2,Pet bowl,Pet supplies,295.79
+O012111,3,Sunscreen,Beauty,66.39
+O012111,4,Keyboard,Electronics,390.59
+O012216,1,Storage jars,Home and kitchen,612.99
+O012251,1,Sunglasses,Fashion,637.99
+O012860,1,Smart watch,Electronics,407.99
+O012985,1,Body lotion,Beauty,121.54
+O013129,1,Yoga mat,Sport and fitness,134.99
+O013272,1,Camping chair,Braai and outdoor,730.99
+O013587,1,Bath towel set,Home and kitchen,335.99
+O013588,1,Pet bowl,Pet supplies,347.99
+O013588,2,Cycling gloves,Sport and fitness,1469.99
+O013588,3,Router,Electronics,2425.04
+O013588,4,Rain jacket,Fashion,1765.99
+O013617,1,Dog lead,,489.99
+O013617,2,Board game,Toys and games,504.04
+O013743,1,Camping chair,Braai and outdoor,1659.99
+O013819,1,Lip balm set,Beauty,166.99
+O013861,1,Colouring pencils,Books and stationery,67.99
+O013861,2,Kettle grill,Braai and outdoor,361.99
+O013861,3,Cookbook,Books and stationery,397.59
+O014066,1,Garden gloves,Garden,1330.99
+O014066,2,Water bottle,Sport and fitness,996.19
+O014066,3,Colouring pencils,Books and stationery,112.79
+O014244,1,Braai tongs,Braai and outdoor,2275.99
+O014362,1,Perfume,Beauty,712.99
+O014583,1,Dumbbells,Sport and fitness,1053.99
+O014628,1,Cap,Fashion,1916.99
+O014628,2,Cookbook,Books and stationery,422.44
+O014628,3,Pet shampoo,Pet supplies,65.99
+O014762,1,Cycling gloves,Sport and fitness,120.99
+O014851,1,USB charger,Electronics,3702.99
+O014910,1,Dog lead,Pet supplies,603.89
+O015000,1,Wireless earbuds,Electronics,5277.99
+O015000,2,Plush toy,Toys and games,192.79
+O015000,3,Sunscreen,Beauty,612.84
+O015000,4,Smart watch,Electronics,182.39
+O015086,1,Pet shampoo,Pet supplies,204.99
+O015529,1,Keyboard,Electronics,433.99
+O015529,2,Kettle grill,Braai and outdoor,2409.99
+O015529,3,Cookbook,Books and stationery,220.79
+O015632,1,Plush toy,Toys and games,242.09
+O015632,2,Router,Electronics,266.39
+O015708,1,Braai tongs,Braai and outdoor,502.39
+O015752,1,Knife set,Home and kitchen,137.99
+O015888,1,Pruning shears,Garden,318.99
+O016031,1,Cycling gloves,Sport and fitness,120.99
+O016059,1,Board game,Toys and games,1034.09
+O016104,1,Cycling gloves,Sport and fitness,129.19
+O016208,1,Dumbbells,Sport and fitness,3170.99
+O016208,2,USB charger,Electronics,1785.99
+O016723,1,Frying pan,Home and kitchen,158.94
+O016841,1,Body lotion,Beauty,462.99
+O017031,1,Rain jacket,Fashion,131.99
+O017114,1,Face cream,Beauty,65.99
+O017114,2,Smart watch,Electronics,619.19
+O017145,1,Wireless earbuds,Electronics,4222.39
+O017145,2,Rain jacket,Fashion,1080.34
+O017212,1,Kettle grill,Braai and outdoor,2409.99
+O017241,1,USB charger,Electronics,5728.99
+O017368,1,Potjie pot,Braai and outdoor,965.99
+O017405,1,USB charger,Electronics,437.74
+O017456,1,Cookbook,Books and stationery,56.09
+O017706,1,Backpack,Fashion,237.14
+O017706,2,Bluetooth speaker,Electronics,6894.89
+O017734,1,Rain jacket,Fashion,151.19
+O017830,1,Power bank,Electronics,386.99
+O018038,1,Cooler box,Braai and outdoor,1049.99
+O018038,2,Knife set,Home and kitchen,328.99
+O018201,1,Kettle,Home and kitchen,84.99
+O018230,1,Sprinkler,Garden,619.99
+O018550,1,Scratching post,Pet supplies,487.79
+O018684,1,Sprinkler,Garden,939.99
+O018765,1,Smart watch,Electronics,285.99
+O018765,2,Dumbbells,Sport and fitness,206.99
+O018904,1,Planner,Books and stationery,54.39
+O019018,1,Face cream,Beauty,64.99
+O019137,1,Sunglasses,Fashion,186.39
+O019137,2,Braai apron,Braai and outdoor,172.79
+O019137,3,Bluetooth speaker,Electronics,2578.99
+O019137,4,Braai tongs,Braai and outdoor,1705.99
+O019533,1,Wireless earbuds,Electronics,4486.29
+O019533,2,Sunscreen,Beauty,308.99
+O019683,1,Dumbbells,Sport and fitness,474.99
+O019684,1,Cycling gloves,Sport and fitness,162.34
+O019684,2,Scratching post,Pet supplies,1369.99
+O019777,1,Dumbbells,Sport and fitness,3170.99
+O019795,1,Air fryer,Home and kitchen,107.19
+O019870,1,USB charger,Electronics,1518.09
+O019884,1,Plush toy,Toys and games,268.99
+O019884,2,Plush toy,Toys and games,1473.99
+O019884,3,Dog bed,Pet supplies,974.69
+O019903,1,Grill brush,Braai and outdoor,1455.99
+O019903,2,Potjie pot,Braai and outdoor,313.99
+O020015,1,Pet bowl,Pet supplies,347.99
+O020117,1,Cycling gloves,Sport and fitness,91.19
+O020117,2,Frying pan,Home and kitchen,742.99
+O020296,1,Remote car,Toys and games,347.99
+O020586,1,Face cream,Beauty,74.99
+O020605,1,Braai apron,Braai and outdoor,281.69
+O020619,1,Dog bed,Pet supplies,437.99
+O020619,2,Perfume,Beauty,712.99
+O020720,1,Cap,Fashion,666.89
+O020764,1,Plush toy,Toys and games,108.99
+O020786,1,Face cream,Beauty,891.99
+O020848,1,Backpack,Fashion,150.99
+O021036,1,Potjie pot,Braai and outdoor,1106.39
+O021303,1,Cap,Fashion,985.49
+O021307,1,Fire starters,Braai and outdoor,180.89
+O021319,1,Bluetooth speaker,Electronics,7315.19
+O021319,2,Remote car,Toys and games,70.99
+O021413,1,Garden gloves,Garden,353.99
+O021897,1,Bluetooth speaker,Electronics,471.99
+O021942,1,Lip balm set,Beauty,784.79
+O021942,2,Router,Electronics,2089.99
+O022011,1,Air fryer,Home and kitchen,1264.99
+O022222,1,Building blocks,Toys and games,234.99
+O022513,1,Knife set,Home and kitchen,125.99
+O022513,2,Kettle,Home and kitchen,2505.99
+O022559,1,Board game,Toys and games,206.09
+O022608,1,Coffee plunger,Home and kitchen,107.99
+O022730,1,Smart watch,Electronics,842.99
+O022730,2,Dumbbells,Sport and fitness,117.89
+O022995,1,Frying pan,Home and kitchen,2651.99
+O023135,1,Smart watch,Electronics,475.99
+O023139,1,Colouring pencils,Books and stationery,266.04
+O023429,1,Seed pack,Garden,1149.59
+O023429,2,Sprinkler,Garden,798.99
+O023583,1,Camping chair,Braai and outdoor,627.99
+O023785,1,Lip balm set,Beauty,744.99
+O024014,1,Bluetooth speaker,Electronics,400.49
+O024014,2,Bluetooth speaker,Electronics,2499.29
+O024019,1,Cycling gloves,Sport and fitness,1469.99
+O024116,1,Router,Electronics,437.99
+O024152,1,Garden gloves,Garden,1038.39
+O024152,2,Potjie pot,Braai and outdoor,691.99
+O024190,1,Rain jacket,Fashion,654.39
+O024190,2,Puzzle,Toys and games,435.99
+O024209,1,Dog bed,Pet supplies,866.39
+O024259,1,Grill brush,Braai and outdoor,1479.99
+O024431,1,Braai apron,Braai and outdoor,1988.09
+O024434,1,USB charger,Electronics,514.99
+O024504,1,Face cream,Beauty,51.84
+O024544,1,Cycling gloves,Sport and fitness,91.19
+O024777,1,Pet shampoo,Pet supplies,55.99
+O024801,1,Smart watch,Electronics,380.79
+O024801,2,Frying pan,Home and kitchen,315.89
+O024898,1,Router,Electronics,350.39
+O024926,1,Air fryer,Home and kitchen,896.74
+O025164,1,Building blocks,Toys and games,211.49
+O025206,1,Body lotion,Beauty,434.99
+O025287,1,Puzzle,Toys and games,789.99
+O025330,1,Body lotion,Beauty,62.09
+O025466,1,Pet shampoo,Pet supplies,204.99
+O025626,1,Braai tongs,Braai and outdoor,2048.39
+O025626,2,Face cream,Beauty,385.59
+O025626,3,Bath towel set,Home and kitchen,289.99
+O025626,4,Sneakers,Fashion,126.64
+O025640,1,Skipping rope,Sport and fitness,1375.99
+O025683,1,Coffee plunger,Home and kitchen,134.99
+O025850,1,Hosepipe,Garden,74.69
+O026088,1,Lip balm set,Beauty,741.19
+O026339,1,Hoodie,Fashion,428.39
+O026339,2,Body lotion,Beauty,393.54
+O026581,1,Smart watch,Electronics,697.99
+O026595,2,LED desk lamp,,277.99
+O026595,3,Plant pot,Garden,1310.99
+O026713,1,Bluetooth speaker,Electronics,1264.99
+O026713,2,Cap,Fashion,471.99
+O026863,1,Keyboard,Electronics,347.19
+O027117,1,Hosepipe,Garden,200.99
+O027436,1,Lip balm set,Beauty,744.99
+O027489,1,Dumbbells,Sport and fitness,3170.99
+O027610,1,USB charger,Electronics,446.99
+O027610,2,LED desk lamp,Electronics,3219.29
+O027610,3,Board game,Toys and games,1034.09
+O027610,4,Backpack,Fashion,131.99
+O027689,1,Pet shampoo,Pet supplies,65.99
+O027707,1,Cat toy,Pet supplies,338.39
+O027715,1,Storage jars,Home and kitchen,1074.99
+O027842,1,Building blocks,Toys and games,211.49
+O027842,2,Sprinkler,Garden,798.99
+O028107,1,Dumbbells,Sport and fitness,2827.79
+O028107,2,Knife set,Home and kitchen,226.94
+O028313,1,Sneakers,Fashion,134.09
+O028316,1,Building blocks,Toys and games,436.99
+O028618,1,LED desk lamp,,277.99
+O028787,1,Fire starters,Braai and outdoor,786.59
+O028787,2,Kids' book,Books and stationery,308.99
+O028787,3,Frying pan,Home and kitchen,1059.99
+O028849,1,Backpack,Fashion,135.89
+O028849,2,Colouring pencils,Books and stationery,140.99
+O028861,1,Sneakers,Fashion,292.39
+O028861,2,Storage jars,Home and kitchen,612.99
+O029087,1,Wireless earbuds,Electronics,1671.99
+O029087,2,Coffee plunger,Home and kitchen,134.99
+O029112,1,Bath towel set,Home and kitchen,287.09
+O029112,2,Potjie pot,Braai and outdoor,638.99
+O029222,1,Puzzle,Toys and games,631.54
+O029338,1,Lip balm set,Beauty,784.79
+O029456,1,Dog bed,Pet supplies,75.99
+O029456,2,Smart watch,Electronics,619.19
+O029473,1,Potjie pot,Braai and outdoor,691.99
+O029485,1,Fire starters,Braai and outdoor,160.79
+O029584,1,Face cream,Beauty,358.69
+O029584,2,Cookbook,Books and stationery,447.29
+O029584,3,Face cream,Beauty,64.99
+O029666,1,Dumbbells,Sport and fitness,403.74
+O029927,1,Water bottle,Sport and fitness,163.99
+O030248,1,Camping chair,Braai and outdoor,686.99
+O030299,1,Wireless earbuds,Electronics,187.84
+O030412,1,Hoodie,Fashion,251.99
+O030672,1,Backpack,Fashion,578.69
+O030827,1,Lip balm set,Beauty,166.99
+O031095,1,Scratching post,Pet supplies,39.99
+O031115,1,Power bank,Electronics,2205.59
+O031142,1,Camping chair,Braai and outdoor,686.99
+O031246,1,Card game,Toys and games,392.99
+O031246,2,Power bank,Electronics,2481.29
+O031249,1,Bath towel set,Home and kitchen,174.59
+O031291,1,Bluetooth speaker,Electronics,3107.99
+O031291,2,Hoodie,Fashion,314.99
+O031291,3,Cap,Fashion,571.19
+O031466,1,Planner,Books and stationery,49.49
+O031488,1,Kettle,Home and kitchen,84.99
+O031488,2,Bluetooth speaker,Electronics,6038.39
+O031488,3,Colouring pencils,Books and stationery,321.59
+O031706,1,Duvet cover,Home and kitchen,366.99
+O031761,1,Fire starters,Braai and outdoor,223.54
+O031802,1,Backpack,Fashion,243.99
+O031843,1,Grill brush,Braai and outdoor,1514.99
+O031843,2,Frying pan,Home and kitchen,298.34
+O031843,3,Bluetooth speaker,Electronics,8127.99
+O031853,1,Bath towel set,Home and kitchen,255.19
+O031853,2,Face cream,Beauty,60.99
+O032018,1,Novel,Books and stationery,391.49
+O032018,2,Braai tongs,Braai and outdoor,565.19
+O032124,1,Dog bed,Pet supplies,104.99
+O032358,1,Backpack,Fashion,95.39
+O032358,2,Knife set,Home and kitchen,936.69
+O032358,3,Cycling gloves,Sport and fitness,2126.99
+O032493,1,Wireless earbuds,Electronics,4486.29
+O032600,1,Storage jars,Home and kitchen,2417.99
+O032673,1,Cooler box,Braai and outdoor,2315.99
+O032711,1,Dog bed,Pet supplies,1082.99
+O032870,1,Board game,Toys and games,179.99
+O033200,1,Seed pack,Garden,1240.99
+O033205,1,Wireless earbuds,Electronics,700.39
+O033220,1,Potjie pot,Braai and outdoor,511.19
+O033220,2,Sneakers,Fashion,463.19
+O033220,3,Bath towel set,Home and kitchen,271.14
+O033432,1,Board game,Toys and games,318.99
+O033452,1,Puzzle,Toys and games,72.79
+O033617,1,Skipping rope,Sport and fitness,994.99
+O033729,1,Air fryer,Home and kitchen,896.74
+O033860,1,Seed pack,Garden,1240.99
+O034090,1,Frying pan,Home and kitchen,515.99
+O034133,1,Knife set,Home and kitchen,492.99
+O034348,1,Storage jars,Home and kitchen,1991.99
+O034348,2,Bluetooth speaker,Electronics,2360.44
+O034421,1,Camping chair,Braai and outdoor,583.94
+O034694,1,Colouring pencils,,39.59
+O034712,1,Smart watch,Electronics,696.59
+O034819,1,Wireless earbuds,Electronics,4516.89
+O035108,1,Pet bowl,Pet supplies,572.99
+O035298,1,Scratching post,Pet supplies,329.79
+O035421,1,Plant pot,Garden,1048.79
+O035458,1,Pet shampoo,Pet supplies,204.99
+O035458,2,Router,Electronics,236.79
+O035476,1,Face cream,Beauty,64.99
+O035838,1,Hoodie,Fashion,813.99
+O035905,1,Bath towel set,Home and kitchen,236.99
+O036052,1,Plush toy,Toys and games,1357.99
+O036073,1,Face cream,Beauty,117.59
+O036073,2,Cookbook,Books and stationery,52.99
+O036120,1,USB charger,Electronics,357.59
+O036223,1,Pet bowl,Pet supplies,143.99
+O036223,2,Hoodie,Fashion,475.99
+O036223,3,Knife set,Home and kitchen,139.99
+O036223,4,Sneakers,Fashion,928.99
+O036281,1,USB charger,Electronics,3332.69
+O036366,1,Storage jars,Home and kitchen,404.79
+O036366,2,Board game,Toys and games,138.99
+O036546,1,Plush toy,Toys and games,506.39
+O036605,1,Backpack,Fashion,120.79
+O036695,1,Frying pan,Home and kitchen,150.99
+O037071,1,Cookbook,Books and stationery,433.99
+O037071,2,Running shorts,Sport and fitness,518.39
+O037071,3,Rain jacket,Fashion,179.99
+O037115,1,Wireless earbuds,Electronics,5915.99
+O037142,1,Sunscreen,Beauty,180.79
+O037244,1,Pet shampoo,Pet supplies,65.99
+O037255,1,USB charger,Electronics,275.19
+O037255,2,Duvet cover,Home and kitchen,293.59
+O037300,1,Sneakers,Fashion,292.39
+O037353,1,Sunglasses,Fashion,311.99
+O037412,1,Building blocks,Toys and games,199.74
+O037430,1,Pet shampoo,Pet supplies,86.99
+O038028,1,Dog lead,,489.99
+O038293,1,Water bottle,Sport and fitness,89.99
+O038293,2,Skipping rope,Sport and fitness,600.99
+O038301,1,Cycling gloves,Sport and fitness,2101.99
+O038301,2,Bath towel set,Home and kitchen,289.99
+O038346,1,Cap,Fashion,537.59
+O038460,1,Storage jars,Home and kitchen,115.59
+O038568,1,Scratching post,Pet supplies,521.99
+O038967,1,Fire starters,Braai and outdoor,262.99
+O038967,2,Camping chair,Braai and outdoor,2074.99
+O039113,1,Building blocks,Toys and games,148.49
+O039132,1,Plush toy,Toys and games,204.84
+O039254,1,Grill brush,Braai and outdoor,1183.99
+O039285,1,Bluetooth speaker,Electronics,424.79
+O039446,1,Hair oil,Beauty,65.99
+O039446,2,Planner,,85.59
+O039483,1,Puzzle,Toys and games,789.99
+O039664,1,Pet shampoo,Pet supplies,65.99
+O039752,1,Grill brush,Braai and outdoor,1514.99
+O039936,1,Dog bed,Pet supplies,611.99
+O040047,1,Wireless earbuds,Electronics,5915.99
+O040047,2,Board game,Toys and games,179.99
+O040047,3,Dumbbells,Sport and fitness,175.94
+O040047,4,Air fryer,Home and kitchen,133.99
+O040181,1,Dumbbells,Sport and fitness,379.99
+O040181,2,Puzzle,Toys and games,57.59
+O040192,1,Sunscreen,Beauty,602.09
+O040238,1,Storage jars,Home and kitchen,180.99
+O040409,1,Face cream,Beauty,117.59
+O040547,1,Cap,Fashion,127.99
+O040727,1,Keyboard,Electronics,889.94
+O040730,1,Backpack,Fashion,84.79
+O040730,2,Dog bed,Pet supplies,54.89
+O040908,1,Coffee plunger,Home and kitchen,134.99
+O041025,1,Knife set,Home and kitchen,1101.99
+O041192,1,Garden gloves,Garden,1038.39
+O041192,2,Skipping rope,Sport and fitness,174.59
+O041341,1,Fire starters,Braai and outdoor,873.99
+O041341,2,Cooler box,Braai and outdoor,2315.99
+O041503,1,Cycling gloves,Sport and fitness,1322.99
+O041539,1,Face cream,Beauty,48.79
+O041612,1,Cap,Fashion,1424.69
+O041679,1,Wireless earbuds,Electronics,823.99
+O041679,2,Power bank,Electronics,7573.99
+O041679,3,Skipping rope,Sport and fitness,510.84
+O041684,1,Fire starters,Braai and outdoor,170.84
+O041684,2,Frying pan,Home and kitchen,1059.99
+O041953,1,Card game,Toys and games,314.39
+O041967,1,Fire starters,Braai and outdoor,248.79
+O042076,1,Cookbook,Books and stationery,397.59
+O042200,1,Coffee plunger,Home and kitchen,1607.99
+O042251,1,Board game,Toys and games,179.99
+O042255,1,Kettle grill,Braai and outdoor,361.99
+O042255,2,Face cream,Beauty,65.99
+O042593,1,Storage jars,Home and kitchen,521.04
+O042621,1,Body lotion,Beauty,462.99
+O042628,1,Air fryer,Home and kitchen,120.59
+O042639,1,Frying pan,Home and kitchen,88.39
+O042639,2,Pet bowl,Pet supplies,971.09
+O042639,3,Backpack,Fashion,243.99
+O042763,1,Scratching post,Pet supplies,39.99
+O042763,2,Cooler box,Braai and outdoor,1860.99
+O042832,1,Pet bowl,Pet supplies,274.54
+O042849,1,Frying pan,Home and kitchen,84.79
+O042849,2,Plant pot,Garden,1538.99
+O042849,3,Dog bed,Pet supplies,394.19
+O042916,1,Board game,Toys and games,919.79
+O042992,1,Bath towel set,Home and kitchen,473.99
+O042992,2,Sneakers,Fashion,351.99
+O043086,1,Colouring pencils,Books and stationery,312.99
+O043339,1,Puzzle,Toys and games,742.99
+O043434,1,Duvet cover,Home and kitchen,208.79
+O043513,1,Fire starters,Braai and outdoor,210.39
+O043567,1,Colouring pencils,Books and stationery,79.99
+O043725,1,Scratching post,Pet supplies,541.99
+O043783,1,Scratching post,Pet supplies,460.69
+O044459,1,Knife set,Home and kitchen,110.39
+O044628,1,Keyboard,Electronics,2675.69
+O044903,1,Sneakers,Fashion,320.44
+O044948,1,Pet shampoo,Pet supplies,65.99
+O044948,2,Potjie pot,Braai and outdoor,821.09
+O044963,1,LED desk lamp,Electronics,306.99
+O044988,1,Bath towel set,Home and kitchen,318.99
+O045272,1,Knife set,Home and kitchen,263.19
+O045390,1,Kettle,Home and kitchen,633.99
+O045498,1,Wireless earbuds,Electronics,600.99
+O045498,2,Storage jars,Home and kitchen,295.19
+O045590,1,Dog bed,Pet supplies,437.99
+O045604,1,Running shorts,Sport and fitness,925.99
+O045630,1,Dog bed,Pet supplies,372.29
+O045854,1,Cooler box,Braai and outdoor,240.99
+O045881,1,Kettle grill,Braai and outdoor,994.49
+O045881,2,Remote car,Toys and games,114.99
+O045967,1,Duvet cover,Home and kitchen,1587.99
+O046452,1,Lip balm set,Beauty,633.24
+O046452,2,Sunscreen,Beauty,720.99

@@ -95,7 +95,7 @@ Saved progress files still use the app id `data-learning-site`, so older exports
 
 ## Glossary (November 2026)
 
-The glossary has 146 terms in six areas: SQL, Modelling, Pipelines, Business, Statistics, and BI and dashboards. Each area has its own file, `data/glossary-<area>.js`, and `data/glossary.js` explains every field. The glossary has three views: an A to Z index grouped by area, a list of business questions linked to terms, and flashcards. Each term also has its own page at `#/glossary/term/<id>`, with the plain meaning, a deeper explanation, an example, common mistakes, the business questions it answers, a sentence to say out loud and related terms. Some terms also have a small picture in their Example section, drawn in `js/glossary-visuals.js` and keyed by the term id. To add a term, copy a block in the right area file and give it a new id. The `rel` list may only use ids that exist.
+The glossary has 163 terms in seven areas: SQL, Python, Modelling, Pipelines, Business, Statistics, and BI and dashboards. Each area has its own file, `data/glossary-<area>.js`, and `data/glossary.js` explains every field. The glossary has three views: an A to Z index grouped by area, a list of business questions linked to terms, and flashcards. Each term also has its own page at `#/glossary/term/<id>`, with the plain meaning, a deeper explanation, an example, common mistakes, the business questions it answers, a sentence to say out loud and related terms. Some terms also have a small picture in their Example section, drawn in `js/glossary-visuals.js` and keyed by the term id. To add a term, copy a block in the right area file and give it a new id. The `rel` list may only use ids that exist.
 
 ## Byte the beetle
 
@@ -129,3 +129,13 @@ The source for it lives outside the site folder, in `project-sources/just-now-de
 and `build_project.py` runs everything and rebuilds `data/projects.js` and the zips from the real results.
 To change a project: edit the source, run `python build_project.py`, then upload the changed site files.
 Keep `project-sources` off GitHub: `generate.py` reveals the patterns learners are meant to discover.
+
+## Python practice (on the Projects page)
+
+Short guides that run in Google Colab, listed under "Python practice" below the project cards. Any project whose `meta.json` has `"track": "Python"` appears there, sorted by `order` (10 onwards).
+
+- `projects/python-basics/`: guide 1, read and clean a messy CSV (its own practice file).
+- `projects/python-explore`, `python-merge`, `python-dates`, `python-charts`, `python-duckdb`, `python-files`: guides 2 to 7. Each folder has PROJECT.md, a ready-made Colab notebook (`<id>.ipynb`), meta.json and, for charts, the chart pictures.
+- `projects/python-data/`: the shared practice data the guides read straight from the site (orders, customers, order items, and a week of daily files in `daily/`).
+
+The sources live in `project-sources/python-basics/`: `make_practice_csv.py` and `build_guide.py` for guide 1; `make_python_data.py`, `guides/` (each guide's text and steps), `run_guides.py` (runs every step for real and records the output and charts) and `build_guides.py` for guides 2 to 7. To change a guide: edit `guides/<id>.md` or `guides/<id>.py`, then run `python run_guides.py` and `python build_guides.py`.

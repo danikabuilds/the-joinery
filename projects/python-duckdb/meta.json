@@ -1,0 +1,18 @@
+{
+ "order": 15,
+ "id": "python-duckdb",
+ "track": "Python",
+ "level": "Practice",
+ "title": "SQL inside Python",
+ "fullTitle": "SQL inside Python with DuckDB",
+ "blurb": "Run SQL straight on pandas tables with DuckDB, then carry on in pandas. Use whichever is clearer for each step.",
+ "time": "About 20 minutes",
+ "md": "projects/python-duckdb/PROJECT.md",
+ "steps": [
+  "Your first query",
+  "GROUP BY in SQL",
+  "Join without fan-out, using a CTE",
+  "The top city in each province",
+  "SQL first, then pandas"
+ ]
+}

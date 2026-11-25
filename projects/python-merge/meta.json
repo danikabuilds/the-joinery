@@ -1,0 +1,20 @@
+{
+ "order": 12,
+ "id": "python-merge",
+ "track": "Python",
+ "level": "Practice",
+ "title": "Merge tables",
+ "fullTitle": "Merge tables without double counting",
+ "blurb": "Combine orders, customers and items with merge, spot fan-out before it inflates your totals, and fix it.",
+ "time": "About 25 minutes",
+ "md": "projects/python-merge/PROJECT.md",
+ "steps": [
+  "Read the three tables",
+  "Check the keys first",
+  "Left merge: keep every order",
+  "Inner merge: only the matches",
+  "Watch the totals grow",
+  "Fix it: summarise first, then merge",
+  "Answer item questions from the items table"
+ ]
+}

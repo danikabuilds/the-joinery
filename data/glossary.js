@@ -13,6 +13,7 @@
 window.GLOSSARY = [];
 window.GLOSSARY_GROUPS = [
   { id: 'SQL', name: 'SQL', blurb: 'Writing queries: joins, grouping, windows and the traps in between.' },
+  { id: 'Python', name: 'Python', blurb: 'pandas, notebooks and scripts: the Python side of data work.' },
   { id: 'Modelling', name: 'Modelling', blurb: 'How tables are shaped so numbers come out right.' },
   { id: 'Pipelines', name: 'Pipelines', blurb: 'How data is moved, cleaned, tested and kept fresh.' },
   { id: 'Business', name: 'Business', blurb: 'The metrics and questions the business actually asks.' },

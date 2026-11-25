@@ -13,7 +13,7 @@ window.PAGES = {
         '<h2>What is here</h2>' +
         '<ul>' +
         '<li><strong>SQL lab:</strong> ' + window.EXERCISES.length + ' exercises that run in your browser, with hints and a model answer.</li>' +
-        '<li><strong>Glossary:</strong> ' + window.GLOSSARY.length + ' data terms in six areas, each with a deeper explanation, business questions and a sentence you can say in an interview.</li>' +
+        '<li><strong>Glossary:</strong> ' + window.GLOSSARY.length + ' data terms in ' + (['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'][window.GLOSSARY_GROUPS.length - 1] || window.GLOSSARY_GROUPS.length) + ' areas, each with a deeper explanation, business questions and a sentence you can say in an interview.</li>' +
         '<li><strong>Review and quizzes:</strong> spaced reviews and quizzes by subject.</li>' +
         '<li><strong>Translate to another database:</strong> run a query in the lab and see it written for PostgreSQL, SQL Server, BigQuery or Snowflake.</li>' +
         '<li><strong>Projects:</strong> end-to-end projects with a business brief, data to download, Python and SQL steps, and model answers.</li>' +

@@ -178,7 +178,7 @@
       '<div class="picks">' +
       '<a class="pick main" href="#routes-h" id="pick-route"><b>Choose a route</b><span>A step-by-step path for where you are now.</span></a>' +
       '<a class="pick" href="#/projects"><b>Start a project</b><span>A real business brief, worked end to end.</span></a>' +
-      '<button type="button" class="pick" data-route="explore"><b>Just explore</b><span>Open everything and look around.</span></button>' +
+      '<button type="button" class="pick pick-beige" data-route="explore"><b>Just explore</b><span>Open everything and look around.</span></button>' +
       '</div></div></section>';
     view.innerHTML = hero + '<section class="start' + (cur ? '' : ' start-below') + '"' + (cur ? '' : ' id="route-choice" hidden') + '>' +
             (cur ? '<h1>Change your route</h1>' : '<h2 id="routes-h" tabindex="-1">Where are you starting?</h2>') +
@@ -299,7 +299,7 @@
 
     if (due || weak) {
       html += '<p class="today-line">' + [due ? plural(due, 'review', 'reviews') + ' due' : '', weak ? plural(weak, 'weak spot', 'weak spots') : ''].filter(Boolean).join(' and ') +
-        '. <a href="#/review">Go to Review</a></p>';
+        '. <a href="#/quizzes/review">Go to review</a></p>';
     }
 
     if (rt.steps && rt.steps.length) html += routeMap(rt);
@@ -737,33 +737,13 @@
     if (window.location.hash === '#/session') renderSession(); else window.location.hash = '#/session';
   }
 
-  function renderReview() {
+  function renderReview(toReview) {
     teardown();
     var due = dueList(), weak = weakList(), hist = Progress.quizHistory();
-    var html = '<section class="review"><h1>Review</h1>' +
-      '<p class="lede">Solved exercises come back after 3, 7, 14 and 30 days. Ones you found hard come back sooner.</p>';
+    var html = '<section class="review"><h1>Quizzes</h1>';
 
-    html += '<div class="review-block"><h2>Due now</h2>';
-    if (due.length) {
-      html += '<ul class="plain">' + due.map(function (e) { return '<li><a href="#/lab/' + e.id + '">' + esc(e.title) + '</a><span class="meta">' + esc(topicOf(e.topic).clause) + '</span></li>'; }).join('') + '</ul>' +
-        '<p><button type="button" class="btn primary" id="start-review">Start review of ' + due.length + '</button></p>';
-    } else {
-      html += '<p class="empty with-byte">' + (window.Byte && Byte.enabled() ? Byte.mini('idle', 36) : '') + '<span>Nothing is due. Solve exercises in the SQL lab and they will appear here when it is time.</span></p>';
-    }
-    html += '</div>';
-
-    html += '<div class="review-block"><h2>Weak spots</h2>';
-    if (weak.length) {
-      html += '<ul class="plain">' + weak.map(function (e) {
-        return '<li><a href="#/lab/' + e.id + '">' + esc(e.title) + '</a><span class="meta">' + plural(Progress.wrongCount(e.id), 'wrong check', 'wrong checks') + '</span></li>';
-      }).join('') + '</ul>';
-    } else {
-      html += '<p class="empty with-byte">' + (window.Byte && Byte.enabled() ? Byte.mini('happy', 36) : '') + '<span>No weak spots yet. An exercise appears here after three wrong checks.</span></p>';
-    }
-    html += '</div>';
-
-    html += '<div class="review-block"><h2>Quiz by subject</h2>' +
-      '<p>' + CQ_SIZE + ' questions at a time, over three levels: <strong>Recognise</strong>, <strong>Apply</strong> and <strong>Explain</strong>. ' +
+    html += '<div class="review-block">' +
+      '<p class="lede">' + CQ_SIZE + ' questions at a time, over three levels: <strong>Recognise</strong>, <strong>Apply</strong> and <strong>Explain</strong>. ' +
         'Score ' + (CQ_SIZE - 1) + ' or more twice to move up a level.</p>' +
       '<div class="topic-quiz" role="group" aria-label="Quiz by subject">' +
       ['all'].concat(window.GLOSSARY_GROUPS.map(function (g) { return g.id; })).map(function (id) {
@@ -776,6 +756,7 @@
           '<span class="mastery-track" aria-hidden="true"><span class="mastery-fill" style="width:' + Math.round(100 * m / Math.max(1, n)) + '%"></span></span></a>';
       }).join('') + '</div></div>';
 
+
     if (hist.length) {
       html += '<div class="review-block"><h2>Recent scores</h2><ul class="plain">' + hist.map(function (h) {
         var tag = '';
@@ -785,16 +766,40 @@
         return '<li>' + esc(h.on) + (tag ? ' <span class="kw">' + esc(tag) + '</span>' : '') + '<span class="meta">' + h.score + ' of ' + h.total + ' ' + kind + '</span></li>';
       }).join('') + '</ul></div>';
     }
+
+    html += '<div class="review-part"><h2 id="review-h">Review</h2>' +
+      '<p class="lede">Solved SQL exercises come back after 3, 7, 14 and 30 days. Ones you found hard come back sooner.</p>';
+    html += '<div class="review-block"><h3>Due now</h3>';
+    if (due.length) {
+      html += '<ul class="plain">' + due.map(function (e) { return '<li><a href="#/lab/' + e.id + '">' + esc(e.title) + '</a><span class="meta">' + esc(topicOf(e.topic).clause) + '</span></li>'; }).join('') + '</ul>' +
+        '<p><button type="button" class="btn primary" id="start-review">Start review of ' + due.length + '</button></p>';
+    } else {
+      html += '<p class="empty with-byte">' + (window.Byte && Byte.enabled() ? Byte.mini('idle', 36) : '') + '<span>Nothing is due. Solve exercises in the SQL lab and they will appear here when it is time.</span></p>';
+    }
+    html += '</div>';
+
+    html += '<div class="review-block"><h3>Weak spots</h3>';
+    if (weak.length) {
+      html += '<ul class="plain">' + weak.map(function (e) {
+        return '<li><a href="#/lab/' + e.id + '">' + esc(e.title) + '</a><span class="meta">' + plural(Progress.wrongCount(e.id), 'wrong check', 'wrong checks') + '</span></li>';
+      }).join('') + '</ul>';
+    } else {
+      html += '<p class="empty with-byte">' + (window.Byte && Byte.enabled() ? Byte.mini('happy', 36) : '') + '<span>No weak spots yet. An exercise appears here after three wrong checks.</span></p>';
+    }
+    html += '</div>';
+
+    html += '</div>';
     html += '</section>';
     view.innerHTML = html;
 
+    if (toReview) { var rh = document.getElementById('review-h'); if (rh) { rh.setAttribute('tabindex', '-1'); rh.scrollIntoView(); rh.focus({ preventScroll: true }); } }
     var sr = document.getElementById('start-review');
     if (sr) sr.addEventListener('click', function () { startSession('review', shuffle(due).map(function (e) { return e.id; })); });
   }
 
   // ---------- subject quizzes: multiple choice from the glossary ----------
   var CQ_SIZE = 8;
-  var QUIZ_AREA = { SQL: 'SQL', Modelling: 'Data modelling', Pipelines: 'Data engineering', Business: 'Business logic', Statistics: 'Data analytics', BI: 'Business intelligence' };
+  var QUIZ_AREA = { SQL: 'SQL', Python: 'Python', Modelling: 'Data modelling', Pipelines: 'Data engineering', Business: 'Business logic', Statistics: 'Data analytics', BI: 'Business intelligence' };
   var cq = null; // current subject quiz
 
   function mentions(text, term) {
@@ -1312,7 +1317,7 @@
     var list = window.PROJECTS || [], soon = window.PROJECTS_COMING || [];
     view.innerHTML = '<section class="projects"><h1>Projects</h1>' +
       '<p class="lede">End-to-end projects with a business brief, data to download, free tools and model answers.</p>' +
-      '<div class="pj-cards">' + list.map(function (p) {
+      '<div class="pj-cards">' + list.filter(function (p) { return p.track !== 'Python'; }).map(function (p) {
         var done = Progress.projectStepsDone(p.id), n = p.steps.length;
         return '<a class="pj-card" href="#/projects/' + p.id + '">' +
           '<h2>' + esc(p.fullTitle) + '</h2>' +
@@ -1324,7 +1329,21 @@
       soon.map(function (p) {
         return '<div class="pj-card pj-soon"><h2>' + esc(p.level + ' ' + p.track + ': ' + p.title) + '</h2>' +
           '<p class="pj-card-tag">' + esc(p.blurb) + '</p><p class="pj-card-progress">Coming next</p></div>';
-      }).join('') + '</div></section>';
+      }).join('') + '</div>' + pythonPractice(list) + '</section>';
+  }
+
+  // Short Python guides, listed under the projects. More are added by giving a project track "Python".
+  function pythonPractice(list) {
+    var py = list.filter(function (p) { return p.track === 'Python'; });
+    if (!py.length) return '';
+    return '<section class="py-practice" aria-labelledby="py-h"><h2 id="py-h">Python practice</h2>' +
+      '<p class="lede">Short, hands-on guides that run in Google Colab, with nothing to install. Good before or alongside the projects.</p>' +
+      '<ul class="py-list">' + py.map(function (p) {
+        var done = Progress.projectStepsDone(p.id), n = p.steps.length;
+        return '<li><a class="py-item" href="#/projects/' + p.id + '"><b>' + esc(p.fullTitle) + '</b>' +
+          '<span class="py-meta">' + esc(p.time) + (done ? ', ' + done + ' of ' + n + ' done' : ', ' + n + ' steps') + '</span>' +
+          '<p class="py-blurb">' + esc(p.blurb) + '</p></a></li>';
+      }).join('') + '</ul></section>';
   }
 
   var mdCache = {};
@@ -1350,6 +1369,24 @@
     var art = document.createElement('article');
     art.className = 'project';
     art.innerHTML = '<p class="crumb"><a href="#/projects">Projects</a> / ' + esc(p.title) + '</p>' + html;
+    // a warm-up block beside the brief, for projects that have one (project 1 points to the Python basics guide)
+    var warm = p.warmup && (window.PROJECTS || []).filter(function (x) { return x.id === p.warmup; })[0];
+    var brief = art.querySelector('.pj-brief');
+    if (warm && brief) {
+      var wDone = Progress.projectStepsDone(warm.id), wN = warm.steps.length;
+      var row = document.createElement('div');
+      row.className = 'pj-brief-row';
+      brief.parentNode.insertBefore(row, brief);
+      row.appendChild(brief);
+      var card = document.createElement('a');
+      card.className = 'pj-warmup';
+      card.href = '#/projects/' + warm.id;
+      card.innerHTML = '<p class="pj-box-label">New to Python?</p>' +
+        '<p class="pj-warmup-title">' + esc(warm.fullTitle) + '</p>' +
+        '<p class="pj-warmup-text">' + wN + ' short steps, ' + esc(warm.time.replace(/^About /, 'about ')) + '. Runs in Google Colab, nothing to install or download.</p>' +
+        '<span class="pj-warmup-go">' + (wDone >= wN ? 'Done. Read it again' : wDone ? 'Carry on (' + wDone + ' of ' + wN + ' done)' : 'Start the warm-up') + ' →</span>';
+      row.appendChild(card);
+    }
     // group each "## N. Title" heading and what follows it into a step with a tick box
     var steps = [], cur = null;
     Array.prototype.slice.call(art.children).forEach(function (el) {
@@ -1656,8 +1693,8 @@
     Array.prototype.forEach.call(document.querySelectorAll('[data-nav]'), function (a) {
       if (a.getAttribute('data-nav') === page) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
-    var due = dueList().length, link = document.querySelector('[data-nav="review"]');
-    if (link) link.innerHTML = 'Review' + (due ? ' <span class="nav-count">' + due + '<span class="sr"> due</span></span>' : '');
+    var due = dueList().length, link = document.querySelector('[data-nav="quizzes"]');
+    if (link) link.innerHTML = 'Quizzes' + (due ? ' <span class="nav-count">' + due + '<span class="sr"> reviews due</span></span>' : '');
   }
 
   var SITE = 'The Joinery';
@@ -1665,7 +1702,7 @@
     var t = '';
     if (page === 'start') { if (!currentRoute()) { document.title = SITE + ': practise data skills, piece by piece'; return; } t = 'Change your route'; }
     else if (page === 'lab') { var ex = parts[1] && (byId(window.EXERCISES, parts[1]) || nextUndone() || window.EXERCISES[0]); t = ex ? ex.title : 'SQL lab'; }
-    else if (page === 'review' || page === 'session' || page === 'quiz') t = 'Review and quiz';
+    else if (page === 'review' || page === 'quizzes' || page === 'session' || page === 'quiz') t = 'Quizzes';
     else if (page === 'glossary') { var gt = parts[1] === 'term' && gTerm(decodeURIComponent(parts[2] || '')); t = gt ? gt.term + ' (glossary)' : 'Glossary'; }
     else if (page === 'settings') t = 'Settings';
     else if (window.PAGES && window.PAGES[page]) t = window.PAGES[page].title;
@@ -1686,7 +1723,7 @@
     if (window.Byte) { Byte.hide(); currentPage = page; Byte.refresh(); }
     if (page === 'start') renderStart();
     else if (page === 'lab') renderLab(parts[1]);
-    else if (page === 'review') renderReview();
+    else if (page === 'review' || page === 'quizzes') renderReview(parts[1] === 'review' || page === 'review');
     else if (page === 'session') renderSession();
     else if (page === 'quiz') renderSubjectQuiz(decodeURIComponent(parts[1] || 'all'));
     else if (page === 'glossary') { if (parts[1] === 'term') renderTerm(decodeURIComponent(parts[2] || '')); else renderGlossary(decodeURIComponent(parts[1] || '')); }
@@ -1695,7 +1732,7 @@
     else if (window.PAGES && window.PAGES[page]) renderInfo(page);
     else if (page === 'progress') renderProgress();
     else { page = 'home'; renderHome(); }
-    updateNav(page === 'session' || page === 'quiz' ? 'review' : page === 'progress' ? 'home' : page);
+    updateNav(page === 'session' || page === 'quiz' || page === 'review' ? 'quizzes' : page === 'progress' ? 'home' : page);
     updateReportLink();
     setTitle(page, parts);
     if (page !== 'progress') window.scrollTo(0, 0);

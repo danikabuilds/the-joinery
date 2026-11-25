@@ -1,5 +1,6 @@
 // The Projects hub: one short entry per project, from projects/<id>/meta.json. The full write-up of each
 // project is its PROJECT.md. Built by each project's build_project.py: edit those, not this.
+// Entries with track "Python" are listed under Python practice instead of as project cards.
 window.PROJECTS = [
  {
   "id": "just-now-deliveries",
@@ -35,7 +36,8 @@ window.PROJECTS = [
    "Why it matters, and how to talk about it",
    "Take it further"
   ],
-  "order": 1
+  "order": 1,
+  "warmup": "python-basics"
  },
  {
   "order": 2,
@@ -73,6 +75,141 @@ window.PROJECTS = [
    "Watch it: run log, freshness and lineage",
    "Why it matters, and how to talk about it",
    "Take it further"
+  ]
+ },
+ {
+  "order": 10,
+  "id": "python-basics",
+  "track": "Python",
+  "level": "Practice",
+  "title": "Python basics",
+  "fullTitle": "Python basics: read and clean a CSV",
+  "blurb": "Read a messy CSV with pandas and clean it in eight short steps. Runs in Google Colab, nothing to install.",
+  "time": "About 30 minutes",
+  "md": "projects/python-basics/PROJECT.md",
+  "steps": [
+   "Read the file",
+   "Look before you clean",
+   "Tidy the column names",
+   "Fix the data types",
+   "Tidy messy text",
+   "Deal with missing values",
+   "Remove duplicate rows",
+   "Catch impossible values, then save"
+  ]
+ },
+ {
+  "order": 11,
+  "id": "python-explore",
+  "track": "Python",
+  "level": "Practice",
+  "title": "Explore and summarise",
+  "fullTitle": "Explore and summarise with groupby",
+  "blurb": "Answer real questions from a clean file: summaries, counts, percentages and groupby, the pandas version of GROUP BY.",
+  "time": "About 25 minutes",
+  "md": "projects/python-explore/PROJECT.md",
+  "steps": [
+   "Read the file with real dates",
+   "Summarise one column",
+   "Count and get percentages",
+   "Group and summarise",
+   "Filter first, then group",
+   "Work out each group's share"
+  ]
+ },
+ {
+  "order": 12,
+  "id": "python-merge",
+  "track": "Python",
+  "level": "Practice",
+  "title": "Merge tables",
+  "fullTitle": "Merge tables without double counting",
+  "blurb": "Combine orders, customers and items with merge, spot fan-out before it inflates your totals, and fix it.",
+  "time": "About 25 minutes",
+  "md": "projects/python-merge/PROJECT.md",
+  "steps": [
+   "Read the three tables",
+   "Check the keys first",
+   "Left merge: keep every order",
+   "Inner merge: only the matches",
+   "Watch the totals grow",
+   "Fix it: summarise first, then merge",
+   "Answer item questions from the items table"
+  ]
+ },
+ {
+  "order": 13,
+  "id": "python-dates",
+  "track": "Python",
+  "level": "Practice",
+  "title": "Work with dates",
+  "fullTitle": "Work with dates",
+  "blurb": "Delivery times, late orders, weekdays and monthly totals: the date skills every delivery or sales question needs.",
+  "time": "About 25 minutes",
+  "md": "projects/python-dates/PROJECT.md",
+  "steps": [
+   "Read the dates as dates",
+   "Days between two dates",
+   "Flag late orders",
+   "Pull out the year, month and weekday",
+   "Monthly totals",
+   "Filter by date"
+  ]
+ },
+ {
+  "order": 14,
+  "id": "python-charts",
+  "track": "Python",
+  "level": "Practice",
+  "title": "Charts with Matplotlib",
+  "fullTitle": "Charts with Matplotlib",
+  "blurb": "Line, bar and histogram charts with titles that say the point, then save them for a report or slide.",
+  "time": "About 25 minutes",
+  "md": "projects/python-charts/PROJECT.md",
+  "steps": [
+   "Get the numbers ready",
+   "Leave out part periods",
+   "A line chart for change over time",
+   "A sorted bar chart for comparing groups",
+   "A histogram for the shape of the data",
+   "Save a chart"
+  ]
+ },
+ {
+  "order": 15,
+  "id": "python-duckdb",
+  "track": "Python",
+  "level": "Practice",
+  "title": "SQL inside Python",
+  "fullTitle": "SQL inside Python with DuckDB",
+  "blurb": "Run SQL straight on pandas tables with DuckDB, then carry on in pandas. Use whichever is clearer for each step.",
+  "time": "About 20 minutes",
+  "md": "projects/python-duckdb/PROJECT.md",
+  "steps": [
+   "Your first query",
+   "GROUP BY in SQL",
+   "Join without fan-out, using a CTE",
+   "The top city in each province",
+   "SQL first, then pandas"
+  ]
+ },
+ {
+  "order": 16,
+  "id": "python-files",
+  "track": "Python",
+  "level": "Practice",
+  "title": "Many files and a script",
+  "fullTitle": "From notebook to script: many files",
+  "blurb": "Write a function, loop over a week of daily files, combine them safely, spot a new column, then turn it into a script.",
+  "time": "About 30 minutes",
+  "md": "projects/python-files/PROJECT.md",
+  "steps": [
+   "A function to read one day",
+   "Loop over the week",
+   "Spot new columns",
+   "Combine the files",
+   "Check the result",
+   "Turn it into a script"
   ]
  }
 ];

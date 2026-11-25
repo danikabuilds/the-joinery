@@ -1,0 +1,19 @@
+{
+ "order": 11,
+ "id": "python-explore",
+ "track": "Python",
+ "level": "Practice",
+ "title": "Explore and summarise",
+ "fullTitle": "Explore and summarise with groupby",
+ "blurb": "Answer real questions from a clean file: summaries, counts, percentages and groupby, the pandas version of GROUP BY.",
+ "time": "About 25 minutes",
+ "md": "projects/python-explore/PROJECT.md",
+ "steps": [
+  "Read the file with real dates",
+  "Summarise one column",
+  "Count and get percentages",
+  "Group and summarise",
+  "Filter first, then group",
+  "Work out each group's share"
+ ]
+}

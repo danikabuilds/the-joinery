@@ -1,0 +1,377 @@
+Order ID,Customer ID,City,Province,Order Date,Status,Order Total,Delivered Date
+O044903,C28101,George,Western Cape,20/11/2025,delivered,R320.44,28/11/2025
+O028861,C19942,Kimberley,Northern Cape,2025-04-24,Delivered,R905.38,2025-04-30
+O017405,C07421,Benoni,Gauteng,2024-11-13,delivered,R437.74,2024-11-19
+O037430,C14423,Johannesburg,Gauteng,2025-08-29,delivered,R86.99,2025-09-01
+O037128,C25656,Johannesburg,Gauteng,2025-08-24,delivered,R212.99,2025-08-22
+O039752,C08133,Centurion,Gauteng,2025-09-10,delivered,R1 514.99,2025-09-14
+O045604,C12452,East London,Eastern Cape,2025-11-30,delivered,R925.99,2025-12-06
+O037115,C25644,Cape Town,Western Cape,2025-08-21,Delivered,R5 915.99,2025-08-23
+O036052,C24895,Durban,KwaZulu-Natal,2025-08-06,delivered,R1 357.99,2025-08-11
+O019018,C13205,Cape Town,Western Cape,2024-12-25,delivered,R64.99,2024-12-30
+O031291,C01529,Rustenburg,North West,2025-06-21,delivered,R3 994.17,2025-06-25
+O029666,C12100,,Gauteng ,2025-05-10,delivered,R403.74,2025-05-16
+O026863,C18538,Soweto,Gauteng,2025-03-30,delivered,,2025-04-02
+O018201,C08064,Pretoria,Gauteng ,13/11/2024,delivered,R84.99,17/11/2024
+O025640,C17689,Durban,KwaZulu-Natal,2025-03-21,delivered,R1 375.99,2025-03-24
+O018904,C13120,Richards Bay,KwaZulu-Natal,2024-12-02,delivered,R54.39,2024-12-05
+O026088,C18002,Pretoria,Gauteng,2025-03-31,delivered,R741.19,2025-04-07
+O039254,C27097,Rustenburg,North West,2025-09-29,delivered,R1 183.99,2025-10-04
+O015632,C10850,Benoni,Gauteng,2024-10-05,delivered,R508.48,2024-10-12
+O023583,C16307,Cape Town,Western Cape,2025-02-02,delivered,R627.99,2025-02-10
+O045967,C31708,Pretoria,Gauteng,2025-11-16,delivered,R1 587.99,2025-11-21
+O023139,C15992,Centurion,Gauteng,2025-01-20,delivered,R266.04,2025-01-24
+O036366,C25105,Johannesburg,GP,2025-08-01,delivered,R543.78,2025-08-06
+O034819,C22547,,KwaZulu-Natal,2025-07-11,delivered ,R4 516.89,2025-07-15
+O003836,C02677,George,Western Cape,2024-03-28,delivered,R847.17,2024-03-30
+O017830,C12375,Pretoria,GP,2024-11-11,delivered ,R386.99,2024-11-15
+O004991,C03480,East London,Eastern Cape,2024-04-17, delivered,R650.38,2024-04-24
+O005864,C04082,,KwaZulu-Natal,2024-05-10,delivered,R103.69,2024-05-15
+O013617,C09481,,gauteng,2024-09-24,delivered,R994.03,2024-09-30
+O009479,C06639,,Gauteng,2024-07-30,delivered,R1 581.08,2024-08-01
+O035458,C24476,Pietermaritzburg,KwaZulu-Natal,2025-08-08,delivered,R441.78,2025-08-12
+O041192,C28438,,Gauteng,19/10/2025,delivered,R1 212.98,27/10/2025
+O039285,C27119,Richards Bay,KwaZulu-Natal,2025-09-03,delivered,,2025-09-06
+O003902,C02723,Cape Town,Western Cape,2024-04-15,delivered,R753.94,2024-04-23
+O034133,C23557,Stellenbosch,Western Cape,2025-07-22,delivered,R492.99,2025-07-24
+O037300,C18957,Emalahleni,Mpumalanga,2025-08-13,delivered,R292.39,2025-08-18
+O012016,C03719,Soweto,Gauteng,2024-08-25,delivered,R86.99,2024-08-29
+O037300,C18957,Emalahleni,Mpumalanga,2025-08-13,delivered,R292.39,2025-08-18
+O004870,C00065,Mbombela,Mpumalanga,2024-04-10,delivered,,2024-04-15
+O024019,C16599,Johannesburg,Gauteng,2025-02-09,delivered,R1 469.99,2025-02-13
+O006222,C04334,Centurion,GP,2024-05-17,delivered,R1 264.99,2024-05-21
+O020720,C03937,Emalahleni,Mpumalanga,2024-12-24,delivered,R666.89,2024-12-30
+O004643,C03234,Midrand,Gauteng,10/04/2024,delivered,R75.99,13/04/2024
+O001329,C00942,Pietermaritzburg,KwaZulu-Natal,2024-02-02,delivered,R136.99,2024-02-07
+O007759,C00148,Mthatha,EC,2024-06-01,delivered,R332.98,2024-06-07
+O013743,C09567,Johannesburg,Gauteng,2024-09-03,delivered,R1 659.99,2024-09-05
+O007621,C05316,Johannesburg,Gauteng,26/06/2024,delivered,R111.34,30/06/2024
+O010396,C05214,Johannesburg,Gauteng,2024-08-30,delivered,R143.64,2024-09-02
+O001854,C01026,Pretoria,Gauteng ,16/02/2024,delivered,,18/02/2024
+O018230,C12648,Benoni,Gauteng,2024-11-30,delivered,R619.99,2024-12-05
+O040238,C21333,Durban,KwaZulu-Natal,2025-10-08,delivered,,2025-10-11
+O022513,C15556,Tzaneen,Limpopo,2025-01-27,delivered,R2 631.98,2025-02-01
+O028316,C14874,East London,Eastern Cape,2025-04-20,delivered,R436.99,2025-04-23
+O008760,C04072,Cape Town,western cape,2024-07-22,delivered,R3 330.57,2024-07-25
+O015888,C00768,Durban,KwaZulu-Natal,2024-11-04,delivered,R318.99,2024-11-13
+O022559,C06820,Emalahleni,Mpumalanga,2025-01-10,delivered,R206.09,2025-01-15
+O014066,C07334,George,Western Cape,2024-10-31,delivered,R2 439.97,2024-11-05
+O041967,C28981,,Gauteng,11/10/2025,delivered,R248.79,16/10/2025
+O014362,C09991,Gqeberha,Eastern Cape,2024-10-10,delivered,R712.99,2024-10-21
+O029222,C20189,Mahikeng,North West,2025-05-28,delivered,R631.54,2025-06-02
+O013861,C09644,Johannesburg,Gauteng,29/10/2024,delivered,R827.57,06/11/2024
+O044948,C30986,Mthatha,Eastern Cape,2025-11-20,delivered,R887.08,2025-11-29
+O011637,C08145,Benoni,Gauteng,2024-08-14,delivered,,2024-08-21
+O024926,C17204,Cape Town,Western Cape,2025-03-29,delivered,R896.74,2025-04-04
+O013129,C02824,Pietermaritzburg,Kwazulu Natal,01/09/2024,delivered,R134.99,05/09/2024
+O036695,C25341,Cape Town,Western Cape,2025-08-27,delivered,R150.99,2025-09-01
+O038301,C13193,Cape Town,Western Cape,13/09/2025,delivered,R2 391.98,17/09/2025
+O039113,C27010,Johannesburg,Gauteng,01/09/2025,delivered,R148.49,07/09/2025
+O031115,C21494,Johannesburg,Gauteng,2025-06-29,delivered,R2 205.59,2025-07-03
+O041025,C28322,Bloemfontein,Free State,2025-10-09,delivered,R1 101.99,2025-10-13
+O005295,C03696,Richards Bay,KwaZulu-Natal,2024-04-13,delivered,R7 197.98,2024-04-19
+O001398,C00403,Benoni,Gauteng,2024-02-29,delivered,R543.73,2024-03-06
+O009207,C06448,Pretoria,Gauteng,2024-07-23,delivered,R228.99,2024-07-27
+O016841,C11670,Durban,KwaZulu-Natal,2024-11-12,delivered,R462.99,2024-11-19
+O032018,C02132,Polokwane,Limpopo,2025-06-26,delivered,R956.68,2025-06-30
+O015708,C10897,Pretoria,gauteng,07/10/2024,delivered,R502.39,10/10/2024
+O011466,C08038,Benoni,Gauteng,2024-08-07,delivered,R7 717.33,2024-08-14
+O045390,C31312,Cape Town,Western Cape,2025-11-29,delivered,R633.99,2025-12-06
+O039483,C07180,Pietermaritzburg,KwaZulu-Natal,28/09/2025,delivered,R789.99,01/10/2025
+O033205,C22922,Midrand,Gauteng,2025-07-13,delivered,R700.39,2025-07-16
+O042628,C12851,Pretoria,Gauteng,2025-10-16,DELIVERED,R120.59,2025-10-19
+O030672,C21192,George,Western Cape,2025-05-03,delivered,R578.69,2025-05-10
+O043339,C29900,Gqeberha,EC,2025-11-01,delivered,R742.99,2025-11-12
+O032600,C22498,Mbombela,Mpumalanga,2025-06-30,delivered,R2 417.99,2025-07-06
+O017145,C11876,Cape Town,Western Cape,2024-11-05,delivered,R5 302.73,2024-11-10
+O024801,C17114,Bloemfontein,Free State,2025-02-04,DELIVERED,,2025-02-10
+O019884,C03685,Upington,Northern Cape,2024-12-03,delivered,R2 717.67,2024-12-17
+O018550,C12882,Midrand,Gauteng,02/11/2024,delivered,R487.79,06/11/2024
+O006138,C00250,Pretoria,Gauteng,2024-05-10,delivered,R1 240.99,2024-05-13
+O020296,C14075,Midrand,Gauteng,2024-12-18,delivered,R347.99,2024-12-24
+O014851,C10307,Mahikeng,North West,2024-10-28,delivered,R3 702.99,2024-11-01
+O031466,C21719,Polokwane,Limpopo,2025-06-10,delivered,R49.49,2025-06-15
+O028618,C19774,Tzaneen,Limpopo,2025-04-02,delivered,R277.99,2025-04-07
+O021942,C15157,Pretoria,Gauteng,2025-01-28,delivered,R2 874.78,2025-02-03
+O041612,C28719,Umhlanga,Kwazulu Natal,2025-10-31,delivered,R1 424.69,2025-11-05
+O042992,C29665,Mahikeng,North West,27/11/2025,delivered,R825.98,04/12/2025
+O031706,C21879,Cape Town,Western Cape,2025-06-16,delivered,R366.99,2025-06-23
+O022011,C15211,Pretoria,Gauteng,2025-01-02,delivered,R1 264.99,2025-01-06
+O005829,C04059,Johannesburg,Gauteng,2024-05-08,delivered,R261.89,2024-05-11
+O024431,C16874,Durban,KwaZulu-Natal,2025-02-03,delivered,R1 988.09,2025-02-07
+O023135,C14758,Durban,KwaZulu-Natal,18/01/2025,delivered,R475.99,23/01/2025
+O006914,C04824,Upington,Northern Cape,2024-05-24,delivered,R364.98,2024-05-31
+O019684,C13655,Gqeberha,Eastern Cape,2024-12-05,delivered,R1 532.33,2024-12-08
+O036120,C11069,Soweto,Gauteng,2025-08-18,Delivered,R357.59,2025-08-25
+O006381,C04447,Cape Town,Western Cape,27/05/2024,delivered,R1 711.28,01/06/2024
+O033860,C13709,Rustenburg,North West,2025-07-23,delivered,R1 240.99,2025-07-28
+O037412,C22508,Bloemfontein,Free State,2025-08-04,delivered ,R199.74,2025-08-12
+O023768,C09032,East London,Eastern Cape,2025-02-02,Delivered,R99.99,2025-01-28
+O037244,C25729,Soweto,Gauteng ,29/08/2025,delivered,R65.99,03/09/2025
+O025206,C17394,Centurion,Gauteng,2025-03-22,delivered,R434.99,2025-03-26
+O005377,C03750,Umhlanga,KwaZulu-Natal,2024-04-07,delivered,R1 046.99,2024-04-12
+O035838,C24746,Durban,KwaZulu-Natal,2025-08-22,delivered,R813.99,2025-08-30
+O023785,C16435,Johannesburg,gauteng,2025-02-14,delivered,R744.99,2025-02-20
+O034090,C23530,Bloemfontein,Free State,2025-07-31,delivered,R515.99,2025-08-09
+O033617,C23203,Stellenbosch,Western Cape,2025-07-15,delivered,R994.99,2025-07-17
+O012111,C08461,Durban,KwaZulu-Natal,25/09/2024,delivered,R1 421.76,05/10/2024
+O035476,C24490,Soweto,Gauteng,2025-08-31,delivered,R64.99,2025-09-05
+O039446,C27227,Centurion,Gauteng,27/09/2025,DELIVERED,R151.58,30/09/2025
+O041953,C28973,Johannesburg,GP,22/10/2025,delivered,R314.39,26/10/2025
+O010216,C07170,Johannesburg,Gauteng,20/07/2024,delivered,R541.99,26/07/2024
+O028787,C19889,Soweto,Gauteng,2025-04-16,delivered,R2 155.57,2025-04-19
+O021036,C14564,Mbombela,Mpumalanga,2024-12-10,delivered,R1 106.39,2024-12-14
+O038967,C14758,Durban,Kwazulu Natal,2025-09-25,delivered,R2 337.98,2025-10-04
+O012860,C08988,Kimberley,Northern Cape,2024-09-29,delivered ,R407.99,2024-10-08
+O027707,C19119,Stellenbosch,Western Cape,11/04/2025,delivered,R338.39,14/04/2025
+O040192,C27746,Stellenbosch,Western Cape,26/10/2025,delivered,R602.09,01/11/2025
+O020586,C14274,Rustenburg,NORTH WEST,2024-12-18,delivered,R74.99,2024-12-24
+O010631,C00344,Bloemfontein,Free State,2024-08-27,delivered,R541.99,2024-09-02
+O030299,C20921,Johannesburg,Gauteng ,2025-05-19,delivered,R187.84,2025-05-24
+O032711,C22581,Richards Bay,KwaZulu-Natal,18/06/2025,delivered,R1 082.99,23/06/2025
+O026581,C18344,Polokwane,Limpopo,2025-03-12,delivered,R697.99,2025-03-17
+O012216,C08535,Pretoria,Gauteng,2024-09-17,Delivered,R612.99,2024-09-22
+O029087,C20094,Pretoria,Gauteng,2025-05-02,delivered,R1 806.98,2025-05-08
+O028107,C19410,Johannesburg,Gauteng,2025-04-06,cancelled,R3 054.73,
+O042916,C29616,Mbombela,Mpumalanga,2025-11-09,delivered,R919.79,2025-11-15
+O022222,C15361,Stellenbosch,Western Cape,2025-01-15,delivered,R234.99,2025-01-21
+O016104,C06916,Mbombela,Mpumalanga,2024-11-05,delivered,R129.19,2024-11-14
+O022730,C15704,Pietermaritzburg,KwaZulu-Natal,2025-01-15,delivered,R960.88,2025-01-21
+O016723,C00250,Pretoria,Gauteng,2024-11-05,delivered,R158.94,2024-11-10
+O044459,C30663,Benoni,Gauteng ,2025-11-26,delivered,R110.39,2025-12-01
+O016059,C08323,George,Western Cape,2024-11-04,delivered,,2024-11-07
+O042639,C29422,East London,Eastern Cape,2025-10-19,delivered,R1 303.47,2025-10-28
+O029485,C20359,Richards Bay,KwaZulu-Natal,2025-05-17,delivered,R160.79,2025-05-24
+O040730,C09327,Durban,KwaZulu-Natal,2025-10-26,delivered,R139.68,2025-11-02
+O020015,C13878,Mahikeng,North West,2024-12-10,delivered,R347.99,2024-12-16
+O041684,C28774,Tzaneen,Limpopo,2025-10-09,DELIVERED,R1 230.83,2025-10-13
+O043567,C30053,Midrand,Gauteng,2025-11-29,delivered,R79.99,2025-12-05
+O042593,C20206,Soweto,Gauteng,14/10/2025,delivered,R521.04,17/10/2025
+O019533,C04431,Soweto,Gauteng,2024-12-11,delivered,R4 795.28,2024-12-16
+O039132,C27026,Centurion,Gauteng,2025-09-06,delivered,R204.84,2025-09-08
+O014628,C10146,Johannesburg,Gauteng,2024-10-27,delivered,R2 405.42,2024-10-29
+O020848,C14440,Pietermaritzburg,KwaZulu-Natal,2024-12-10,delivered,R150.99,2024-12-16
+O025164,C17362,Pretoria,Gauteng,2025-03-06,delivered,R211.49,2025-03-12
+O001408,C00994,Upington,Northern Cape,2024-02-18,delivered,R2 208.99,2024-02-25
+O036073,C24909,Cape Town,Western Cape,2025-08-27,delivered ,R170.58,2025-08-30
+O005096,C03555,Kimberley,Northern Cape,23/04/2024,delivered,R446.93,01/05/2024
+O046452,C32038,Pietermaritzburg,KwaZulu-Natal,2025-11-09,delivered,R1 354.23,2025-11-17
+O015000,C10414,Cape Town,Western Cape,2024-10-13,delivered,R6 266.01,2024-10-20
+O017734,C01972,Soweto,Gauteng,19/11/2024,Delivered,R151.19,24/11/2024
+O013272,C09264,Upington,Northern Cape,2024-09-07,delivered,R730.99,2024-09-19
+O033729,C23281,Durban,KwaZulu-Natal,31/07/2025,delivered,R896.74,06/08/2025
+O031802,C01069,Polokwane,LIMPOPO,2025-06-17,delivered,R243.99,2025-06-22
+O031761,C21920,Durban,KwaZulu-Natal,2025-06-19,delivered,R223.54,2025-06-25
+O017706,C12281,Durban,KwaZulu-Natal,2024-11-22,delivered,R7 132.03,2024-11-27
+O013587,C09460,Durban,KwaZulu-Natal,10/09/2024,delivered,R335.99,14/09/2024
+O045498,C31385,Soweto,Gauteng,2025-11-04,delivered,R896.18,2025-11-09
+O001820,C01289,Bloemfontein,Free State,29/02/2024,delivered,R876.99,06/03/2024
+O008562,C01621,Mahikeng,North West,27/06/2024,delivered,R584.88,01/07/2024
+O001198,C00543,Johannesburg,Gauteng,2024-02-21,delivered,R2 647.17,2024-02-27
+O004035,C02818,Benoni,Gauteng,2024-04-24,delivered,R3 326.67,2024-05-01
+O001958,C01391,Polokwane,Limpopo,2024-02-02,delivered,R118.99,2024-02-08
+TEST001,C00001,Durban,KwaZulu-Natal,2024-01-03,delivered,R0.01,
+O024014,C16595,Pretoria,Gauteng,2025-02-21,Delivered,R2 899.78,2025-02-26
+O019903,C13801,Mbombela,Mpumalanga,2024-12-29,delivered ,R1 769.98,2025-01-06
+O008167,C05699,Emalahleni,MPUMALANGA,09/06/2024,delivered,R579.99,16/06/2024
+O004277,C01896,Pretoria,Gauteng,2024-04-10,delivered,R391.08,2024-04-14
+O024190,C16713,Durban,KwaZulu-Natal,2025-02-02,delivered,R1 090.38,2025-02-06
+O033220,C12826,Polokwane,Limpopo,2025-07-04,delivered,R1 245.52,2025-07-23
+O032530,C07199,Cape Town,Western Cape,2025-06-06,delivered,-R488.99,2025-06-11
+O020605,C14286,Pretoria,Gauteng,2024-12-27, delivered,R281.69,2024-12-30
+O024504,C14874,East London,EC,2025-02-02,delivered,R51.84,2025-02-10
+O022559,C06820,Emalahleni,Mpumalanga,2025-01-10,delivered,R206.09,2025-01-15
+O019533,C04431,Soweto,Gauteng,2024-12-11,delivered,R4 795.28,2024-12-16
+O023429,C14863,Cape Town,Western Cape,2025-02-23,delivered,R1 948.58,2025-03-01
+O042849,C29570,Johannesburg,Gauteng,2025-11-16,delivered,R2 017.97,2025-11-20
+O038028,C26247,Gqeberha,Eastern Cape,2025-09-26,delivered,R489.99,2025-10-06
+TEST003,C00001,Durban,KwaZulu-Natal,2024-01-09,delivered,R0.01,
+O024777,C16043,Pretoria,Gauteng,2025-02-20,delivered,R55.99,2025-02-24
+O012251,C08560,Polokwane,LIMPOPO,07/09/2024,delivered,R637.99,13/09/2024
+O025850,C17841,Polokwane,Limpopo,2025-03-10,delivered,R74.69,2025-03-15
+O039664,C27379,Cape Town,Western Cape,2025-09-22,delivered,R65.99,2025-09-25
+O032493,C22425,Johannesburg,Gauteng,2025-06-24,delivered,R4 486.29,2025-06-28
+O036546,C25236,Umhlanga,KwaZulu-Natal,2025-08-27,delivered,R506.39,2025-09-01
+O009336,C06537,Pretoria,Gauteng,2024-07-18,delivered,R593.29,2024-07-24
+O015086,C03153,Pretoria,Gauteng,2024-10-22,delivered,R204.99,2024-10-27
+O024259,C16763,Pretoria,Gauteng,2025-02-05,delivered,R1 479.99,2025-02-07
+O041503,C28649,Durban,KwaZulu-Natal,2025-10-28,delivered,R1 322.99,2025-11-03
+O014910,C10350,Durban,KwaZulu-Natal,2024-10-16,delivered,,2024-10-21
+O022995,C10950,Bloemfontein,FREE STATE,2025-01-25,delivered,R2 651.99,2025-01-29
+O034694,C23948,Umhlanga,KwaZulu-Natal,2025-07-12,delivered,R39.59,2025-07-16
+O025683,C08961,Richards Bay,KwaZulu-Natal,2025-03-28,delivered,R134.99,2025-04-04
+O022730,C15704,Pietermaritzburg,KwaZulu-Natal,2025-01-15,delivered,R960.88,2025-01-21
+O022608,C00380,Polokwane,Limpopo,18/01/2025,delivered,R107.99,30/01/2025
+O040047,C27650,Bloemfontein,Free State,2025-09-11,delivered,R6 405.91,2025-09-14
+O019777,C13719,Bloemfontein,Free State,2024-12-31,delivered,R3 170.99,2025-01-05
+O044628,C30781,Durban,KwaZulu-Natal,2025-11-15,delivered,R2 675.69,2025-11-22
+O018038,C03076,Centurion,Gauteng,2024-11-20,delivered ,R1 378.98,2024-11-27
+O033200,C22918,Johannesburg,Gauteng,2025-07-18,delivered,R1 240.99,2025-07-23
+O045272,C31225,Bloemfontein,Free State,2025-11-22,delivered,R263.19,2025-11-28
+O041679,C28770,Durban,KwaZulu-Natal,2025-10-28,delivered,R8 908.82,2025-11-04
+O014762,C10247,Durban,Kwazulu Natal,2024-10-04,delivered,R120.99,2024-10-10
+O006567,C04577,Durban,KwaZulu-Natal,2024-05-12,delivered,R682.99,2024-05-17
+O045630,C31474,Midrand,Gauteng,2025-11-06,delivered,R372.29,2025-11-15
+O029584,C20436,Umhlanga,KwaZulu-Natal,2025-05-04,delivered,R870.97,2025-05-08
+O029112,C20113,Pretoria,Gauteng,2025-05-27,delivered,R926.08,2025-06-03
+O004811,C03350,Mthatha,Eastern Cape,2024-04-28,delivered,R149.59,2024-05-07
+O009533,C03285,Paarl,WC,2024-07-24,delivered,R168.29,2024-07-29
+O010174,C07138,Johannesburg,Gauteng,13/07/2024,delivered,R204.99,16/07/2024
+TEST004,C00001,Durban,KwaZulu-Natal,2024-01-12,delivered,R0.01,
+O017456,C12099,East London,EC,2024-11-13,delivered,R56.09,2024-11-18
+O027436,C18001,Soweto,Gauteng ,2025-04-29,delivered,R744.99,2025-05-04
+O040727,C28110,Pretoria,Gauteng,2025-10-13,delivered,R889.94,2025-10-17
+O018684,C12979,Cape Town,Western Cape,15/11/2024,delivered,R939.99,22/11/2024
+O004225,C02943,Cape Town,WC,2024-04-23,delivered,R338.98,2024-04-27
+O025466,C17571,Bloemfontein,Free State,2025-03-04,cancelled,R204.99,
+O043434,C29963,Emalahleni,MPUMALANGA,2025-11-12,delivered,R208.79,2025-11-17
+O014244,C03765,Cape Town,Western Cape,29/10/2024,delivered,R2 275.99,04/11/2024
+O031488,C10764,Pretoria,Gauteng,2025-06-19,delivered,R6 444.97,2025-06-24
+O012985,C09072,Cape Town,Western Cape,2024-09-18,delivered,R121.54,2024-09-22
+O025287,C17449,Tzaneen,Limpopo,2025-03-03,delivered,R789.99,2025-03-09
+O027117,C18715,Gqeberha,EC,2025-04-09,delivered,R200.99,2025-04-17
+O003242,C02291,Cape Town,Western Cape,2024-03-16,delivered,R1 075.36,2024-03-23
+O020786,C14396,Cape Town,Western Cape,2024-12-23,Delivered,R891.99,2024-12-27
+O019683,C08984,Midrand,Gauteng,2024-12-18,delivered,R474.99,2024-12-22
+O006736,C04693,Polokwane,Limpopo,2024-05-12,delivered,R6 340.79,2024-05-18
+O035905,C24798,Bloemfontein,Free State,2025-08-12,delivered,R236.99,2025-08-19
+O005619,C03919,Durban,Kwazulu Natal,2024-05-05,delivered,R50.39,2024-05-09
+O042763,C29509,Polokwane,Limpopo,08/11/2025,delivered,R1 900.98,22/11/2025
+O010373,C07274,Polokwane,Limpopo,2024-08-19,delivered,R490.43,2024-08-28
+O002994,C02113,Tzaneen,Limpopo,2024-03-15,delivered,R137.99,2024-03-20
+O037071,C25615,Richards Bay,KwaZulu-Natal,2025-08-25,delivered,R1 132.37,2025-08-28
+O013819,C09617,Durban,KwaZulu-Natal,27/09/2024,delivered,R166.99,03/10/2024
+O011473,C08042,Johannesburg,Gauteng,2024-08-21,delivered,R74.99,2024-08-24
+O027842,C19222,Mthatha,Eastern Cape,2025-04-01,delivered,R1 010.48,2025-04-11
+O005377,C03750,Umhlanga,KwaZulu-Natal,2024-04-07,delivered,R1 046.99,2024-04-12
+O013588,C09461,Stellenbosch,Western Cape,2024-09-02,delivered,R6 009.01,2024-09-05
+O007532,C01760,Johannesburg,Gauteng,2024-06-19,delivered,R289.99,2024-06-23
+O043513,C30016,Rustenburg,North West,14/11/2025,delivered,R210.39,22/11/2025
+O038460,C23453,Pretoria,Gauteng,2025-09-08,delivered,R115.59,2025-09-11
+O002061,C00839,Emalahleni,Mpumalanga,2024-02-27,delivered,R564.12,2024-03-02
+O024898,C17185,Centurion,Gauteng,2025-02-22,delivered,R350.39,2025-02-27
+O020764,C14386,Cape Town,Western Cape,09/12/2024,delivered,R108.99,15/12/2024
+O030248,C20885,Pietermaritzburg,KwaZulu-Natal,2025-05-10,delivered,R686.99,2025-05-14
+O042832,C04892,Durban,KwaZulu-Natal,16/11/2025,delivered,R274.54,22/11/2025
+O015752,C10920,Richards Bay,KwaZulu-Natal,2024-10-02,delivered,R137.99,2024-10-09
+O005108,C03564,George,Western Cape,2024-04-11,delivered,R55.99,2024-04-13
+O043725,C30159,Cape Town,WC,2025-11-06,delivered,R541.99,2025-11-13
+O016031,C11113,Cape Town,Western Cape,2024-11-29,delivered,R120.99,2024-12-06
+O035421,C09829,Benoni,Gauteng,15/08/2025,delivered,R1 048.79,17/08/2025
+O021319,C14754,Midrand,Gauteng,2024-12-14,delivered,R7 386.18,2024-12-17
+O037353,C25798,Durban,KwaZulu-Natal,2025-08-02,delivered,R311.99,2025-08-11
+O027489,C18967,Durban,KZN,2025-04-20,delivered,R3 170.99,2025-04-30
+O014583,C10122,East London,Eastern Cape,2024-10-01,delivered ,R1 053.99,2024-10-08
+O017031,C01150,Soweto,Gauteng,2024-11-16,delivered,R131.99,2024-11-20
+O043783,C08787,Pretoria,Gauteng,2025-11-20,Delivered,R460.69,2025-11-24
+O008310,C03413,Pietermaritzburg,KwaZulu-Natal,2024-06-25,delivered,R285.99,2024-06-29
+O037255,C25736,,Gauteng ,2025-08-12,Delivered,R568.78,2025-08-14
+O042621,C29411,Mthatha,Eastern Cape,2025-10-12,delivered,R462.99,2025-10-17
+O039936,C17392,Durban,KwaZulu-Natal,2025-09-14,delivered,R611.99,2025-09-22
+O040047,C27650,Bloemfontein,Free State,2025-09-11,delivered,R6 405.91,2025-09-14
+O031246,C21576,Stellenbosch,Western Cape,2025-06-01,delivered,R2 874.28,2025-06-04
+O044988,C31014,Centurion,Gauteng,2025-11-01,delivered,R318.99,2025-11-06
+O017212,C11925,Cape Town,Western Cape,2024-11-15,delivered,R2 409.99,2024-11-19
+O006143,C03206,Soweto,Gauteng,2024-05-11,delivered,R1 512.23,2024-05-16
+O024152,C16690,Durban,KwaZulu-Natal,2025-02-17,delivered,R1 730.38,2025-02-21
+O000561,C00394,Pietermaritzburg,KwaZulu-Natal,2024-01-15,delivered,R208.79,2024-01-21
+O019137,C07334,George,Western Cape,2024-12-12,delivered,R4 644.16,2024-12-17
+O042251,C29172,Midrand,Gauteng,2025-10-26,delivered,R179.99,2025-10-31
+O032358,C22334,Cape Town,Western Cape,2025-06-01,delivered,R3 159.07,2025-06-05
+O041539,C04824,Upington,Northern Cape,25/10/2025,delivered,R48.79,09/11/2025
+O025626,C03870,Paarl,Western Cape,24/03/2025,delivered,R2 850.61,26/03/2025
+O045590,C31449,Emalahleni,Mpumalanga,20/11/2025,delivered,R437.99,25/11/2025
+O041341,C28531,Benoni,Gauteng,2025-10-10,delivered,R3 189.98,2025-10-13
+O032673,C22549,Welkom,Free State,2025-06-26,delivered,R2 315.99,2025-07-01
+O036281,C25049,Welkom,Free State,2025-08-02,delivered,R3 332.69,2025-08-07
+O044963,C30995,Bloemfontein,FREE STATE,2025-11-25,delivered ,R306.99,2025-12-03
+O008754,C06117,Cape Town,WC,2024-07-16,delivered,R108.89,2024-07-19
+O028313,C08065,Stellenbosch,Western Cape,2025-04-21,delivered,R134.09,2025-04-26
+O016723,C00250,Pretoria,Gauteng,2024-11-05,delivered,R158.94,2024-11-10
+O010473,C07345,Mthatha,Eastern Cape,2024-08-19,DELIVERED,R3 255.98,2024-08-22
+O022513,C15556,Tzaneen,Limpopo,2025-01-27,delivered,R2 631.98,2025-02-01
+O041451,C09327,Durban,KwaZulu-Natal,15/10/2025,delivered,R135.19,12/10/2025
+O035298,C24364,Cape Town,Western Cape,2025-07-12,delivered,R329.79,2025-07-18
+O030827,C21299,Johannesburg,Gauteng,2025-05-09,delivered,R166.99,2025-05-12
+O040908,C28237,East London,Eastern Cape,2025-10-06,delivered,R134.99,2025-10-15
+O038346,C26471,Pretoria,GP,2025-09-23,delivered,R537.59,2025-09-29
+O024544,C14758,Durban,KwaZulu-Natal,01/02/2025,delivered,R91.19,09/02/2025
+O015529,C03593,Cape Town,Western Cape,2024-10-05,delivered,R3 064.77,2024-10-10
+O011617,C01471,Johannesburg,Gauteng,2024-08-17,delivered,R261.98,2024-08-22
+O029473,C20349,Johannesburg,Gauteng,2025-05-01,delivered,R691.99,2025-05-04
+O021897,C15128,Mahikeng,North West,2025-01-23,delivered,R471.99,2025-01-27
+O027689,C19109,Rustenburg,North West,2025-04-21,delivered,R65.99,2025-04-26
+O004751,C03303,Mahikeng,North West,2024-04-04,delivered,R506.39,2024-04-10
+O018684,C12979,Cape Town,Western Cape,15/11/2024,delivered,R939.99,22/11/2024
+O042255,C23532,Gqeberha,EC,2025-10-10,delivered,R427.98,2025-10-16
+O041503,C28649,Durban,KwaZulu-Natal,2025-10-28,delivered,R1 322.99,2025-11-03
+O042200,C29141,Johannesburg,Gauteng,25/10/2025,delivered,R1 607.99,30/10/2025
+O029338,C05098,East London,Eastern Cape,31/05/2025,delivered,R784.79,10/06/2025
+O027610,C19053,Durban,KwaZulu-Natal,30/04/2025,delivered,R4 832.36,08/05/2025
+O024434,C16876,Paarl,Western Cape,2025-02-22,delivered,R514.99,2025-02-27
+O040547,C27985,Bloemfontein,Free State,2025-10-08,delivered,R127.99,2025-10-15
+O024116,C16665,Pretoria,Gauteng,2025-02-08,delivered,R437.99,2025-02-12
+O024209,C01770,Mthatha,Eastern Cape,2025-02-07,delivered,R866.39,2025-02-13
+O019795,C13734,Pretoria,Gauteng,29/12/2024,delivered,R107.19,04/01/2025
+O010595,C01886,Mbombela,Mpumalanga,10/08/2024,delivered,R522.74,17/08/2024
+O031095,C21479,Cape Town,Western Cape,11/06/2025,delivered ,R39.99,15/06/2025
+O009915,C06958,Bloemfontein,Free State,05/07/2024,delivered,R277.99,09/07/2024
+O031843,C21972,Johannesburg,gauteng,2025-06-24,delivered,R9 941.32,2025-06-30
+O018765,C13035,Johannesburg,Gauteng,2024-11-18,delivered,R492.98,2024-11-25
+O035108,C00324,Paarl,Western Cape,2025-07-01,Delivered,R572.99,2025-07-05
+O043086,C18389,Cape Town,Western Cape,2025-11-12,delivered,R312.99,2025-11-16
+O017368,C12033,Cape Town,Western Cape,2024-11-13,delivered,R965.99,2024-11-20
+O029927,C14874,East London,Eastern Cape,2025-05-18,delivered,R163.99,2025-05-22
+O038293,C26432,Benoni,Gauteng,2025-09-04,delivered,,2025-09-07
+O000467,C00322,Richards Bay,KZN,2024-01-31,delivered,R474.99,2024-02-04
+O007822,C05456,Johannesburg,Gauteng,2024-06-01,delivered,R627.99,2024-06-06
+O004327,C03017,Pretoria,GP,2024-04-21,delivered,R7 660.99,2024-04-26
+O034348,C01770,Mthatha,Eastern Cape,2025-07-23,delivered,R4 352.43,2025-07-29
+O032493,C22425,Johannesburg,Gauteng,2025-06-24,delivered,R4 486.29,2025-06-28
+O021303,C14741,Pretoria,Gauteng,2024-12-25,delivered,R985.49,2024-12-29
+O042076,C29057,East London,Eastern Cape,2025-10-30,delivered,R397.59,2025-11-06
+O019870,C13779,George,WC,2024-12-06,delivered,R1 518.09,2024-12-11
+O026595,C18356,,Eastern Cape,2025-03-18,delivered,,2025-03-23
+O009844,C04386,Cape Town,WC,2024-07-21,delivered,R71.99,2024-07-24
+O031853,C21976,Midrand,Gauteng,29/06/2025,Delivered,R316.18,03/07/2025
+O034712,C14381,,Gauteng,2025-07-23,delivered,R696.59,2025-07-27
+O004327,C03017,Pretoria,GP,2024-04-21,delivered,R7 660.99,2024-04-26
+O037142,C25667,Pretoria,Gauteng,2025-08-22,delivered,R180.79,2025-08-30
+O010300,C07226,Stellenbosch,Western Cape,15/08/2024,DELIVERED,R355.99,22/08/2024
+O025330,C17476,Durban,KwaZulu-Natal,2025-03-10,delivered,R62.09,2025-03-15
+TEST002,C00001,Durban,KwaZulu-Natal,2024-01-06,delivered,R0.01,
+O028849,C19935,Cape Town,Western Cape,2025-04-23,delivered,R276.88,2025-04-26
+O011488,C08052,Mbombela,Mpumalanga,2024-08-07, delivered,R1 473.99,2024-08-12
+O020401,C14139,Polokwane,Limpopo,2024-12-20,delivered,-R753.94,2024-12-28
+O009666,C03528,Durban,KwaZulu-Natal,2024-07-17,delivered,R458.18,2024-07-23
+O040181,C27741,Durban,KwaZulu-Natal,2025-10-11,delivered,R437.58,2025-10-15
+O027715,C19125,Paarl,Western Cape,2025-04-30,delivered,R1 074.99,2025-05-03
+O020117,C13947,Pietermaritzburg,KwaZulu-Natal,15/12/2024,delivered,R834.18,23/12/2024
+O017241,C10704,,Kwazulu Natal,2024-11-23,delivered,R5 728.99,2024-11-29
+O036605,C25279,Mbombela,Mpumalanga,18/08/2025,delivered,R120.79,25/08/2025
+O032124,C14946,Cape Town,Western Cape,2025-06-02,delivered,R104.99,2025-06-05
+O021413,C14812,Paarl,Western Cape,2024-12-09,delivered,R353.99,2024-12-14
+O026713,C18433,Durban,KwaZulu-Natal,2025-03-11,delivered,R1 736.98,2025-03-15
+O030412,C21003,George,Western Cape,2025-05-07,DELIVERED,R251.99,2025-05-11
+O036223,C17925,Johannesburg,Gauteng,2025-08-16,delivered,R1 688.96,2025-08-19
+O002509,C01783,Kimberley,Northern Cape,2024-03-22,delivered,R745.98,2024-03-31
+O017114,C11855,Kimberley,Northern Cape,2024-11-27,delivered,R685.18,2024-12-06
+O032870,C22693,Cape Town,Western Cape,2025-06-19,delivered,R179.99,2025-06-22
+O040409,C08238,Centurion,Gauteng,16/10/2025,delivered ,R117.59,19/10/2025
+O026339,C18172,,Gauteng,2025-03-20,delivered ,R821.93,2025-03-22
+O031249,C06347,Mbombela,Mpumalanga,2025-06-21,delivered,R174.59,
+O029456,C20338,Johannesburg,Gauteng,25/05/2025,delivered,R695.18,30/05/2025
+O045881,C31642,Durban,KwaZulu-Natal,2025-11-16,delivered,,2025-11-21
+O016208,C07250,Johannesburg,Gauteng,2024-11-22,delivered,R4 956.98,2024-11-26
+O033452,C23087,Durban,KwaZulu-Natal,2025-07-02,DELIVERED,R72.79,2025-07-06
+O031142,C21512,George,Western Cape,2025-06-25,delivered,R686.99,2025-06-27
+O033432,C23072,Polokwane,Limpopo,07/07/2025,delivered,R318.99,15/07/2025
+O038568,C26617,Richards Bay,Kwazulu Natal,2025-09-14,delivered ,R521.99,2025-09-21
+O010534,C00216,Paarl,Western Cape,2024-08-07,delivered,R1 451.99,2024-08-12
+O004830,C03363,Umhlanga,KwaZulu-Natal,2024-04-17,delivered,R488.99,2024-04-22
+O010366,C01290,Durban,KwaZulu-Natal,2024-08-18,delivered,R2 505.99,2024-08-21
+O021307,C14744,Cape Town,WC,2024-12-04, delivered,R180.89,2024-12-09
+O034421,C11832,Cape Town,Western Cape,2025-07-10,delivered,R583.94,2025-07-17
+O009339,C06540,Stellenbosch,WC,2024-07-29,delivered,R212.99,2024-07-31
+O020619,C08322,Pretoria,Gauteng,2024-12-04,delivered,R1 150.98,2024-12-10
+O045854,C31623,Upington,Northern Cape,18/11/2025,delivered,R240.99,26/11/2025

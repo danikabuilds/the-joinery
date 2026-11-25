@@ -1,0 +1,21 @@
+{
+ "order": 10,
+ "id": "python-basics",
+ "track": "Python",
+ "level": "Practice",
+ "title": "Python basics",
+ "fullTitle": "Python basics: read and clean a CSV",
+ "blurb": "Read a messy CSV with pandas and clean it in eight short steps. Runs in Google Colab, nothing to install.",
+ "time": "About 30 minutes",
+ "md": "projects/python-basics/PROJECT.md",
+ "steps": [
+  "Read the file",
+  "Look before you clean",
+  "Tidy the column names",
+  "Fix the data types",
+  "Tidy messy text",
+  "Deal with missing values",
+  "Remove duplicate rows",
+  "Catch impossible values, then save"
+ ]
+}

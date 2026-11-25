@@ -162,6 +162,25 @@
         '<text class="vis-lbl" x="' + ((L + R) / 2) + '" y="140" text-anchor="middle">delivery days</text>' +
         '</svg>' +
         '<p class="vis-note">Four deliveries take 3 to 5 days. One takes 40. That single outlier drags the mean to 11.2 days, while the median stays at 4, where most deliveries actually are.</p>';
+    },
+
+    'boolean-mask': function () {
+      return flow(mini('orders, with the mask', ['order_id', 'days', 'days &gt; 5'], [['o1', '3', 'False'], ['o2', '8', 'True'], ['o3', '6', 'True'], ['o4', '4', 'False']], { 1: 'kept', 2: 'kept' }),
+        'orders[late]', mini('late orders', ['order_id', 'days'], [['o2', '8'], ['o3', '6']], { 0: 'kept', 1: 'kept' })) +
+        note('The comparison gives one True or False per row. Only the True rows are kept. <code>late.sum()</code> is 2 and <code>late.mean()</code> is 0.5: half the orders were late.');
+    },
+
+    'pandas-merge': function () {
+      return flow('<div class="vis-pair">' + mini('orders', ['order_id', 'customer_id'], [['o1', 'c1'], ['o2', 'c2'], ['o3', 'c9']], { 2: 'kept' }) + CUST + '</div>', 'how="left", indicator=True',
+        mini('result', ['order_id', 'name', '_merge'], [['o1', 'Thandi', 'both'], ['o2', 'Sipho', 'both'], ['o3', 'NaN', 'left_only']], { 2: 'kept' })) +
+        note('A left merge keeps every order. Customer c9 is not in the customers table, so order o3 keeps an empty name, and <code>_merge</code> says <code>left_only</code>, so you can count the rows that did not match.');
+    },
+
+    'concat': function () {
+      return flow('<div class="vis-pair">' + mini('monday', ['order_id', 'total'], [['o1', 'R120'], ['o2', 'R80']]) +
+        mini('tuesday', ['order_id', 'total', 'method'], [['o3', 'R45', 'express']], { 0: 'new' }) + '</div>', 'pd.concat',
+        mini('week', ['order_id', 'total', 'method'], [['o1', 'R120', 'NaN'], ['o2', 'R80', 'NaN'], ['o3', 'R45', 'express']], { 2: 'new' })) +
+        note('The rows are stacked: 2 + 1 = 3. Tuesday has a new <code>method</code> column, so Monday\'s rows get empty values there. Check for gaps like this after every combine.');
     }
   };
 })();

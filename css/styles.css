@@ -643,17 +643,18 @@ h2.with-byte { gap: .5rem; }
 [data-theme="dark"] .CodeMirror-focused { border-color: var(--marigold); box-shadow: 0 0 0 4px var(--mist), 0 0 0 5px var(--marigold), 0 0 28px var(--glow); }
 
 
-/* ---------- accent colours: six areas, each with a job ----------
+/* ---------- accent colours: seven areas, each with a job ----------
    Checked for colour-blind separation and 3:1 contrast on both surfaces.
    Colour never carries meaning alone: every use sits beside a name or label. */
-:root { --c1: #1F5FA8; --c2: #B0306A; --c3: #3F7D20; --c4: #8A3FA8; --c5: #B8470C; --c6: #00809E; --ac: var(--pine); }
-[data-theme="dark"] { --c1: #4A8AE0; --c2: #D95A92; --c3: #68A83A; --c4: #A877D6; --c5: #DB7430; --c6: #1FA3B3; }
+:root { --c1: #1F5FA8; --c2: #B0306A; --c3: #3F7D20; --c4: #8A3FA8; --c5: #B8470C; --c6: #00809E; --c7: #8C6D00; --ac: var(--pine); }
+[data-theme="dark"] { --c1: #4A8AE0; --c2: #D95A92; --c3: #68A83A; --c4: #A877D6; --c5: #DB7430; --c6: #1FA3B3; --c7: #CDA23A; }
 [data-area="SQL"] { --ac: var(--c1); }
 [data-area="Modelling"] { --ac: var(--c2); }
 [data-area="Pipelines"] { --ac: var(--c3); }
 [data-area="Business"] { --ac: var(--c4); }
 [data-area="Statistics"] { --ac: var(--c5); }
 [data-area="BI"] { --ac: var(--c6); }
+[data-area="Python"] { --ac: var(--c7); }
 [data-accent="1"] { --ac: var(--c1); }
 [data-accent="2"] { --ac: var(--c3); }
 [data-accent="3"] { --ac: var(--c4); }
@@ -1054,6 +1055,15 @@ ol.pj-list { list-style: decimal; }
 .pick.main { background: var(--pine); border-color: var(--pine); }
 .pick.main b, .pick.main span { color: var(--on-pine); }
 [data-theme="dark"] .pick { background: rgba(11, 16, 21, .85); border-color: var(--edge); }
+/* Just explore: the beige one (Byte's timber colour) */
+.pick.pick-beige { background: var(--sand); border-color: var(--beige); }
+.pick.pick-beige b { color: var(--beige-ink); }
+[data-theme="light"] .pick.pick-beige { background: #F3EAD8; }
+[data-theme="light"] .pick.pick-beige b { color: #6E5114; }
+[data-theme="light"] .pick.pick-beige span { color: #5C5242; }
+[data-theme="dark"] .pick.pick-beige { background: rgba(201, 169, 106, .12); border-color: var(--beige); }
+[data-theme="dark"] .pick.pick-beige span { color: var(--ink); }
+.pick.pick-beige:hover { border-color: var(--beige); box-shadow: 0 0 16px rgba(201, 169, 106, .3); }
 [data-theme="dark"] .pick.main { background: var(--fill-strong); border-color: var(--marigold); box-shadow: 0 0 18px var(--glow); }
 [data-theme="dark"] .pick.main b { color: var(--focus); }
 [data-theme="dark"] .pick.main span { color: var(--ink); }
@@ -1124,3 +1134,42 @@ ol.pj-list { list-style: decimal; }
 .vis-bar { fill: var(--fill-strong); stroke: var(--pine); stroke-width: 1; }
 .vis-bar-end { fill: var(--sand); stroke: var(--beige); }
 .vis-val { font-size: 11.5px; }
+
+/* ---------- warm-up block beside a project brief ---------- */
+.pj-brief-row { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(14rem, 1fr); gap: 1rem; align-items: stretch; margin: 1.25rem 0; }
+.pj-brief-row .pj-brief { margin: 0; }
+.pj-warmup { display: flex; flex-direction: column; gap: .35rem; padding: 1rem 1.1rem; border: 1.5px solid var(--beige); border-radius: 10px; background: var(--sand); color: var(--ink); text-decoration: none; }
+.pj-warmup:hover { box-shadow: 0 0 16px rgba(201, 169, 106, .3); }
+.pj-warmup .pj-box-label { margin: 0; color: var(--beige-ink); }
+[data-theme="light"] .pj-warmup .pj-box-label { color: #6E5114; }
+.pj-warmup-title { margin: 0; font-weight: 700; font-size: 1.02rem; }
+.pj-warmup-text { margin: 0; color: var(--moss); font-size: .9rem; }
+[data-theme="light"] .pj-warmup-text { color: #5C5242; }
+.pj-warmup-go { margin-top: auto; padding-top: .4rem; font-weight: 650; color: var(--pine); }
+[data-theme="light"] .pj-warmup { background: #F3EAD8; }
+@media (max-width: 760px) { .pj-brief-row { grid-template-columns: 1fr; } }
+
+/* settings gear beside the light/dark switch */
+.settings-btn { order: 2; margin-left: .5rem; text-decoration: none; }
+.settings-btn[aria-current="page"] { border-color: var(--marigold); box-shadow: 0 0 12px var(--glow); }
+.theme-btn#theme-btn { margin-left: -1.5rem; }
+@media (max-width: 860px) {
+  .settings-btn { order: 1; margin-left: auto; }
+  .theme-btn#theme-btn { order: 1; margin-left: -.7rem; }
+}
+/* Quizzes page: the review part sits underneath */
+.review-part { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+.review-part h2 { margin: 0 0 .4rem; scroll-margin-top: 5rem; }
+.review-part h3 { font-size: 1.05rem; margin: 1.2rem 0 .5rem; }
+/* Projects page: Python practice list */
+.py-practice { margin-top: 2.5rem; }
+.py-practice h2 { margin: 0 0 .3rem; }
+.py-list { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: .6rem; }
+.py-item { display: grid; grid-template-columns: 1fr auto; gap: .2rem 1rem; align-items: baseline; padding: .85rem 1rem; border: 1.5px solid var(--beige); border-radius: 10px; background: var(--sand); color: var(--ink); text-decoration: none; }
+[data-theme="light"] .py-item { background: #F3EAD8; }
+.py-item:hover { box-shadow: 0 0 14px rgba(201, 169, 106, .3); }
+.py-item b { font-size: 1rem; }
+.py-item .py-meta { color: var(--moss); font-size: .85rem; }
+[data-theme="light"] .py-item .py-meta { color: #5C5242; }
+.py-item .py-blurb { grid-column: 1 / -1; color: var(--moss); font-size: .9rem; margin: 0; }
+[data-theme="light"] .py-item .py-blurb { color: #5C5242; }

@@ -1,0 +1,19 @@
+{
+ "order": 16,
+ "id": "python-files",
+ "track": "Python",
+ "level": "Practice",
+ "title": "Many files and a script",
+ "fullTitle": "From notebook to script: many files",
+ "blurb": "Write a function, loop over a week of daily files, combine them safely, spot a new column, then turn it into a script.",
+ "time": "About 30 minutes",
+ "md": "projects/python-files/PROJECT.md",
+ "steps": [
+  "A function to read one day",
+  "Loop over the week",
+  "Spot new columns",
+  "Combine the files",
+  "Check the result",
+  "Turn it into a script"
+ ]
+}

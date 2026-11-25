@@ -32,5 +32,6 @@
   "Why it matters, and how to talk about it",
   "Take it further"
  ],
- "order": 1
+ "order": 1,
+ "warmup": "python-basics"
 }
